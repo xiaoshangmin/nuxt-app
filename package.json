@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "dom-to-image-more": "^3.3.0",
+    "interactjs": "^1.10.27",
     "nuxt": "^3.12.3",
-    "vue": "latest"
+    "vue": "latest",
+    "vue-qr": "^4.0.9"
   },
   "devDependencies": {
     "vite-plugin-vuetify": "^2.0.3",
