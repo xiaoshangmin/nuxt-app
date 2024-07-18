@@ -40,9 +40,9 @@
                             </div>
                             <div @click="dialog = true">
                                 <ClientOnly>
-                                    <vue-qr :text="qrData" :size="60" :margin="0" colorLight="transparent"
+                                    <vueQr :text="qrData" :size="60" :margin="0" colorLight="transparent"
                                         backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                                    </vue-qr>
+                                    </vueQr>
                                 </ClientOnly>
                             </div>
                         </div>
@@ -108,26 +108,28 @@
 <script setup>
 import interact from 'interactjs';
 import domtoimage from 'dom-to-image-more';
+import { useDisplay } from 'vuetify'
+import vueQr from 'vue-qr/src/packages/vue-qr.vue'
 
-
-let snackbar = ref(false)
-let canvas = ref(null)
-let dialog = ref(false)
-let rules = reactive({
+const snackbar = ref(false)
+const canvas = ref(null)
+const draggable = ref(null)
+const dialog = ref(false)
+const rules = reactive({
     required: value => !!value || '请输入二维码内容.'
 })
-let show = reactive({
+const show = reactive({
     title: true,
     content: true,
     qrcode: true,
     author: true,
     padding: false
 })
-let colorDark = ref("#101320")
-let showWidth = ref('0px')
-let content = ref("")
-let qrcode = ref("")
-let themeList = ref(
+const colorDark = ref("#101320")
+const showWidth = ref('0px')
+const content = ref("")
+const qrcode = ref("")
+const themeList = ref(
     [
         { "bgcolor": "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));", "colorA": "rgb(5, 174, 157)", "colorB": "rgb(17, 26, 35)", "angle": "150deg" },
         { "bgcolor": "background-image: linear-gradient(150deg, rgb(94, 106, 137), rgb(15, 19, 40));", "colorA": "rgb(94, 106, 137)", "colorB": " rgb(15, 19, 40)", "angle": "150deg" },
@@ -168,55 +170,165 @@ let themeList = ref(
         { "bgcolor": "background-image: linear-gradient(45deg, rgb(186, 167, 228), rgb(245, 159, 156));", "colorA": "rgb(186, 167, 228)", "colorB": " rgb(245, 159, 156)", "angle": "45deg" },
 
 
-    ])
-let styleObject = reactive({
+])
+const styleObject = reactive({
     padding: '20px',
     width: '393px',
     fontSize: '1.1rem'
 })
-let mainStyleObj = reactive({})
-let qrData = ref("https://card.wowyou.cc/")
-let qrDataCopy = ref("https://card.wowyou.cc/")
-let mdAndUp = ref(true)
+const mainStyleObj = reactive({})
+const qrData = ref("https://card.wowyou.cc/")
+const qrDataCopy = ref("https://card.wowyou.cc/")
+const mdAndUp = ref(true)
 
-// if (!this.$vuetify.display.mdAndUp) {
-//     let width = this.$vuetify.display.width
-//     styleObject.value.width = `${width}px`
-//     mdAndUp.value = false;
-// }
-// if (mdAndUp.value) {
-//     mainStyleObj.value = {
-//         marginRight: '25vw',
-//         marginTop: '40px',
-//     }
-// }
+const { mobile, name } = useDisplay()
 
-interact(this.$refs.draggable)
-    .resizable({
-        edges: { top: false, left: true, bottom: false, right: true },
-        listeners: {
-            start(event) {
-                console.log('Resize started');
-            },
-            move(event) {
-                let { x, y } = event.target.dataset
-
-                x = (parseFloat(x) || 0) + event.deltaRect.left
-                y = (parseFloat(y) || 0) + event.deltaRect.top
-                self.showWidth = `${event.rect.width}px`;
-                Object.assign(event.target.style, {
-                    width: `${event.rect.width}px`,
-                    // height: `${event.rect.height}px`,
-                    // transform: `translate(${x}px, ${y}px)`
-                })
-                Object.assign(event.target.dataset, { x, y })
-            },
-            end(event) {
-                console.log('Resize ended');
-
-            }
+onMounted(() => {
+    console.log(mobile.value, name.value)
+    if (mobile.value) {
+        let width = this.$vuetify.display.width
+        styleObject.width = `${width}px`
+        mdAndUp.value = false;
+    }
+    if (mdAndUp.value) {
+        mainStyleObj.value = {
+            marginRight: '25vw',
+            marginTop: '40px',
         }
+    }
+
+    interact(draggable.value)
+        .resizable({
+            edges: { top: false, left: true, bottom: false, right: true },
+            listeners: {
+                start(event) {
+                    console.log('Resize started');
+                },
+                move(event) {
+                    let { x, y } = event.target.dataset
+
+                    x = (parseFloat(x) || 0) + event.deltaRect.left
+                    y = (parseFloat(y) || 0) + event.deltaRect.top
+                    self.showWidth = `${event.rect.width}px`;
+                    Object.assign(event.target.style, {
+                        width: `${event.rect.width}px`,
+                        // height: `${event.rect.height}px`,
+                        // transform: `translate(${x}px, ${y}px)`
+                    })
+                    Object.assign(event.target.dataset, { x, y })
+                },
+                end(event) {
+                    console.log('Resize ended');
+
+                }
+            }
+        });
+})
+
+function editQrData() {
+    if (this.qrDataCopy) {
+        this.qrData = this.qrDataCopy
+        this.dialog = false
+    }
+}
+function getQrcode(data, id) {
+    qrcode.value = data;
+}
+function changeColor(theme) {
+    draggable.value.style.setProperty('--colorA', theme.colorA);
+    draggable.value.style.setProperty('--colorB', theme.colorB);
+    draggable.value.style.setProperty('--angle', theme.angle);
+
+}
+function onSwitchChange(e) {
+    //无边框
+    if (e.val.padding == true) {
+        styleObject.padding = '0px'
+    } else if (styleObject.padding == '0px') {
+        styleObject.padding = '20px'
+    }
+    // show = e.val
+    Object.assign(show,e.val)
+
+}
+function onSliderChange(e) {
+    if (e.action == 'padding') {
+        styleObject.padding = `${e.val}px`
+    }
+    if (e.action == 'width') {
+        styleObject.width = `${e.val}px`
+    }
+    if (e.action == 'fontsize') {
+        styleObject.fontSize = `${e.val}rem`
+    }
+}
+function onBtnToggleChange(e) {
+    if (e.action == 'padding') {
+        styleObject.padding = `${e.val}px`
+    }
+    if (e.action == 'width') {
+        styleObject.width = `${e.val}px`
+    }
+    if (e.action == 'fontsize') {
+        styleObject.fontSize = `${e.val}rem`
+    }
+}
+function decrement(e) {
+    if ("padding" == e.action) {
+        styleObject.padding = `${e.val}px`
+    } else if ("width" == e.action) {
+        styleObject.width = `${e.val}px`
+    } else {
+        styleObject.fontSize = `${e.val}rem`
+    }
+}
+function increment(e) {
+    if ("padding" == e.action) {
+        styleObject.padding = `${e.val}px`
+    } else if ("width" == e.action) {
+        styleObject.width = `${e.val}px`
+    } else {
+        styleObject.fontSize = `${e.val}rem`
+    }
+}
+function generateImage() {
+    document.fonts.ready.then(() => {
+        domtoimage.toPng(draggable.value).then(dataUrl => {  
+            const link = document.createElement('a');
+            link.download = 'simple.png';
+            link.href = dataUrl;
+            document.body.appendChild(link); // 需要先插入文档流才能触发点击事件
+            link.click();
+            document.body.removeChild(link);
+        }).catch(error => {
+            console.error('生成图片时出错:', error);
+        });
     });
+}
+function copyImage() {
+    document.fonts.ready.then(() => {
+        domtoimage.toPng(draggable.value).then(dataUrl => {
+            copyBase64Img(dataUrl)
+
+        }).catch(error => {
+            console.error('生成图片时出错:', error);
+        });
+    });
+}
+/*复制Base64图片*/
+function copyBase64Img(base64Data) {
+    // location.origin.includes('https://') || showToast('图片复制功能需要在https://协议下使用');
+    //将base64转为Blob类型
+    base64Data = base64Data.split(';base64,'); let type = base64Data[0].split('data:')[1]; base64Data = base64Data[1];
+    let bytes = atob(base64Data), ab = new ArrayBuffer(bytes.length), ua = new Uint8Array(ab);
+    [...Array(bytes.length)].forEach((v, i) => ua[i] = bytes.charCodeAt(i));
+    let blob = new Blob([ab], { type });
+    // “navigator.clipboard.write”该方法的确只能在本地localhost 、127.0.0.1 或者 https 协议下使用，否则navigator没有clipboard方法。
+    navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
+    // showToast('已复制到你的剪贴板');
+    snackbar.value = true
+}
+
 </script>
 
 <style>
