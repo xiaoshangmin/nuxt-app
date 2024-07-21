@@ -1,11 +1,11 @@
 <template>
     <div class="operation mt-4 mx-1 d-flex flex-column align-center">
         <div style="max-width: 600px;">
-            <div class="bgcolor-class d-flex flex-row align-center justify-space-between">
+            <div class="d-flex flex-row align-center justify-space-between">
                 <div style="width: 5rem;">
                     背景颜色
                 </div>
-                <div class="d-flex flex-row ga-2 flex-wrap	" style="flex:1">
+                <div class="d-flex flex-row ga-2 flex-wrap" style="flex:1">
                     <div v-for="theme in themeList" class="color-item rounded-circle cursor-pointer"
                         :style="theme.bgcolor" @click="changeColor(theme)">
                     </div>
@@ -217,3 +217,11 @@ export default {
     }
 }
 </script>
+
+<style>
+
+.color-item {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+</style>

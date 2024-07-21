@@ -1,46 +1,40 @@
 <template>
-    <div class="container d-flex justify-center align-center ga-4"
+    <div class="container d-flex justify-center align-center ga-4 mt-4"
         :class="{ 'flex-row': mdAndUp, 'flex-column': !mdAndUp }">
+        <!-- 主体部分 -->
         <div class="main d-flex flex-column justify-center align-center" :style="mainStyleObj">
-
             <div class="d-flex justify-center align-center ">
-                <!-- <v-hover v-slot="{ isHovering, props }">
-                    <div class="d-none d-sm-flex resize-handle-left" v-if="isHovering"></div> 
-                </v-hover> -->
                 <div class="content-mode" ref="draggable" :style="styleObject">
                     <div class="card d-flex justify-center align-start pt-4 pb-4 px-4  flex-column"
                         :class="{ 'rounded-lg': styleObject.padding != '0px' }">
                         <div class="editable-element title" contenteditable="true" :class="{ 'd-none': !show.title }"
                             @paste="getClipboardData">
-                            <p>👋 hi 你好</p>
+                            <p>{{ userConfig.title }}</p>
                         </div>
                         <div class="editable-element content" contenteditable="true"
-                            :class="{ 'd-none': !show.content }" @input="updateTitle" @paste="getClipboardData">
-                            <p>这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。</p>
-                            <p>💡你可以在这里输入文字尝试一下，在电脑上全选文字后支持下面快捷键</p>
-                            <p>- Ctrl+B 加粗文本</p>
-                            <p>- Ctrl+I 斜体文本</p>
-                            <p>- Ctrl+U 下划线文本</p>
+                            :class="{ 'd-none': !show.content }" @input="updateContent" @paste="getClipboardData">
+                            {{ userConfig.content }}
                         </div>
                         <div class="editable-element time justify-end mt-6" contenteditable="true"
                             :class="{ 'd-none': !show.author, 'd-flex': show.author }" @paste="getClipboardData">
-                            <p>讨厌麻烦事 2024-07-15 18:20 广东</p>
+                            <p>{{ userConfig.author }}</p>
                         </div>
-                        <v-divider class="my-2" :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
-                            style="width: 100%;"></v-divider>
+                        <!-- <v-divider class="my-2" :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
+                            style="width: 100%;"></v-divider> -->
                         <div class="qrcode pt-2 flex-row justify-space-between align-center"
                             :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
                             <div>
                                 <div class="editable-element" contenteditable="true" @paste="getClipboardData">
-                                    简单卡片
+                                    {{ userConfig.qrCodeTitle }}
                                 </div>
                                 <div class="editable-element desc" contenteditable="true" @paste="getClipboardData">
-                                    扫描二维码
+                                    {{
+                                        userConfig.qrCodeDesc }}
                                 </div>
                             </div>
                             <div @click="dialog = true">
                                 <ClientOnly>
-                                    <vueQr :text="qrData" :size="60" :margin="0" colorLight="transparent"
+                                    <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
                                         backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
                                     </vueQr>
                                 </ClientOnly>
@@ -48,44 +42,28 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="d-none d-sm-flex resize-handle-right" v-if="isHovering"></div> -->
-
             </div>
-            <div style="width: 100%;visibility:hidden">
-                <v-divider class="my-2" color="info">{{ showWidth }}</v-divider>
-            </div>
-            <div class="d-flex mt-5 mb-4  flex-row align-center justify-center ga-2">
-                <v-btn @click="generateImage">
-                    下载图片
-                </v-btn>
-                <v-tooltip text="可直接粘贴在聊天框">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" @click="copyImage">复制图片</v-btn>
-                    </template>
-                </v-tooltip>
+            <div class="d-flex mt-5 mb-16  flex-row align-center justify-center ga-4">
+                <ClientOnly>
+                    <v-btn @click="generateImage" class="text-none">
+                        {{ $t("Download Image") }}
+                    </v-btn>
+                    <v-tooltip text="可直接粘贴在聊天框">
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" @click="copyImage" class="text-none"> {{ $t("Copy Image") }}</v-btn>
+                        </template>
+                    </v-tooltip>
+                </ClientOnly>
             </div>
         </div>
-
-        <!-- 操作区域 -->
-        <v-sheet v-if="mdAndUp" height="80vh" width="650px" elevation="4" style="position: fixed;right: 0;top: 80px;">
-            <CardOperation :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
-                @decrement="decrement" @increment="increment" @onBtnToggleChange="onBtnToggleChange"
-                @onSwitchChange="onSwitchChange"></CardOperation>
-        </v-sheet>
-        <v-bottom-sheet inset v-if="!mdAndUp">
-            <template v-slot:activator="{ props }">
-                <div style="position: fixed;right: 6px;bottom: 10vh;">
-                    <v-btn v-bind="props" text="Click Me" icon="mdi-pencil"></v-btn>
-                </div>
-            </template>
-            <v-sheet height="50vh" :elevation="15">
-                <CardOperation :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
-                    @decrement="decrement" @increment="increment" @onBtnToggleChange="onBtnToggleChange"
-                    @onSwitchChange="onSwitchChange">
-                </CardOperation>
-            </v-sheet>
-        </v-bottom-sheet>
+        <div class="operation">
+            <ClientOnly>
+                <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+                    @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
+                    @onBtnToggleChange="onBtnToggleChange">
+                </CardOperation2>
+            </ClientOnly>
+        </div>
         <!-- qrcode edit -->
         <v-dialog v-model="dialog" max-width="500">
             <v-card hover title="编辑二维码">
@@ -103,6 +81,7 @@
             复制成功
         </v-snackbar>
     </div>
+
 </template>
 
 <script setup>
@@ -111,8 +90,9 @@ import domtoimage from 'dom-to-image-more';
 import { useDisplay } from 'vuetify'
 import vueQr from 'vue-qr/src/packages/vue-qr.vue'
 
+const { mobile, width } = useDisplay()
+
 const snackbar = ref(false)
-const canvas = ref(null)
 const draggable = ref(null)
 const dialog = ref(false)
 const rules = reactive({
@@ -127,7 +107,6 @@ const show = reactive({
 })
 const colorDark = ref("#101320")
 const showWidth = ref('0px')
-const content = ref("")
 const qrcode = ref("")
 const themeList = ref(
     [
@@ -170,24 +149,53 @@ const themeList = ref(
         { "bgcolor": "background-image: linear-gradient(45deg, rgb(186, 167, 228), rgb(245, 159, 156));", "colorA": "rgb(186, 167, 228)", "colorB": " rgb(245, 159, 156)", "angle": "45deg" },
 
 
-])
+    ])
 const styleObject = reactive({
     padding: '20px',
     width: '393px',
     fontSize: '1.1rem'
 })
 const mainStyleObj = reactive({})
-const qrData = ref("https://card.wowyou.cc/")
-const qrDataCopy = ref("https://card.wowyou.cc/")
+const qrDataCopy = ref("https://labs.wowyou.cc/")
 const mdAndUp = ref(true)
 
-const { mobile, name } = useDisplay()
+const userConfig = reactive({
+    content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
+    在这里输入文字尝试一下，鼠标拖动左右边框进行缩放
+    在电脑上全选文字后支持下面快捷键
+    - Ctrl+B 加粗文本
+    - Ctrl+I 斜体文本
+    - Ctrl+U 下划线文本`,
+    title: `简单卡片`,
+    author: "简单卡片 2024-07-15 18:20 广东",
+    qrCodeTitle: "简单卡片",
+    qrCodeDesc: "扫描二维码",
+    qrData: "https://labs.wowyou.cc/",
+    show: {
+        title: true,
+        content: true,
+        qrcode: true,
+        author: true,
+        padding: false
+    }
+})
+
+useSeoMeta({
+    title: '简单卡片',
+    ogTitle: '简单卡片 - 优雅好看的文字卡片工具',
+    ogType: 'website',
+    description: '体验全新的文字分享，让你的文字更具特色',
+    ogDescription: '体验全新的文字分享，让你的文字更具特色',
+    twitterCard: 'summary_large_image',
+    ogUrl: "https://labs.wowyou.cc",
+    ogLocale: "zh"
+})
+
+
 
 onMounted(() => {
-    console.log(mobile.value, name.value)
     if (mobile.value) {
-        let width = this.$vuetify.display.width
-        styleObject.width = `${width}px`
+        styleObject.width = `${width.value}px`
         mdAndUp.value = false;
     }
     if (mdAndUp.value) {
@@ -197,32 +205,30 @@ onMounted(() => {
         }
     }
 
+    loadUserConfig();
+
     interact(draggable.value)
         .resizable({
             edges: { top: false, left: true, bottom: false, right: true },
             listeners: {
                 start(event) {
-                    console.log('Resize started');
                 },
                 move(event) {
                     let { x, y } = event.target.dataset
 
                     x = (parseFloat(x) || 0) + event.deltaRect.left
                     y = (parseFloat(y) || 0) + event.deltaRect.top
-                    self.showWidth = `${event.rect.width}px`;
+
                     Object.assign(event.target.style, {
-                        width: `${event.rect.width}px`,
+                        width: `${event.rect.width}px`
                         // height: `${event.rect.height}px`,
                         // transform: `translate(${x}px, ${y}px)`
                     })
                     Object.assign(event.target.dataset, { x, y })
-                },
-                end(event) {
-                    console.log('Resize ended');
-
                 }
             }
         });
+
 })
 
 function editQrData() {
@@ -248,7 +254,7 @@ function onSwitchChange(e) {
         styleObject.padding = '20px'
     }
     // show = e.val
-    Object.assign(show,e.val)
+    Object.assign(show, e.val)
 
 }
 function onSliderChange(e) {
@@ -293,7 +299,7 @@ function increment(e) {
 }
 function generateImage() {
     document.fonts.ready.then(() => {
-        domtoimage.toPng(draggable.value).then(dataUrl => {  
+        domtoimage.toPng(draggable.value).then(dataUrl => {
             const link = document.createElement('a');
             link.download = 'simple.png';
             link.href = dataUrl;
@@ -328,10 +334,25 @@ function copyBase64Img(base64Data) {
     // showToast('已复制到你的剪贴板');
     snackbar.value = true
 }
+function updateContent(e) {
+    userConfig.content = e.target.innerHTML
+}
 
+// 监视状态变化，并将其保存到 localStorage
+watch(userConfig, (newState) => {
+    localStorage.setItem('userConfig', JSON.stringify(newState));
+}, { deep: true });
+
+const loadUserConfig = () => {
+    const savedUserConfig = localStorage.getItem('userConfig');
+    if (savedUserConfig) {
+        const config = JSON.parse(savedUserConfig);
+        Object.assign(userConfig, config)
+    }
+};
 </script>
 
-<style>
+<style scoped>
 @property --angle {
     syntax: "<angle>";
     inherits: false;
@@ -358,15 +379,20 @@ function copyBase64Img(base64Data) {
 .main {
     position: relative;
     font-family: inherit;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .content-mode {
     width: 100%;
     background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
-    transition: padding .5s, --angle 1s, --colorA 1s, --colorB 1s, width .5s;
+    transition: padding .5s, --angle 1s, --colorA 1s, --colorB 1s;
     min-width: 393px;
     max-width: 940px;
     font-family: inherit;
+    touch-action: none;
+    /* 防止触摸屏设备上默认行为干扰 */
+    box-sizing: border-box;
 }
 
 .title,
@@ -409,24 +435,6 @@ function copyBase64Img(base64Data) {
     width: 100%;
 }
 
-.resize-handle-left {
-    width: 0.5rem;
-    height: 0.5rem;
-    background-color: white;
-    border-radius: 50%;
-    margin-right: -0.25rem;
-    z-index: 99;
-}
-
-.resize-handle-right {
-    width: 0.5rem;
-    height: 0.5rem;
-    background-color: white;
-    border-radius: 50%;
-    margin-left: -0.25rem;
-    z-index: 99;
-}
-
 .qrcode {
     width: 100%;
     opacity: .5;
@@ -437,16 +445,9 @@ function copyBase64Img(base64Data) {
     font-size: 0.875rem;
 }
 
-.operation {}
-
-.bgcolor-class,
-.width-class,
-.padding-class {
-    /* margin: 2rem 0; */
-}
-
-.color-item {
-    width: 1.75rem;
-    height: 1.75rem;
+.operation {
+    position: fixed;
+    bottom: 0;
+    overflow: hidden;
 }
 </style>

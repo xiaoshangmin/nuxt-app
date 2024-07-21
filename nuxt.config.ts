@@ -1,10 +1,21 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  app: { 
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+      link: [
+        // 添加一个favicon链接
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      ]
+    }
+  },
   build: {
     transpile: ['vuetify'],
   },
   modules: [
+    '@nuxtjs/i18n',
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
@@ -20,7 +31,29 @@ export default defineNuxtConfig({
       },
     },
   },
-  components:true,
+  i18n: {
+    detectBrowserLanguage: {
+      useCookie: true,
+      fallbackLocale: 'zh-CN',
+    },
+    strategy: 'no_prefix',
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en.json',
+      },
+      {
+        code: 'zh-CN',
+        name: '简体中文',
+        file: 'zh-CN.json',
+      }
+    ],
+    lazy: true,
+    langDir: 'internationalization',
+    defaultLocale: 'zh-CN',
+  },
+  components: true,
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true }
 })
