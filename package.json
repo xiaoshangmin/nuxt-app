@@ -15,14 +15,15 @@
     "@imgly/background-removal-data": "^1.4.5",
     "@mdi/font": "^7.4.47",
     "dom-to-image-more": "^3.3.0",
+    "html2canvas": "^1.4.1",
     "interactjs": "^1.10.27",
     "nuxt": "^3.12.3",
     "vue": "latest",
     "vue-qr": "^4.0.9"
   },
   "devDependencies": {
+    "@nuxtjs/i18n": "^8.3.0",
     "vite-plugin-vuetify": "^2.0.3",
-    "vuetify": "^3.6.13",
-    "@nuxtjs/i18n": "^8.3.0"
+    "vuetify": "^3.6.13"
   }
 }
