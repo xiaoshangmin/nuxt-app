@@ -1,77 +1,40 @@
 <template>
-  <div
-    class="container d-flex justify-center align-center ga-4 mt-4"
-    :class="{ 'flex-row': mdAndUp, 'flex-column': !mdAndUp }"
-  >
+  <div class="container d-flex justify-center align-center ga-4 mt-4"
+    :class="{ 'flex-row': mdAndUp, 'flex-column': !mdAndUp }">
     <!-- 主体部分 -->
-    <div
-      class="main d-flex flex-column justify-center align-center"
-      :style="mainStyleObj"
-    >
+    <div class="main d-flex flex-column justify-center align-center" :style="mainStyleObj">
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="draggable" :style="styleObject">
-          <div
-            class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
-            :class="{ 'rounded-lg': styleObject.padding != '0px' }"
-          >
-            <div
-              class="editable-element title"
-              contenteditable="true"
-              :class="{ 'd-none': !show.title }"
-              @paste="getClipboardData"
-            >
+          <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
+            :class="{ 'rounded-lg': styleObject.padding != '0px' }">
+            <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
+              :class="{ 'd-none': !show.title }" @paste="getClipboardData">
               <p>{{ userConfig.title }}</p>
             </div>
-            <div
-              class="editable-element content"
-              contenteditable="true"
-              :class="{ 'd-none': !show.content }"
-              @input="updateContent"
-              @paste="getClipboardData"
-            >
-              {{ userConfig.content }}
+            <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
+              :class="{ 'd-none': !show.content }" @input="updateContent" @paste="getClipboardData">
+              {{ content }}
             </div>
-            <div
-              class="editable-element time justify-end mt-6"
-              contenteditable="true"
-              :class="{ 'd-none': !show.author, 'd-flex': show.author }"
-              @paste="getClipboardData"
-            >
+            <div class="editable-element time justify-end mt-6" contenteditable="true"
+              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @paste="getClipboardData">
               <p>{{ userConfig.author }}</p>
             </div>
             <!-- <v-divider class="my-2" :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
                             style="width: 100%;"></v-divider> -->
-            <div
-              class="qrcode pt-2 flex-row justify-space-between align-center"
-              :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
-            >
+            <div class="qrcode pt-2 flex-row justify-space-between align-center"
+              :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
               <div>
-                <div
-                  class="editable-element"
-                  contenteditable="true"
-                  @paste="getClipboardData"
-                >
+                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off" @paste="getClipboardData">
                   {{ userConfig.qrCodeTitle }}
                 </div>
-                <div
-                  class="editable-element desc"
-                  contenteditable="true"
-                  @paste="getClipboardData"
-                >
+                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData">
                   {{ userConfig.qrCodeDesc }}
                 </div>
               </div>
               <div @click="dialog = true">
                 <ClientOnly>
-                  <vueQr
-                    :text="userConfig.qrData"
-                    :size="60"
-                    :margin="0"
-                    colorLight="transparent"
-                    backgroundColor="transparent"
-                    :colorDark="colorDark"
-                    :callback="getQrcode"
-                  >
+                  <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
+                    backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
                   </vueQr>
                 </ClientOnly>
               </div>
@@ -87,8 +50,7 @@
           <v-tooltip text="可直接粘贴在聊天框" v-if="mdAndUp">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" @click="copyImage" class="text-none">
-                {{ $t("Copy Image") }}</v-btn
-              >
+                {{ $t("Copy Image") }}</v-btn>
             </template>
           </v-tooltip>
         </ClientOnly>
@@ -96,15 +58,9 @@
     </div>
     <div class="operation">
       <ClientOnly>
-        <CardOperation2
-          :themeList="themeList"
-          @changeColor="changeColor"
-          @onSwitchChange="onSwitchChange"
-          @onSliderChange="onSliderChange"
-          @decrement="decrement"
-          @increment="increment"
-          @onBtnToggleChange="onBtnToggleChange"
-        >
+        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+          @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
+          @onBtnToggleChange="onBtnToggleChange">
         </CardOperation2>
       </ClientOnly>
     </div>
@@ -112,21 +68,9 @@
     <v-dialog v-model="dialog" max-width="500">
       <v-card hover title="编辑二维码">
         <v-card-text>
-          <v-text-field
-            v-model="qrDataCopy"
-            class="mb-2"
-            :rules="[rules.required]"
-            label="可输入文本或链接"
-            clearable
-          ></v-text-field>
-          <v-btn
-            color="success"
-            size="large"
-            type="submit"
-            variant="elevated"
-            block
-            @click="editQrData"
-          >
+          <v-text-field v-model="qrDataCopy" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
+            clearable></v-text-field>
+          <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
             更新二维码
           </v-btn>
         </v-card-text>
@@ -422,8 +366,9 @@ const mainStyleObj = reactive({});
 const qrDataCopy = ref("https://labs.wowyou.cc/");
 const mdAndUp = ref(true);
 
+const content = ref("")
 const userConfig = reactive({
-  content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
+  text: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
     在这里输入文字尝试一下，鼠标拖动左右边框进行缩放
     在电脑上全选文字后支持下面快捷键
     - Ctrl+B 加粗文本
@@ -468,10 +413,12 @@ onMounted(() => {
 
   loadUserConfig();
 
+  content.value = userConfig.text
+
   interact(draggable.value).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
-      start(event) {},
+      start(event) { },
       move(event) {
         let { x, y } = event.target.dataset;
 
@@ -595,20 +542,20 @@ const dataURItoBlob = (dataURI) => {
   return new Blob([ab], { type: mimeString });
 };
 function copyImage() {
-    html2canvas(draggable.value).then((canvas) => {
+  html2canvas(draggable.value).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     copyBase64Img(imgData);
-});
-//   document.fonts.ready.then(() => {
-//     domtoimage
-//       .toPng(draggable.value)
-//       .then((dataUrl) => {
-//         copyBase64Img(dataUrl);
-//       })
-//       .catch((error) => {
-//         console.error("生成图片时出错:", error);
-//       });
-//   });
+  });
+  //   document.fonts.ready.then(() => {
+  //     domtoimage
+  //       .toPng(draggable.value)
+  //       .then((dataUrl) => {
+  //         copyBase64Img(dataUrl);
+  //       })
+  //       .catch((error) => {
+  //         console.error("生成图片时出错:", error);
+  //       });
+  //   });
 }
 /*复制Base64图片*/
 function copyBase64Img(base64Data) {
@@ -628,7 +575,7 @@ function copyBase64Img(base64Data) {
   snackbar.value = true;
 }
 function updateContent(e) {
-  userConfig.content = e.target.innerHTML;
+  userConfig.text = e.target.innerHTML;
 }
 
 // 监视状态变化，并将其保存到 localStorage
