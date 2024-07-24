@@ -1,33 +1,33 @@
 <template>
-  <div class="container d-flex justify-center align-center ga-4 mt-4"
-    :class="{ 'flex-row': mdAndUp, 'flex-column': !mdAndUp }">
+  <div class="container d-flex flex-column justify-center align-center ga-4 mt-4">
     <!-- 主体部分 -->
-    <div class="main d-flex flex-column justify-center align-center" :style="mainStyleObj">
+    <div class="main d-flex flex-column justify-center align-center">
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="draggable" :style="styleObject">
           <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
             :class="{ 'rounded-lg': styleObject.padding != '0px' }">
             <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'd-none': !show.title }" @paste="getClipboardData">
-              <p>{{ userConfig.title }}</p>
+              :class="{ 'd-none': !show.title }"  @input="updateConfig" data-key="title" @paste="getClipboardData">
+              {{ userConfig.title }}
             </div>
             <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'd-none': !show.content }" @input="updateContent" @paste="getClipboardData">
-              {{ content }}
+              :class="{ 'd-none': !show.content }" @input="updateConfig" data-key="content" @paste="getClipboardData">
+              {{ userConfig.content }}
             </div>
             <div class="editable-element time justify-end mt-6" contenteditable="true"
-              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @paste="getClipboardData">
-              <p>{{ userConfig.author }}</p>
+              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @input="updateConfig" data-key="author" @paste="getClipboardData">
+              {{ userConfig.author }}
             </div>
             <!-- <v-divider class="my-2" :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
                             style="width: 100%;"></v-divider> -->
             <div class="qrcode pt-2 flex-row justify-space-between align-center"
               :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
               <div>
-                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off" @paste="getClipboardData">
+                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off" @input="updateConfig" data-key="qrCodeTitle"
+                  @paste="getClipboardData">
                   {{ userConfig.qrCodeTitle }}
                 </div>
-                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData">
+                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData" @input="updateConfig" data-key="qrCodeDesc">
                   {{ userConfig.qrCodeDesc }}
                 </div>
               </div>
@@ -47,7 +47,7 @@
           <v-btn @click="generateImage" class="text-none">
             {{ $t("Download Image") }}
           </v-btn>
-          <v-tooltip text="可直接粘贴在聊天框" v-if="mdAndUp">
+          <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" @click="copyImage" class="text-none">
                 {{ $t("Copy Image") }}</v-btn>
@@ -90,7 +90,7 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
-const { mobile, width } = useDisplay();
+const {  width,xs } = useDisplay();
 
 const snackbar = ref(false);
 const draggable = ref(null);
@@ -362,14 +362,37 @@ const styleObject = reactive({
   width: "393px",
   fontSize: "1.1rem",
 });
-const mainStyleObj = reactive({});
 const qrDataCopy = ref("https://labs.wowyou.cc/");
-const mdAndUp = ref(true);
 
 const content = ref("")
+
 const userConfig = reactive({
-  text: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
-    在这里输入文字尝试一下，鼠标拖动左右边框进行缩放
+  content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
+    显示的文字都可以修改，点击二维码可以修改内容
+    电脑上鼠标拖动左右边框进行缩放
+    在电脑上全选文字后支持下面快捷键
+    - Ctrl+B 加粗文本
+    - Ctrl+I 斜体文本
+    - Ctrl+U 下划线文本`,
+  title: `简单卡片`,
+  author: "简单卡片 2024-07-15 18:20 广东",
+  qrCodeTitle: "简单卡片",
+  qrCodeDesc: "扫描二维码",
+  qrData: "https://labs.wowyou.cc/",
+  show: {
+    title: true,
+    content: true,
+    qrcode: true,
+    author: true,
+    padding: false,
+  },
+})
+
+
+const userConfigStore = reactive({
+  content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
+    显示的文字都可以修改，点击二维码可以修改内容
+    电脑上鼠标拖动左右边框进行缩放
     在电脑上全选文字后支持下面快捷键
     - Ctrl+B 加粗文本
     - Ctrl+I 斜体文本
@@ -400,21 +423,16 @@ useSeoMeta({
 });
 
 onMounted(() => {
-  if (mobile.value) {
+  if (xs.value) {
     styleObject.width = `${width.value}px`;
-    mdAndUp.value = false;
-  }
-  if (mdAndUp.value) {
-    mainStyleObj.value = {
-      marginRight: "25vw",
-      marginTop: "40px",
-    };
+  }else{
+    initInteract();
   }
 
   loadUserConfig();
 
-  content.value = userConfig.text
-
+});
+function initInteract(){
   interact(draggable.value).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
@@ -434,8 +452,24 @@ onMounted(() => {
       },
     },
   });
-});
-
+}
+function updateConfig(e) {
+  if('title' == e.target.dataset.key){
+    userConfigStore.title = e.target.innerHTML;
+  }
+  if('content' == e.target.dataset.key){
+    userConfigStore.content = e.target.innerHTML;
+  }
+  if('author' == e.target.dataset.key){
+    userConfigStore.author = e.target.innerHTML;
+  }
+  if('qrCodeTitle' == e.target.dataset.key){
+    userConfigStore.qrCodeTitle = e.target.innerHTML;
+  }
+  if('qrCodeDesc' == e.target.dataset.key){
+    userConfigStore.qrCodeDesc = e.target.innerHTML;
+  }
+}
 function editQrData() {
   if (this.qrDataCopy) {
     this.qrData = this.qrDataCopy;
@@ -574,21 +608,19 @@ function copyBase64Img(base64Data) {
   // showToast('已复制到你的剪贴板');
   snackbar.value = true;
 }
-function updateContent(e) {
-  userConfig.text = e.target.innerHTML;
-}
+
 
 // 监视状态变化，并将其保存到 localStorage
 watch(
-  userConfig,
+  userConfigStore,
   (newState) => {
-    localStorage.setItem("userConfig", JSON.stringify(newState));
+    localStorage.setItem("userConfigStore", JSON.stringify(newState));
   },
   { deep: true }
 );
 
 const loadUserConfig = () => {
-  const savedUserConfig = localStorage.getItem("userConfig");
+  const savedUserConfig = localStorage.getItem("userConfigStore");
   if (savedUserConfig) {
     const config = JSON.parse(savedUserConfig);
     Object.assign(userConfig, config);
@@ -624,6 +656,7 @@ const loadUserConfig = () => {
   font-family: inherit;
   margin-right: auto;
   margin-left: auto;
+  margin-bottom: 30vh;
 }
 
 .content-mode {
@@ -690,7 +723,7 @@ const loadUserConfig = () => {
 
 .operation {
   position: fixed;
-  bottom: 0;
+  bottom: 20px;
   overflow: hidden;
 }
 </style>
