@@ -7,7 +7,7 @@
           <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
             :class="{ 'rounded-lg': styleObject.padding != '0px' }">
             <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'd-none': !show.title }"  @input="updateConfig" data-key="title" @paste="getClipboardData">
+              :class="{ 'd-none': !show.title }" @input="updateConfig" data-key="title" @paste="getClipboardData">
               {{ userConfig.title }}
             </div>
             <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
@@ -15,19 +15,19 @@
               {{ userConfig.content }}
             </div>
             <div class="editable-element time justify-end mt-6" contenteditable="true"
-              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @input="updateConfig" data-key="author" @paste="getClipboardData">
+              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @input="updateConfig" data-key="author"
+              @paste="getClipboardData">
               {{ userConfig.author }}
             </div>
-            <!-- <v-divider class="my-2" :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }"
-                            style="width: 100%;"></v-divider> -->
             <div class="qrcode pt-2 flex-row justify-space-between align-center"
               :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
               <div>
-                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off" @input="updateConfig" data-key="qrCodeTitle"
-                  @paste="getClipboardData">
+                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off"
+                  @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
                   {{ userConfig.qrCodeTitle }}
                 </div>
-                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData" @input="updateConfig" data-key="qrCodeDesc">
+                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData"
+                  @input="updateConfig" data-key="qrCodeDesc">
                   {{ userConfig.qrCodeDesc }}
                 </div>
               </div>
@@ -90,7 +90,7 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
-const {  width,xs } = useDisplay();
+const { width, xs } = useDisplay();
 
 const snackbar = ref(false);
 const draggable = ref(null);
@@ -421,21 +421,21 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   ogUrl: "https://labs.wowyou.cc",
   ogLocale: "zh",
-  robots:"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
 
 });
 
 onMounted(() => {
   if (xs.value) {
     styleObject.width = `${width.value}px`;
-  }else{
+  } else {
     initInteract();
   }
 
   loadUserConfig();
 
 });
-function initInteract(){
+function initInteract() {
   interact(draggable.value).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
@@ -457,19 +457,19 @@ function initInteract(){
   });
 }
 function updateConfig(e) {
-  if('title' == e.target.dataset.key){
+  if ('title' == e.target.dataset.key) {
     userConfigStore.title = e.target.innerHTML;
   }
-  if('content' == e.target.dataset.key){
+  if ('content' == e.target.dataset.key) {
     userConfigStore.content = e.target.innerHTML;
   }
-  if('author' == e.target.dataset.key){
+  if ('author' == e.target.dataset.key) {
     userConfigStore.author = e.target.innerHTML;
   }
-  if('qrCodeTitle' == e.target.dataset.key){
+  if ('qrCodeTitle' == e.target.dataset.key) {
     userConfigStore.qrCodeTitle = e.target.innerHTML;
   }
-  if('qrCodeDesc' == e.target.dataset.key){
+  if ('qrCodeDesc' == e.target.dataset.key) {
     userConfigStore.qrCodeDesc = e.target.innerHTML;
   }
 }
@@ -610,6 +610,28 @@ function copyBase64Img(base64Data) {
   navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
   // showToast('已复制到你的剪贴板');
   snackbar.value = true;
+}
+function getClipboardData(event) {
+  event.preventDefault(); // 阻止默认粘贴行为
+
+  // 获取剪贴板中的纯文本内容
+  const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+
+  // 获取当前选中的范围
+  const selection = window.getSelection();
+  if (!selection.rangeCount) return;
+  const range = selection.getRangeAt(0);
+
+  // 创建一个文本节点并插入到当前范围
+  const textNode = document.createTextNode(text);
+  range.deleteContents(); // 删除选中内容
+  range.insertNode(textNode);
+
+  // 调整光标位置
+  range.setStartAfter(textNode);
+  range.setEndAfter(textNode);
+  selection.removeAllRanges();
+  selection.addRange(range);
 }
 
 
