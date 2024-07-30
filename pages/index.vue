@@ -374,9 +374,9 @@ const userConfig = reactive({
     - Ctrl+B 加粗文本
     - Ctrl+I 斜体文本
     - Ctrl+U 下划线文本`,
-  title: `简单卡片`,
-  author: "简单卡片 2024-07-15 18:20 广东",
-  qrCodeTitle: "简单卡片",
+  title: `创图卡片`,
+  author: "创图卡片 2024-07-15 18:20 广东",
+  qrCodeTitle: "创图卡片",
   qrCodeDesc: "扫描二维码",
   qrData: "https://labs.wowyou.cc/",
   show: {
@@ -397,9 +397,9 @@ const userConfigStore = reactive({
     - Ctrl+B 加粗文本
     - Ctrl+I 斜体文本
     - Ctrl+U 下划线文本`,
-  title: `简单卡片`,
-  author: "简单卡片 2024-07-15 18:20 广东",
-  qrCodeTitle: "简单卡片",
+  title: `创图卡片`,
+  author: "创图卡片 2024-07-15 18:20 广东",
+  qrCodeTitle: "创图卡片",
   qrCodeDesc: "扫描二维码",
   qrData: "https://labs.wowyou.cc/",
   show: {
@@ -412,14 +412,17 @@ const userConfigStore = reactive({
 });
 
 useSeoMeta({
-  title: "简单卡片",
-  ogTitle: "简单卡片 - 优雅好看的文字卡片工具",
+  title: "创图卡片 - 体验全新的文字分享 | labs.wowyou.cc",
+  ogTitle: "创图卡片 - 优雅好看的文字卡片工具",
+  keywords: "创图卡片，卡片，文生图，文字卡片",
   ogType: "website",
-  description: "体验全新的文字分享，让你的文字更具特色",
-  ogDescription: "体验全新的文字分享，让你的文字更具特色",
+  description: "创图卡片让你体验全新的文字分享，让你的文字更具特色",
+  ogDescription: "创图卡片让你体验全新的文字分享，让你的文字更具特色",
   twitterCard: "summary_large_image",
   ogUrl: "https://labs.wowyou.cc",
   ogLocale: "zh",
+  robots:"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+
 });
 
 onMounted(() => {
@@ -543,7 +546,7 @@ function generateImage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "简单卡片-screenshot.png"; // 设置下载文件名
+    link.download = "创图卡片-screenshot.png"; // 设置下载文件名
 
     // 触发下载
     document.body.appendChild(link);

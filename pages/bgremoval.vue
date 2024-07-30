@@ -90,17 +90,19 @@
 import type { Config } from "@imgly/background-removal";
 import { removeBackground } from "@imgly/background-removal";
 import { ImgComparisonSlider } from '@img-comparison-slider/vue';
-
+ 
 useSeoMeta({
-    title: '消除图片背景',
-    ogTitle: '消除图片背景',
-    ogType: 'website',
-    description: '消除图片背景 - 全自动 - 快速 - 免费',
-    ogDescription: '消除图片背景',
-    twitterCard: 'summary_large_image',
-    ogUrl: "https://labs.wowyou.cc/bgremoval",
-    ogLocale: "zh"
-})
+  title: "消除图片背景 - 在线抠图去除背景 | labs.wowyou.cc",
+  ogTitle: "消除图片背景 - 在线抠图去除背景",
+  keywords: "消除图片背景,抠图,去背景",
+  ogType: "website",
+  description: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
+  ogDescription: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
+  twitterCard: "summary_large_image",
+  ogUrl: "https://labs.wowyou.cc/bgremoval",
+  ogLocale: "zh",
+  robots:"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+});
 
 const uploadRef = ref(null)
 const isActive = ref(false);
