@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center ga-4 mt-4">
+  <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4':!xs}">
     <!-- 主体部分 -->
     <div class="main d-flex flex-column justify-center align-center">
       <div class="d-flex justify-center align-center">
@@ -54,13 +54,11 @@
         </v-tooltip>
       </div>
     </div>
-    <div class="operation">
-      <!-- <ClientOnly> -->
+    <div class="operation"> 
       <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
-      </CardOperation2>
-      <!-- </ClientOnly> -->
+      </CardOperation2> 
     </div>
     <!-- qrcode edit -->
     <v-dialog v-model="dialog" max-width="500">
