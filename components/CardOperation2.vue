@@ -180,7 +180,7 @@ const show = reactive({
     padding: false
 })
 function onSwitchChange(e) {
-    emit('onSwitchChange', { "action": e, "val": this.show });
+    emit('onSwitchChange', { "action": e, "val": show });
 }
 function onBtnToggle(e) {
     let val = e == "padding" ? this.paddingSlider : e == "width" ? this.widthSlider : this.fontSizeSlider;

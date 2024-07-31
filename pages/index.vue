@@ -1,7 +1,7 @@
 <template>
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4':!xs}">
     <!-- 主体部分 -->
-    <div class="main d-flex flex-column justify-center align-center">
+    <!-- <div class="main d-flex flex-column justify-center align-center">
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="draggable" :style="styleObject">
           <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
@@ -53,7 +53,10 @@
           </template>
         </v-tooltip>
       </div>
-    </div>
+    </div> -->
+    
+    <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" 
+    :dialog="dialog" :styleObject="styleObject" @generateImage="generateImage"></DefaultTemplate>
     <div class="operation"> 
       <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
@@ -84,7 +87,7 @@ import interact from "interactjs";
 // import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
-import vueQr from "vue-qr/src/packages/vue-qr.vue";
+// import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
 const { width, xs } = useDisplay();
 
@@ -94,14 +97,7 @@ const dialog = ref(false);
 const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
-const show = reactive({
-  title: true,
-  content: true,
-  qrcode: true,
-  author: true,
-  padding: false,
-});
-const colorDark = ref("#101320");
+
 const showWidth = ref("0px");
 const qrcode = ref("");
 const themeList = ref([
@@ -360,8 +356,6 @@ const styleObject = reactive({
 });
 const qrDataCopy = ref("https://labs.wowyou.cc/");
 
-const content = ref("")
-
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
     显示的文字都可以修改，点击二维码可以修改内容
@@ -422,17 +416,17 @@ useSeoMeta({
 });
 
 onMounted(() => {
-  if (xs.value) {
+    if (xs.value) { 
     styleObject.width = `${width.value}px`;
   } else {
+    console.log(33)
     initInteract();
   }
-
   loadUserConfig();
 
 });
 function initInteract() {
-  interact(draggable.value).resizable({
+  interact(draggable.value.$refs.draggable).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
       start(event) { },
@@ -453,7 +447,7 @@ function initInteract() {
   });
 }
 function updateConfig(e) {
-  doUpdateUserConfig(e.target.dataset.key, e.target.innerHTML)
+  doUpdateUserConfig(e.key, e.text)
 }
 function doUpdateUserConfig(key, text) {
   if ('title' == key) {
@@ -482,9 +476,9 @@ function getQrcode(data, id) {
   qrcode.value = data;
 }
 function changeColor(theme) {
-  draggable.value.style.setProperty("--colorA", theme.colorA);
-  draggable.value.style.setProperty("--colorB", theme.colorB);
-  draggable.value.style.setProperty("--angle", theme.angle);
+  draggable.value.$refs.draggable.style.setProperty("--colorA", theme.colorA);
+  draggable.value.$refs.draggable.style.setProperty("--colorB", theme.colorB);
+  draggable.value.$refs.draggable.style.setProperty("--angle", theme.angle);
 }
 function onSwitchChange(e) {
   //无边框
@@ -494,7 +488,7 @@ function onSwitchChange(e) {
     styleObject.padding = "20px";
   }
   // show = e.val
-  Object.assign(show, e.val);
+  Object.assign(userConfig.show, e.val);
 }
 function onSliderChange(e) {
   if (e.action == "padding") {
@@ -537,7 +531,7 @@ function increment(e) {
   }
 }
 function generateImage() {
-  html2canvas(draggable.value).then((canvas) => {
+  html2canvas(draggable.value.$refs.draggable).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     const blob = dataURItoBlob(imgData);
 
@@ -654,101 +648,10 @@ const loadUserConfig = () => {
 </script>
 
 <style scoped>
-@property --angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 45deg;
-}
-
-@property --colorA {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #5797f9;
-}
-
-@property --colorB {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: #6cd5c4;
-}
-
-.container {
-  font-family: "Roboto", sans-serif;
-}
-
-.main {
-  position: relative;
-  font-family: inherit;
-  margin-right: auto;
-  margin-left: auto;
-  margin-bottom: 30vh;
-}
-
-.content-mode {
-  width: 100%;
-  background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
-  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s;
-  min-width: 393px;
-  max-width: 940px;
-  font-family: inherit;
-  touch-action: none;
-  /* 防止触摸屏设备上默认行为干扰 */
-  box-sizing: border-box;
-}
-
-.title,
-.content {
-  width: 100%;
-  height: auto;
-  font-family: inherit;
-}
-
-.title {
-  font-weight: 700;
-  line-height: 2rem;
-}
-
-.content {
-  line-height: 1.8;
-  min-height: 2rem;
-}
-
-.time {
-  width: 100%;
-  height: auto;
-  font-size: 0.875rem;
-  opacity: 0.4;
-}
-
-.card {
-  width: 100%;
-  background-color: hsla(0, 0%, 100%, 0.5);
-  box-shadow: 0 10px 40px hsla(0, 0%, 39%, 0.4);
-  color: #000;
-  transition: all 500ms ease 0s;
-}
-
-.editable-element {
-  display: block;
-  white-space: pre-wrap;
-  word-break: break-word;
-  outline: none;
-  width: 100%;
-}
-
-.qrcode {
-  width: 100%;
-  opacity: 0.5;
-  font-size: 1.25rem;
-}
-
-.desc {
-  font-size: 0.875rem;
-}
 
 .operation {
   position: fixed;
-  bottom: 20px;
+  bottom: 0px;
   overflow: hidden;
 }
 </style>

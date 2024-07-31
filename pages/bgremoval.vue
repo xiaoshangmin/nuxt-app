@@ -41,29 +41,23 @@
         </div>
         <div class="mt-10">
             <div class="d-flex justify-center align-center flex-column">
-                <div class="d-flex  justify-center align-center ga-5 mb-6">
-                    <ClientOnly>
+                <div class="d-flex  justify-center align-center ga-5 mb-6"> 
                         <v-btn @click="upload" :text="$t('Upload Image')" prepend-icon="mdi-image" elevation="12"
                             size="x-large" rounded="xl" width="180px" height="55px" class="text-none">
                         </v-btn> 
                         <v-btn @click="handleDownload" :text="$t('Download Image')" prepend-icon="mdi-download"
                             elevation="12" size="x-large" width="180px" height="55px" rounded="xl" :disabled="disabled"
                             class="text-none"></v-btn>
-                    </ClientOnly>
-                </div>
-                <ClientOnly>
+                </div> 
                     <v-tooltip text="电脑有GPU的话勾选出图更快">
                         <template v-slot:activator="{ props }">
                             <v-checkbox label="使用GPU" v-model="gpu" v-bind="props"></v-checkbox>
                         </template>
-                    </v-tooltip>
-                </ClientOnly>
-            </div>
-            <ClientOnly>
+                    </v-tooltip> 
+            </div> 
                 <v-file-input ref="uploadRef" label="选择需要转换的文件" :rules="rules" prepend-icon="" v-model="files"
                     @change="remove" class="custom-file-input">
-                </v-file-input>
-            </ClientOnly>
+                </v-file-input> 
         </div>
     </div>
     <!-- 对话框 -->

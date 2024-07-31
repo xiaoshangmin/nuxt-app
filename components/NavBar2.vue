@@ -97,7 +97,7 @@ function onClick() {
     emit('onClick', theme.value);
 }
 function feedback() {
-    // window.open('https://txc.qq.com/products/662353')
+    window.open('https://txc.qq.com/products/662353')
 }
 </script>
 <style>

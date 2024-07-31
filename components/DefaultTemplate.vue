@@ -1,138 +1,356 @@
 <template>
-    <div class="main d-flex flex-column justify-center align-center">
-        <div class="d-flex justify-center align-center">
-            <div class="content-mode" ref="draggable" :style="styleObject">
-                <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
-                    :class="{ 'rounded-lg': styleObject.padding != '0px' }">
-                    <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-                        :class="{ 'd-none': !show.title }" @input="updateConfig" data-key="title"
-                        @paste="getClipboardData">
-                        {{ userConfig.title }}
-                    </div>
-                    <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-                        :class="{ 'd-none': !show.content }" @input="updateConfig" data-key="content"
-                        @paste="getClipboardData">
-                        {{ userConfig.content }}
-                    </div>
-                    <div class="editable-element time justify-end mt-6" contenteditable="true"
-                        :class="{ 'd-none': !show.author, 'd-flex': show.author }" @input="updateConfig"
-                        data-key="author" @paste="getClipboardData">
-                        {{ userConfig.author }}
-                    </div>
-                    <div class="qrcode pt-2 flex-row justify-space-between align-center"
-                        :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
-                        <div>
-                            <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off"
-                                @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                                {{ userConfig.qrCodeTitle }}
-                            </div>
-                            <div class="editable-element desc" contenteditable="true" @paste="getClipboardData"
-                                @input="updateConfig" data-key="qrCodeDesc">
-                                {{ userConfig.qrCodeDesc }}
-                            </div>
-                        </div>
-                        <div @click="dialog = true">
-                            <ClientOnly>
-                                <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                                    backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                                </vueQr>
-                            </ClientOnly>
-                        </div>
-                    </div>
-                </div>
+  <div class="main d-flex flex-column justify-center align-center">
+    <div class="d-flex justify-center align-center">
+      <div class="content-mode" ref="draggable" :style="styleObject">
+        <div
+          class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
+          :class="{ 'rounded-lg': styleObject.padding != '0px' }"
+        >
+          <div
+            class="editable-element title"
+            contenteditable="true"
+            autocorrect="off"
+            autocomplete="off"
+            :class="{ 'd-none': !userConfig.show.title }"
+            @input="updateConfig"
+            data-key="title"
+            @paste="getClipboardData"
+          >
+            {{ userConfig.title }}
+          </div>
+          <div
+            class="editable-element content"
+            contenteditable="true"
+            autocorrect="off"
+            autocomplete="off"
+            :class="{ 'd-none': !userConfig.show.content }"
+            @input="updateConfig"
+            data-key="content"
+            @paste="getClipboardData"
+          >
+            {{ userConfig.content }}
+          </div>
+          <div
+            class="editable-element time justify-end mt-6"
+            contenteditable="true"
+            :class="{
+              'd-none': !userConfig.show.author,
+              'd-flex': userConfig.show.author,
+            }"
+            @input="updateConfig"
+            data-key="author"
+            @paste="getClipboardData"
+          >
+            {{ userConfig.author }}
+          </div>
+          <div
+            class="qrcode pt-2 flex-row justify-space-between align-center"
+            :class="{
+              'd-none': !userConfig.show.qrcode,
+              'd-flex': userConfig.show.qrcode,
+            }"
+          >
+            <div>
+              <div
+                class="editable-element"
+                contenteditable="true"
+                autocorrect="off"
+                autocomplete="off"
+                @input="updateConfig"
+                data-key="qrCodeTitle"
+                @paste="getClipboardData"
+              >
+                {{ userConfig.qrCodeTitle }}
+              </div>
+              <div
+                class="editable-element desc"
+                contenteditable="true"
+                @paste="getClipboardData"
+                @input="updateConfig"
+                data-key="qrCodeDesc"
+              >
+                {{ userConfig.qrCodeDesc }}
+              </div>
             </div>
+            <div @click="dialog = true">
+              <ClientOnly>
+                <vueQr
+                  :text="userConfig.qrData"
+                  :size="60"
+                  :margin="0"
+                  colorLight="transparent"
+                  backgroundColor="transparent"
+                  :colorDark="colorDark"
+                  :callback="getQrcode"
+                >
+                </vueQr>
+              </ClientOnly>
+            </div>
+          </div>
         </div>
-        <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
-            <ClientOnly>
-                <v-btn @click="generateImage" class="text-none">
-                    {{ $t("Download Image") }}
-                </v-btn>
-                <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
-                    <template v-slot:activator="{ props }">
-                        <v-btn v-bind="props" @click="copyImage" class="text-none">
-                            {{ $t("Copy Image") }}</v-btn>
-                    </template>
-                </v-tooltip>
-            </ClientOnly>
-        </div>
+      </div>
     </div>
+    <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
+      <v-btn @click="generateImage" class="text-none">
+        {{ $t("Download Image") }}
+      </v-btn>
+      <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" @click="copyImage" class="text-none">
+            {{ $t("Copy Image") }}</v-btn
+          >
+        </template>
+      </v-tooltip>
+    </div>
+    <!-- qrcode edit -->
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card hover title="编辑二维码">
+        <v-card-text>
+          <v-text-field
+            v-model="qrDataCopy"
+            class="mb-2"
+            :rules="[rules.required]"
+            label="可输入文本或链接"
+            clearable
+          ></v-text-field>
+          <v-btn
+            color="success"
+            size="large"
+            type="submit"
+            variant="elevated"
+            block
+            @click="editQrData"
+          >
+            更新二维码
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </div>
 </template>
 <script setup>
+import html2canvas from "html2canvas";
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
-const draggable = ref(null);
-const colorDark = ref("#101320");
-const styleObject = reactive({
+import { useDisplay } from "vuetify";
+
+const props = defineProps({
+  draggable: { type: Object },
+  styleObject: {
     padding: "20px",
     width: "393px",
     fontSize: "1.1rem",
-});
-
-const show = reactive({
-  title: true,
-  content: true,
-  qrcode: true,
-  author: true,
-  padding: false,
-});
-
-const userConfig = reactive({
-  content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
+  },
+  userConfig: {
+    type: Object,
+    default: () => ({
+      content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
     显示的文字都可以修改，点击二维码可以修改内容
     电脑上鼠标拖动左右边框进行缩放
     在电脑上全选文字后支持下面快捷键
     - Ctrl+B 加粗文本
     - Ctrl+I 斜体文本
     - Ctrl+U 下划线文本`,
-  title: `创图卡片`,
-  author: "创图卡片 2024-07-15 18:20 广东",
-  qrCodeTitle: "创图卡片",
-  qrCodeDesc: "扫描二维码",
-  qrData: "https://labs.wowyou.cc/",
-  show: {
-    title: true,
-    content: true,
-    qrcode: true,
-    author: true,
-    padding: false,
+      title: `创图卡片`,
+      author: "创图卡片 2024-07-15 18:20 广东",
+      qrCodeTitle: "创图卡片",
+      qrCodeDesc: "扫描二维码",
+      qrData: "https://labs.wowyou.cc/",
+      show: {
+        title: true,
+        content: true,
+        qrcode: true,
+        author: true,
+        padding: false,
+      },
+    }),
   },
-})
+});
+const emit = defineEmits(["updateConfig","generateImage"]);
+
+// const draggable = ref(null);
+const dialog = ref(false);
+const colorDark = ref("#101320");
+const qrDataCopy = ref("https://labs.wowyou.cc/");
+const rules = reactive({
+  required: (value) => !!value || "请输入二维码内容.",
+});
+const { width, xs } = useDisplay();
 
 function updateConfig(e) {
-  doUpdateUserConfig(e.target.dataset.key, e.target.innerHTML)
+  // doUpdateUserConfig(e.target.dataset.key, e.target.innerHTML)
+  emit("updateConfig", { key: e.target.dataset.key, text: e.target.innerHTML });
 }
+
 function doUpdateUserConfig(key, text) {
-  if ('title' == key) {
+  if ("title" == key) {
     userConfigStore.title = text;
   }
-  if ('content' == key) {
+  if ("content" == key) {
     userConfigStore.content = text;
   }
-  if ('author' == key) {
+  if ("author" == key) {
     userConfigStore.author = text;
   }
-  if ('qrCodeTitle' == key) {
+  if ("qrCodeTitle" == key) {
     userConfigStore.qrCodeTitle = text;
   }
-  if ('qrCodeDesc' == key) {
+  if ("qrCodeDesc" == key) {
     userConfigStore.qrCodeDesc = text;
   }
 }
 
 function editQrData() {
-    if (this.qrDataCopy) {
-        this.qrData = this.qrDataCopy;
-        this.dialog = false;
-    }
+  // if (qrDataCopy.value) {
+  //   qrData.value = this.qrDataCopy;
+  //   dialog.value = false;
+  // }
 }
 function getQrcode(data, id) {
-    qrcode.value = data;
+  // qrcode.value = data;
 }
 
 function getClipboardData(event) {
   event.preventDefault(); // 阻止默认粘贴行为
 
   // 获取剪贴板中的纯文本内容
-  const text = (event.clipboardData || window.clipboardData).getData('text/plain'); 
-  doUpdateUserConfig(event.target.dataset.key,text)
+  const text = (event.clipboardData || window.clipboardData).getData(
+    "text/plain"
+  );
+  doUpdateUserConfig(event.target.dataset.key, text);
 }
+
+function generateImage() {
+  emit("generateImage")
+}
+function copyImage() {
+  html2canvas(draggable.value).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    copyBase64Img(imgData);
+  });
+}
+/*复制Base64图片*/
+function copyBase64Img(base64Data) {
+  // location.origin.includes('https://') || showToast('图片复制功能需要在https://协议下使用');
+  //将base64转为Blob类型
+  base64Data = base64Data.split(";base64,");
+  let type = base64Data[0].split("data:")[1];
+  base64Data = base64Data[1];
+  let bytes = atob(base64Data),
+    ab = new ArrayBuffer(bytes.length),
+    ua = new Uint8Array(ab);
+  [...Array(bytes.length)].forEach((v, i) => (ua[i] = bytes.charCodeAt(i)));
+  let blob = new Blob([ab], { type });
+  // “navigator.clipboard.write”该方法的确只能在本地localhost 、127.0.0.1 或者 https 协议下使用，否则navigator没有clipboard方法。
+  navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
+  // showToast('已复制到你的剪贴板');
+  snackbar.value = true;
+}
+
+const loadUserConfig = () => {
+  const savedUserConfig = localStorage.getItem("userConfigStore");
+  if (savedUserConfig) {
+    const config = JSON.parse(savedUserConfig);
+    Object.assign(userConfig, config);
+  }
+};
 </script>
+
+<style scoped>
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 45deg;
+}
+
+@property --colorA {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #5797f9;
+}
+
+@property --colorB {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #6cd5c4;
+}
+
+.container {
+  font-family: "Roboto", sans-serif;
+}
+
+.main {
+  position: relative;
+  font-family: inherit;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 30vh;
+}
+
+.content-mode {
+  width: 100%;
+  background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
+  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s;
+  min-width: 393px;
+  max-width: 940px;
+  font-family: inherit;
+  touch-action: none;
+  /* 防止触摸屏设备上默认行为干扰 */
+  box-sizing: border-box;
+}
+
+.title,
+.content {
+  width: 100%;
+  height: auto;
+  font-family: inherit;
+}
+
+.title {
+  font-weight: 700;
+  line-height: 2rem;
+}
+
+.content {
+  line-height: 1.8;
+  min-height: 2rem;
+}
+
+.time {
+  width: 100%;
+  height: auto;
+  font-size: 0.875rem;
+  opacity: 0.4;
+}
+
+.card {
+  width: 100%;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  box-shadow: 0 10px 40px hsla(0, 0%, 39%, 0.4);
+  color: #000;
+  transition: all 500ms ease 0s;
+}
+
+.editable-element {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+  outline: none;
+  width: 100%;
+}
+
+.qrcode {
+  width: 100%;
+  opacity: 0.5;
+  font-size: 1.25rem;
+}
+
+.desc {
+  font-size: 0.875rem;
+}
+
+.operation {
+  position: fixed;
+  bottom: 20px;
+  overflow: hidden;
+}
+</style>
