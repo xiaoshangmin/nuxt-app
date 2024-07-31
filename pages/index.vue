@@ -637,11 +637,11 @@ function getClipboardData(event) {
 
 
 // 监视状态变化，并将其保存到 localStorage
+//Object.assign(userConfig, userConfigStore)
 watch(
   userConfigStore,
   (newState) => {
     localStorage.setItem("userConfigStore", JSON.stringify(newState));
-    Object.assign(userConfig, userConfigStore)
   },
   { deep: true }
 );
