@@ -97,24 +97,27 @@ const userConfig = reactive({
   },
 })
 
-
 function updateConfig(e) {
-    if ('title' == e.target.dataset.key) {
-        userConfigStore.title = e.target.innerHTML;
-    }
-    if ('content' == e.target.dataset.key) {
-        userConfigStore.content = e.target.innerHTML;
-    }
-    if ('author' == e.target.dataset.key) {
-        userConfigStore.author = e.target.innerHTML;
-    }
-    if ('qrCodeTitle' == e.target.dataset.key) {
-        userConfigStore.qrCodeTitle = e.target.innerHTML;
-    }
-    if ('qrCodeDesc' == e.target.dataset.key) {
-        userConfigStore.qrCodeDesc = e.target.innerHTML;
-    }
+  doUpdateUserConfig(e.target.dataset.key, e.target.innerHTML)
 }
+function doUpdateUserConfig(key, text) {
+  if ('title' == key) {
+    userConfigStore.title = text;
+  }
+  if ('content' == key) {
+    userConfigStore.content = text;
+  }
+  if ('author' == key) {
+    userConfigStore.author = text;
+  }
+  if ('qrCodeTitle' == key) {
+    userConfigStore.qrCodeTitle = text;
+  }
+  if ('qrCodeDesc' == key) {
+    userConfigStore.qrCodeDesc = text;
+  }
+}
+
 function editQrData() {
     if (this.qrDataCopy) {
         this.qrData = this.qrDataCopy;
@@ -124,26 +127,12 @@ function editQrData() {
 function getQrcode(data, id) {
     qrcode.value = data;
 }
+
 function getClipboardData(event) {
-    event.preventDefault(); // 阻止默认粘贴行为
+  event.preventDefault(); // 阻止默认粘贴行为
 
-    // 获取剪贴板中的纯文本内容
-    const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-
-    // 获取当前选中的范围
-    const selection = window.getSelection();
-    if (!selection.rangeCount) return;
-    const range = selection.getRangeAt(0);
-
-    // 创建一个文本节点并插入到当前范围
-    const textNode = document.createTextNode(text);
-    range.deleteContents(); // 删除选中内容
-    range.insertNode(textNode);
-
-    // 调整光标位置
-    range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
-    selection.removeAllRanges();
-    selection.addRange(range);
+  // 获取剪贴板中的纯文本内容
+  const text = (event.clipboardData || window.clipboardData).getData('text/plain'); 
+  doUpdateUserConfig(event.target.dataset.key,text)
 }
 </script>
