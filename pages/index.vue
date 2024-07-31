@@ -43,26 +43,24 @@
         </div>
       </div>
       <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
-        <ClientOnly>
-          <v-btn @click="generateImage" class="text-none">
-            {{ $t("Download Image") }}
-          </v-btn>
-          <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" @click="copyImage" class="text-none">
-                {{ $t("Copy Image") }}</v-btn>
-            </template>
-          </v-tooltip>
-        </ClientOnly>
+        <v-btn @click="generateImage" class="text-none">
+          {{ $t("Download Image") }}
+        </v-btn>
+        <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" @click="copyImage" class="text-none">
+              {{ $t("Copy Image") }}</v-btn>
+          </template>
+        </v-tooltip>
       </div>
     </div>
     <div class="operation">
-      <ClientOnly>
-        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
-          @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
-          @onBtnToggleChange="onBtnToggleChange">
-        </CardOperation2>
-      </ClientOnly>
+      <!-- <ClientOnly> -->
+      <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+        @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
+        @onBtnToggleChange="onBtnToggleChange">
+      </CardOperation2>
+      <!-- </ClientOnly> -->
     </div>
     <!-- qrcode edit -->
     <v-dialog v-model="dialog" max-width="500">
@@ -618,8 +616,8 @@ function getClipboardData(event) {
   event.preventDefault(); // 阻止默认粘贴行为
 
   // 获取剪贴板中的纯文本内容
-  const text = (event.clipboardData || window.clipboardData).getData('text/plain'); 
-  doUpdateUserConfig(event.target.dataset.key,text)
+  const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+  doUpdateUserConfig(event.target.dataset.key, text)
   // 获取当前选中的范围
   // const selection = window.getSelection();
   // if (!selection.rangeCount) return;
@@ -643,7 +641,7 @@ watch(
   userConfigStore,
   (newState) => {
     localStorage.setItem("userConfigStore", JSON.stringify(newState));
-    Object.assign(userConfig,userConfigStore)
+    Object.assign(userConfig, userConfigStore)
   },
   { deep: true }
 );

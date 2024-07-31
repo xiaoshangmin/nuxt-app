@@ -1,9 +1,7 @@
 <template>
   <NuxtLayout>
     <v-app id="app" :theme="theme">
-       <ClientOnly> 
-        <NavBar2 @onClick="onClick"></NavBar2>
-      </ClientOnly>   
+      <NavBar2 @onClick="onClick"></NavBar2>
       <v-main>
         <NuxtLoadingIndicator />
         <NuxtPage />

@@ -75,7 +75,7 @@
                                         </div>
                                         <div>
                                             <v-btn-toggle v-model="widthSlider" color="deep-purple-accent-3" rounded="0"
-                                                group @click="onBtnToggle('width')">
+                                                @click="onBtnToggle('width')">
                                                 <v-btn value="340" class="text-none">
                                                     {{ $t("Small") }}
                                                 </v-btn>
@@ -118,7 +118,7 @@
                                     </div>
                                     <div>
                                         <v-btn-toggle v-model="fontSizeSlider" color="deep-purple-accent-3" rounded="0"
-                                            group @click="onBtnToggle('fontsize')">
+                                            @click="onBtnToggle('fontsize')">
                                             <v-btn value="0.77" class="text-none">
                                                 {{ $t("Small") }}
                                             </v-btn>
@@ -152,7 +152,7 @@
                             </v-tabs-window-item>
                         </v-tabs-window>
                     </v-card-text>
-                    <v-tabs v-model="tab" bg-color="primary" align-tabs="center" fixed-tabs>
+                    <v-tabs v-model="tab" align-tabs="center">
                         <v-tab value="one" class="text-none">{{ $t("Bg Color") }}</v-tab>
                         <v-tab value="two" class="text-none">{{ $t("Display") }}</v-tab>
                         <v-tab value="three" class="text-none d-none d-sm-flex">{{ $t("Width And Padding") }}</v-tab>
@@ -232,7 +232,7 @@ function increment(e) {
     emit('increment', { "action": e, "val": val });
 }
 </script>
-<style>
+<style scoped>
 .color-item {
     width: 1.75rem;
     height: 1.75rem;
