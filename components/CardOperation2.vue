@@ -134,7 +134,7 @@
                                         </v-btn-toggle>
                                         <div class="d-flex">
                                             <v-slider v-model="fontSizeSlider" thumb-label :step="0.1"
-                                                track-color="grey" min="0.5" max="2"
+                                                track-color="grey" min="0.7" max="1.5"
                                                 @update:modelValue="onSliderChange('fontsize')">
                                                 <template v-slot:prepend>
                                                     <v-btn icon="mdi-minus" size="small" variant="text"

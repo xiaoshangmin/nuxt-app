@@ -1,80 +1,16 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4':!xs}">
-    <!-- 主体部分 -->
-    <!-- <div class="main d-flex flex-column justify-center align-center">
-      <div class="d-flex justify-center align-center">
-        <div class="content-mode" ref="draggable" :style="styleObject">
-          <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
-            :class="{ 'rounded-lg': styleObject.padding != '0px' }">
-            <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'd-none': !show.title }" @input="updateConfig" data-key="title" @paste="getClipboardData">
-              {{ userConfig.title }}
-            </div>
-            <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'd-none': !show.content }" @input="updateConfig" data-key="content" @paste="getClipboardData">
-              {{ userConfig.content }}
-            </div>
-            <div class="editable-element time justify-end mt-6" contenteditable="true"
-              :class="{ 'd-none': !show.author, 'd-flex': show.author }" @input="updateConfig" data-key="author"
-              @paste="getClipboardData">
-              {{ userConfig.author }}
-            </div>
-            <div class="qrcode pt-2 flex-row justify-space-between align-center"
-              :class="{ 'd-none': !show.qrcode, 'd-flex': show.qrcode }">
-              <div>
-                <div class="editable-element" contenteditable="true" autocorrect="off" autocomplete="off"
-                  @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                  {{ userConfig.qrCodeTitle }}
-                </div>
-                <div class="editable-element desc" contenteditable="true" @paste="getClipboardData"
-                  @input="updateConfig" data-key="qrCodeDesc">
-                  {{ userConfig.qrCodeDesc }}
-                </div>
-              </div>
-              <div @click="dialog = true">
-                <ClientOnly>
-                  <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                    backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                  </vueQr>
-                </ClientOnly>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
-        <v-btn @click="generateImage" class="text-none">
-          {{ $t("Download Image") }}
-        </v-btn>
-        <v-tooltip text="可直接粘贴在聊天框" v-if="!xs">
-          <template v-slot:activator="{ props }">
-            <v-btn v-bind="props" @click="copyImage" class="text-none">
-              {{ $t("Copy Image") }}</v-btn>
-          </template>
-        </v-tooltip>
-      </div>
-    </div> -->
-    
-    <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" 
-    :dialog="dialog" :styleObject="styleObject" @generateImage="generateImage"></DefaultTemplate>
-    <div class="operation"> 
+  <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
+    <!-- 主体部分 --> 
+    <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
+      :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
+      @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
+    <div class="operation">
       <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
-      </CardOperation2> 
+      </CardOperation2>
     </div>
-    <!-- qrcode edit -->
-    <v-dialog v-model="dialog" max-width="500">
-      <v-card hover title="编辑二维码">
-        <v-card-text>
-          <v-text-field v-model="qrDataCopy" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
-            clearable></v-text-field>
-          <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
-            更新二维码
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <!-- qrcode edit --> 
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
       复制成功
@@ -84,22 +20,23 @@
 
 <script setup>
 import interact from "interactjs";
-// import domtoimage from "dom-to-image-more";
+import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
-// import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
 const { width, xs } = useDisplay();
 
+const isMobile = ref(false);
 const snackbar = ref(false);
 const draggable = ref(null);
 const dialog = ref(false);
+const showWidth = ref("0px");
+const qrcode = ref("");
+const qrDataCopy = ref("https://labs.wowyou.cc/");
 const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
 
-const showWidth = ref("0px");
-const qrcode = ref("");
 const themeList = ref([
   {
     bgcolor:
@@ -352,10 +289,7 @@ const themeList = ref([
 const styleObject = reactive({
   padding: "20px",
   width: "393px",
-  fontSize: "1.1rem",
 });
-const qrDataCopy = ref("https://labs.wowyou.cc/");
-
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
     显示的文字都可以修改，点击二维码可以修改内容
@@ -415,11 +349,12 @@ useSeoMeta({
 
 });
 
-onMounted(() => {
-    if (xs.value) { 
+onMounted(async () => {
+  await new Promise(resolve => setTimeout(resolve, 0.5))
+  if (xs.value) {
     styleObject.width = `${width.value}px`;
+    isMobile.value = true
   } else {
-    console.log(33)
     initInteract();
   }
   loadUserConfig();
@@ -449,27 +384,30 @@ function initInteract() {
 function updateConfig(e) {
   doUpdateUserConfig(e.key, e.text)
 }
+
 function doUpdateUserConfig(key, text) {
-  if ('title' == key) {
-    userConfigStore.title = text;
-  }
-  if ('content' == key) {
-    userConfigStore.content = text;
-  }
-  if ('author' == key) {
-    userConfigStore.author = text;
-  }
-  if ('qrCodeTitle' == key) {
-    userConfigStore.qrCodeTitle = text;
-  }
-  if ('qrCodeDesc' == key) {
-    userConfigStore.qrCodeDesc = text;
-  }
+  // if ('title' == key) {
+  //   userConfigStore.title = text;
+  // }
+  // if ('content' == key) {
+  //   userConfigStore.content = text;
+  // }
+  // if ('author' == key) {
+  //   userConfigStore.author = text;
+  // }
+  // if ('qrCodeTitle' == key) {
+  //   userConfigStore.qrCodeTitle = text;
+  // }
+  // if ('qrCodeDesc' == key) {
+  //   userConfigStore.qrCodeDesc = text;
+  // }
+
+  userConfigStore[`${key}`] = text
 }
-function editQrData() {
-  if (this.qrDataCopy) {
-    this.qrData = this.qrDataCopy;
-    this.dialog = false;
+function editQrData(e) {
+  if (e) {
+    userConfigStore.qrData = e;
+    userConfig.qrData = e
   }
 }
 function getQrcode(data, id) {
@@ -509,7 +447,8 @@ function onBtnToggleChange(e) {
     styleObject.width = `${e.val}px`;
   }
   if (e.action == "fontsize") {
-    styleObject.fontSize = `${e.val}rem`;
+    // styleObject.fontSize = `${e.val}rem`;
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function decrement(e) {
@@ -531,34 +470,36 @@ function increment(e) {
   }
 }
 function generateImage() {
-  html2canvas(draggable.value.$refs.draggable).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    const blob = dataURItoBlob(imgData);
+  if (isMobile.value) {
+    html2canvas(draggable.value.$refs.draggable).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const blob = dataURItoBlob(imgData);
 
-    // 创建下载链接
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "创图卡片-screenshot.png"; // 设置下载文件名
+      // 创建下载链接
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "创图卡片-screenshot.png"; // 设置下载文件名
 
-    // 触发下载
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
-
-  // document.fonts.ready.then(() => {
-  //     domtoimage.toJpeg(draggable.value).then(dataUrl => {
-  //         const link = document.createElement('a');
-  //         link.download = 'simple.jpeg';
-  //         link.href = dataUrl;
-  //         document.body.appendChild(link); // 需要先插入文档流才能触发点击事件
-  //         link.click();
-  //         document.body.removeChild(link);
-  //     }).catch(error => {
-  //         console.error('生成图片时出错:', error);
-  //     });
-  // });
+      // 触发下载
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  } else {
+    document.fonts.ready.then(() => {
+      domtoimage.toJpeg(draggable.value.$refs.draggable).then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = '创图卡片-screenshot.png';
+        link.href = dataUrl;
+        document.body.appendChild(link); // 需要先插入文档流才能触发点击事件
+        link.click();
+        document.body.removeChild(link);
+      }).catch(error => {
+        console.error('生成图片时出错:', error);
+      });
+    });
+  }
 }
 // 将 base64 转换为 Blob 对象的函数
 const dataURItoBlob = (dataURI) => {
@@ -571,21 +512,25 @@ const dataURItoBlob = (dataURI) => {
   }
   return new Blob([ab], { type: mimeString });
 };
+
 function copyImage() {
-  html2canvas(draggable.value).then((canvas) => {
-    const imgData = canvas.toDataURL("image/png");
-    copyBase64Img(imgData);
-  });
-  //   document.fonts.ready.then(() => {
-  //     domtoimage
-  //       .toPng(draggable.value)
-  //       .then((dataUrl) => {
-  //         copyBase64Img(dataUrl);
-  //       })
-  //       .catch((error) => {
-  //         console.error("生成图片时出错:", error);
-  //       });
-  //   });
+  if (isMobile.value) {
+    html2canvas(draggable.value.$refs.draggable).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      copyBase64Img(imgData);
+    });
+  } else {
+    document.fonts.ready.then(() => {
+      domtoimage
+        .toPng(draggable.value.$refs.draggable)
+        .then((dataUrl) => {
+          copyBase64Img(dataUrl);
+        })
+        .catch((error) => {
+          console.error("生成图片时出错:", error);
+        });
+    });
+  }
 }
 /*复制Base64图片*/
 function copyBase64Img(base64Data) {
@@ -609,6 +554,7 @@ function getClipboardData(event) {
 
   // 获取剪贴板中的纯文本内容
   const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+  userConfig[`${event.target.dataset.key}`] = text
   doUpdateUserConfig(event.target.dataset.key, text)
   // 获取当前选中的范围
   // const selection = window.getSelection();
@@ -629,7 +575,6 @@ function getClipboardData(event) {
 
 
 // 监视状态变化，并将其保存到 localStorage
-//Object.assign(userConfig, userConfigStore)
 watch(
   userConfigStore,
   (newState) => {
@@ -648,6 +593,9 @@ const loadUserConfig = () => {
 </script>
 
 <style scoped>
+.container {
+  font-family: "Roboto", sans-serif;
+}
 
 .operation {
   position: fixed;
