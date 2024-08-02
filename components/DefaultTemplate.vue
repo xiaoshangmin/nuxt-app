@@ -206,7 +206,6 @@ function copyImage() {
   min-width: 393px;
   max-width: 940px;
   font-family: inherit;
-  touch-action: none;
   /* 防止触摸屏设备上默认行为干扰 */
   box-sizing: border-box;
   --base-font-size: 1rem;

@@ -1,16 +1,18 @@
 <template>
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
-    <!-- 主体部分 --> 
-    <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
-      :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
-      @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
+    <!-- 主体部分 -->
+    <div>
+      <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
+        :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
+        @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
+    </div>
     <div class="operation">
       <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
       </CardOperation2>
     </div>
-    <!-- qrcode edit --> 
+    <!-- qrcode edit -->
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
       复制成功
@@ -38,6 +40,13 @@ const rules = reactive({
 });
 
 const themeList = ref([
+{
+    bgcolor:
+      "background: #fff;",
+    colorA: "rgb(5, 174, 157)",
+    colorB: "rgb(17, 26, 35)",
+    angle: "150deg",
+  },
   {
     bgcolor:
       "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));",
@@ -436,7 +445,7 @@ function onSliderChange(e) {
     styleObject.width = `${e.val}px`;
   }
   if (e.action == "fontsize") {
-    styleObject.fontSize = `${e.val}rem`;
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function onBtnToggleChange(e) {
