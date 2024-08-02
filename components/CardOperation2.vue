@@ -166,7 +166,7 @@
 
 <script setup>
 const props = defineProps(['themeList']);
-const emit = defineEmits(['onSwitchChange', 'onBtnToggle', 'changeColor', 'onSliderChange', 'decrement', 'increment']);
+const emit = defineEmits(['onSwitchChange', 'onBtnToggleChange', 'changeColor', 'onSliderChange', 'decrement', 'increment']);
 const tab = ref(null);
 const showOperation = ref('showOperation')
 const fontSizeSlider = ref('1.1');
@@ -183,50 +183,48 @@ function onSwitchChange(e) {
     emit('onSwitchChange', { "action": e, "val": show });
 }
 function onBtnToggle(e) {
-    let val = e == "padding" ? this.paddingSlider : e == "width" ? this.widthSlider : this.fontSizeSlider;
+    let val = e == "padding" ? paddingSlider.value : e == "width" ? widthSlider.value : fontSizeSlider.value;
     emit('onBtnToggleChange', { "action": e, "val": val });
 }
 function changeColor(e) {
     emit('changeColor', e);
 }
 function onSliderChange(e) {
-    let val = e == "padding" ? this.paddingSlider : e == "width" ? this.widthSlider : this.fontSizeSlider;
+    let val = e == "padding" ? paddingSlider.value : e == "width" ? widthSlider.value : fontSizeSlider.value;
     emit('onSliderChange', { "action": e, "val": val });
 }
 function decrement(e) {
-    let val = 0;//e == "padding" ? this.paddingSlider : e == "width" ? this.widthSlider : this.fontSizeSlider;
-
+    let val = 0;
     if ("padding" == e) {
-        let paddingSlider = parseInt(this.paddingSlider) - 1
-        this.paddingSlider = paddingSlider + ""
-        val = paddingSlider
+        let padding = parseInt(paddingSlider.value) - 1
+        paddingSlider.value = padding + ""
+        val = paddingSlider.value
     } else if ("width" == e) {
-        let widthSlider = parseInt(this.widthSlider) - 5
-        this.widthSlider = widthSlider + ""
-        val = widthSlider
+        let width = parseInt(widthSlider.value) - 5
+        widthSlider.value = width + ""
+        val = widthSlider.value
     } else {
-        let fontSizeSlider = parseFloat(this.fontSizeSlider) - 0.1
-        this.fontSizeSlider = fontSizeSlider + ""
+        let fontSize = parseFloat(fontSizeSlider.value) - 0.1
+        fontSizeSlider.value = fontSize + ""
         val = fontSizeSlider
     }
 
     emit('decrement', { "action": e, "val": val });
 }
 function increment(e) {
-    let val = 0;//e == "padding" ? this.paddingSlider : e == "width" ? this.widthSlider : this.fontSizeSlider;
-
+    let val = 0;
     if ("padding" == e) {
-        let paddingSlider = parseInt(this.paddingSlider) + 1
-        this.paddingSlider = paddingSlider + ""
-        val = paddingSlider
+        let padding = parseInt(paddingSlider.value) + 1
+        paddingSlider.value = padding + ""
+        val = paddingSlider.value
     } else if ("width" == e) {
-        let widthSlider = parseInt(this.widthSlider) + 5
-        this.widthSlider = widthSlider + ""
-        val = widthSlider
+        let width = parseInt(widthSlider.value) + 5
+        widthSlider.value = width + ""
+        val = widthSlider.value
     } else {
-        let fontSizeSlider = parseFloat(this.fontSizeSlider) + 0.1
-        this.fontSizeSlider = fontSizeSlider + ""
-        val = fontSizeSlider
+        let fontSize = parseFloat(fontSizeSlider.value) + 0.1
+        fontSizeSlider.value = fontSize + ""
+        val = fontSizeSlider.value
     }
 
     emit('increment', { "action": e, "val": val });

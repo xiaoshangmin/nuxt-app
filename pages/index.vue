@@ -466,7 +466,8 @@ function decrement(e) {
   } else if ("width" == e.action) {
     styleObject.width = `${e.val}px`;
   } else {
-    styleObject.fontSize = `${e.val}rem`;
+    // styleObject.fontSize = `${e.val}rem`;
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function increment(e) {
@@ -475,7 +476,8 @@ function increment(e) {
   } else if ("width" == e.action) {
     styleObject.width = `${e.val}px`;
   } else {
-    styleObject.fontSize = `${e.val}rem`;
+    // styleObject.fontSize = `${e.val}rem`;
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function generateImage() {
