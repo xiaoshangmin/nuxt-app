@@ -7,10 +7,10 @@
         @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
     </div>
     <div class="operation">
-      <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+      <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
-      </CardOperation2>
+      </CardOperation>
     </div>
     <!-- qrcode edit -->
     <!-- 消息条 -->
@@ -36,253 +36,254 @@ const showWidth = ref("0px");
 const qrcode = ref("");
 
 const themeList = ref([
-  {
-    bgcolor:
-      "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));",
-    colorA: "rgb(5, 174, 157)",
-    colorB: "rgb(17, 26, 35)",
-    angle: "150deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(150deg, rgb(94, 106, 137), rgb(15, 19, 40));",
-    colorA: "rgb(94, 106, 137)",
-    colorB: " rgb(15, 19, 40)",
-    angle: "150deg",
-  },
-  //蓝粉
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(87, 151, 249), rgb(108, 213, 196));",
-    colorA: "rgb(87, 151, 249)",
-    colorB: " rgb(108, 213, 196)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(64, 127, 231), rgb(253, 202, 220));",
-    colorA: "rgb(64, 127, 231)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(77, 3, 222), rgb(253, 202, 220));",
-    colorA: "rgb(77, 3, 222)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(204, 81, 36), rgb(253, 202, 220));",
-    colorA: "rgb(204, 81, 36)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(52, 182, 150), rgb(253, 202, 220));",
-    colorA: "rgb(52, 182, 150)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(244, 205, 82), rgb(253, 202, 220));",
-    colorA: "rgb(244, 205, 82)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(86, 93, 204), rgb(253, 202, 220));",
-    colorA: "rgb(86, 93, 204)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(33, 127, 193), rgb(253, 202, 220));",
-    colorA: "rgb(33, 127, 193)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(53, 99, 250), rgb(253, 202, 220));",
-    colorA: "rgb(53, 99, 250)",
-    colorB: " rgb(253, 202, 220)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(44, 68, 89), rgb(255, 203, 203));",
-    colorA: "rgb(44, 68, 89)",
-    colorB: " rgb(255, 203, 203)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(137, 176, 217), rgb(255, 238, 203));",
-    colorA: "rgb(137, 176, 217)",
-    colorB: " rgb(255, 238, 203)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(14, 87, 238), rgb(230, 255, 203));",
-    colorA: "rgb(14, 87, 238)",
-    colorB: " rgb(230, 255, 203)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(186, 125, 239), rgb(255, 203, 253));",
-    colorA: "rgb(186, 125, 239)",
-    colorB: " rgb(255, 203, 253)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(67, 197, 167), rgb(203, 238, 255));",
-    colorA: "rgb(67, 197, 167)",
-    colorB: " rgb(203, 238, 255)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(240, 111, 105), rgb(205, 203, 255));",
-    colorA: "rgb(240, 111, 105)",
-    colorB: " rgb(205, 203, 255)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(44, 176, 206), rgb(205, 203, 255));",
-    colorA: "rgb(44, 176, 206)",
-    colorB: " rgb(205, 203, 255)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(176, 189, 191), rgb(205, 203, 255));",
-    colorA: "rgb(176, 189, 191)",
-    colorB: " rgb(205, 203, 255)",
-    angle: "45deg",
-  },
-  // 红粉
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(149, 18, 190), rgb(245, 159, 156));",
-    colorA: "rgb(149, 18, 190)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(180, 20, 51), rgb(245, 159, 156));",
-    colorA: "rgb(180, 20, 51)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(245, 148, 126), rgb(245, 159, 156));",
-    colorA: "rgb(245, 148, 126)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(255, 242, 201), rgb(245, 159, 156));",
-    colorA: "rgb(255, 242, 201)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(139, 177, 196), rgb(245, 159, 156));",
-    colorA: "rgb(139, 177, 196)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(136, 14, 133), rgb(245, 159, 156));",
-    colorA: "rgb(136, 14, 133)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(69, 165, 215), rgb(245, 159, 156));",
-    colorA: "rgb(69, 165, 215)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(191, 69, 133), rgb(245, 159, 156));",
-    colorA: "rgb(191, 69, 133)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(182, 195, 141), rgb(245, 159, 156));",
-    colorA: "rgb(182, 195, 141)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(154, 151, 236), rgb(245, 159, 156));",
-    colorA: "rgb(154, 151, 236)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(84, 102, 105), rgb(245, 159, 156));",
-    colorA: "rgb(84, 102, 105)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(247, 174, 171), rgb(245, 159, 156));",
-    colorA: "rgb(247, 174, 171)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(254, 252, 59), rgb(245, 159, 156));",
-    colorA: "rgb(254, 252, 59)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(167, 254, 204), rgb(245, 159, 156));",
-    colorA: "rgb(167, 254, 204)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(241, 255, 207), rgb(245, 159, 156));",
-    colorA: "rgb(241, 255, 207)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
-  {
-    bgcolor:
-      "background-image: linear-gradient(45deg, rgb(186, 167, 228), rgb(245, 159, 156));",
-    colorA: "rgb(186, 167, 228)",
-    colorB: " rgb(245, 159, 156)",
-    angle: "45deg",
-  },
+  [
+    {
+      bgcolor:
+        "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));",
+      colorA: "rgb(5, 174, 157)",
+      colorB: "rgb(17, 26, 35)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(150deg, rgb(94, 106, 137), rgb(15, 19, 40));",
+      colorA: "rgb(94, 106, 137)",
+      colorB: " rgb(15, 19, 40)",
+      angle: "150deg",
+    },
+    //蓝粉
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(87, 151, 249), rgb(108, 213, 196));",
+      colorA: "rgb(87, 151, 249)",
+      colorB: " rgb(108, 213, 196)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(64, 127, 231), rgb(253, 202, 220));",
+      colorA: "rgb(64, 127, 231)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(77, 3, 222), rgb(253, 202, 220));",
+      colorA: "rgb(77, 3, 222)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(204, 81, 36), rgb(253, 202, 220));",
+      colorA: "rgb(204, 81, 36)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(52, 182, 150), rgb(253, 202, 220));",
+      colorA: "rgb(52, 182, 150)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(244, 205, 82), rgb(253, 202, 220));",
+      colorA: "rgb(244, 205, 82)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(86, 93, 204), rgb(253, 202, 220));",
+      colorA: "rgb(86, 93, 204)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(33, 127, 193), rgb(253, 202, 220));",
+      colorA: "rgb(33, 127, 193)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(53, 99, 250), rgb(253, 202, 220));",
+      colorA: "rgb(53, 99, 250)",
+      colorB: " rgb(253, 202, 220)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(44, 68, 89), rgb(255, 203, 203));",
+      colorA: "rgb(44, 68, 89)",
+      colorB: " rgb(255, 203, 203)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(137, 176, 217), rgb(255, 238, 203));",
+      colorA: "rgb(137, 176, 217)",
+      colorB: " rgb(255, 238, 203)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(14, 87, 238), rgb(230, 255, 203));",
+      colorA: "rgb(14, 87, 238)",
+      colorB: " rgb(230, 255, 203)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(186, 125, 239), rgb(255, 203, 253));",
+      colorA: "rgb(186, 125, 239)",
+      colorB: " rgb(255, 203, 253)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(67, 197, 167), rgb(203, 238, 255));",
+      colorA: "rgb(67, 197, 167)",
+      colorB: " rgb(203, 238, 255)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(240, 111, 105), rgb(205, 203, 255));",
+      colorA: "rgb(240, 111, 105)",
+      colorB: " rgb(205, 203, 255)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(44, 176, 206), rgb(205, 203, 255));",
+      colorA: "rgb(44, 176, 206)",
+      colorB: " rgb(205, 203, 255)",
+      angle: "45deg",
+    },], [
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(176, 189, 191), rgb(205, 203, 255));",
+      colorA: "rgb(176, 189, 191)",
+      colorB: " rgb(205, 203, 255)",
+      angle: "45deg",
+    },
+    // 红粉
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(149, 18, 190), rgb(245, 159, 156));",
+      colorA: "rgb(149, 18, 190)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(180, 20, 51), rgb(245, 159, 156));",
+      colorA: "rgb(180, 20, 51)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(245, 148, 126), rgb(245, 159, 156));",
+      colorA: "rgb(245, 148, 126)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(255, 242, 201), rgb(245, 159, 156));",
+      colorA: "rgb(255, 242, 201)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(139, 177, 196), rgb(245, 159, 156));",
+      colorA: "rgb(139, 177, 196)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(136, 14, 133), rgb(245, 159, 156));",
+      colorA: "rgb(136, 14, 133)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(69, 165, 215), rgb(245, 159, 156));",
+      colorA: "rgb(69, 165, 215)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(191, 69, 133), rgb(245, 159, 156));",
+      colorA: "rgb(191, 69, 133)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(182, 195, 141), rgb(245, 159, 156));",
+      colorA: "rgb(182, 195, 141)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(154, 151, 236), rgb(245, 159, 156));",
+      colorA: "rgb(154, 151, 236)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(84, 102, 105), rgb(245, 159, 156));",
+      colorA: "rgb(84, 102, 105)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(247, 174, 171), rgb(245, 159, 156));",
+      colorA: "rgb(247, 174, 171)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(254, 252, 59), rgb(245, 159, 156));",
+      colorA: "rgb(254, 252, 59)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(167, 254, 204), rgb(245, 159, 156));",
+      colorA: "rgb(167, 254, 204)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(241, 255, 207), rgb(245, 159, 156));",
+      colorA: "rgb(241, 255, 207)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(45deg, rgb(186, 167, 228), rgb(245, 159, 156));",
+      colorA: "rgb(186, 167, 228)",
+      colorB: " rgb(245, 159, 156)",
+      angle: "45deg",
+    },]
 ]);
 const styleObject = reactive({
   padding: "20px",
