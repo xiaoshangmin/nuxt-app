@@ -34,19 +34,8 @@ const draggable = ref(null);
 const dialog = ref(false);
 const showWidth = ref("0px");
 const qrcode = ref("");
-const qrDataCopy = ref("https://labs.wowyou.cc/");
-const rules = reactive({
-  required: (value) => !!value || "请输入二维码内容.",
-});
 
 const themeList = ref([
-{
-    bgcolor:
-      "background: #fff;",
-    colorA: "rgb(5, 174, 157)",
-    colorB: "rgb(17, 26, 35)",
-    angle: "150deg",
-  },
   {
     bgcolor:
       "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));",
@@ -297,7 +286,7 @@ const themeList = ref([
 ]);
 const styleObject = reactive({
   padding: "20px",
-  width: "393px",
+  width: "393px"
 });
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
@@ -320,7 +309,6 @@ const userConfig = reactive({
     padding: false,
   },
 })
-
 
 const userConfigStore = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
@@ -367,25 +355,26 @@ onMounted(async () => {
     initInteract();
   }
   loadUserConfig();
-
 });
 function initInteract() {
   interact(draggable.value.$refs.draggable).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
-      start(event) { },
+      start(event) {
+        styleObject.transition = ""
+      },
       move(event) {
-        let { x, y } = event.target.dataset;
+        // let { x, y } = event.target.dataset;
 
-        x = (parseFloat(x) || 0) + event.deltaRect.left;
-        y = (parseFloat(y) || 0) + event.deltaRect.top;
+        // x = (parseFloat(x) || 0) + event.deltaRect.left;
+        // y = (parseFloat(y) || 0) + event.deltaRect.top;
 
         Object.assign(event.target.style, {
           width: `${event.rect.width}px`,
           // height: `${event.rect.height}px`,
-          // transform: `translate(${x}px, ${y}px)`
+          translate: '500ms'
         });
-        Object.assign(event.target.dataset, { x, y });
+        // Object.assign(event.target.dataset, { x, y });
       },
     },
   });
@@ -423,6 +412,7 @@ function getQrcode(data, id) {
   qrcode.value = data;
 }
 function changeColor(theme) {
+  styleObject.transition = ""
   draggable.value.$refs.draggable.style.setProperty("--colorA", theme.colorA);
   draggable.value.$refs.draggable.style.setProperty("--colorB", theme.colorB);
   draggable.value.$refs.draggable.style.setProperty("--angle", theme.angle);
@@ -454,6 +444,7 @@ function onBtnToggleChange(e) {
   }
   if (e.action == "width") {
     styleObject.width = `${e.val}px`;
+    styleObject.transition = "500ms"
   }
   if (e.action == "fontsize") {
     // styleObject.fontSize = `${e.val}rem`;
@@ -476,7 +467,6 @@ function increment(e) {
   } else if ("width" == e.action) {
     styleObject.width = `${e.val}px`;
   } else {
-    // styleObject.fontSize = `${e.val}rem`;
     draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }

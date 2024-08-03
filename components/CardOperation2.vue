@@ -55,7 +55,7 @@
                                             </v-btn-toggle>
                                             <v-slider v-model="paddingSlider" thumb-label :step="1" track-color="grey"
                                                 @update:modelValue="onSliderChange('padding')">
-                                                <template v-slot:prepend>
+                                                <!-- <template v-slot:prepend>
                                                     <v-btn icon="mdi-minus" size="small" variant="text"
                                                         @click="decrement('padding')" data-id="padding"></v-btn>
                                                 </template>
@@ -63,7 +63,7 @@
                                                 <template v-slot:append>
                                                     <v-btn icon="mdi-plus" size="small" variant="text"
                                                         @click="increment('padding')" data-id="padding"></v-btn>
-                                                </template>
+                                                </template> -->
                                             </v-slider>
                                         </div>
 
@@ -95,7 +95,7 @@
                                             <div class="d-flex">
                                                 <v-slider v-model="widthSlider" thumb-label :step="5" track-color="grey"
                                                     min="340" max="900" @update:modelValue="onSliderChange('width')">
-                                                    <template v-slot:prepend>
+                                                    <!-- <template v-slot:prepend>
                                                         <v-btn icon="mdi-minus" size="small" variant="text"
                                                             @click="decrement('width')" data-id="width"></v-btn>
                                                     </template>
@@ -103,7 +103,7 @@
                                                     <template v-slot:append>
                                                         <v-btn icon="mdi-plus" size="small" variant="text"
                                                             @click="increment('width')" data-id="width"></v-btn>
-                                                    </template>
+                                                    </template> -->
                                                 </v-slider>
                                             </div>
                                         </div>
@@ -136,7 +136,7 @@
                                             <v-slider v-model="fontSizeSlider" thumb-label :step="0.1"
                                                 track-color="grey" min="0.7" max="1.5"
                                                 @update:modelValue="onSliderChange('fontsize')">
-                                                <template v-slot:prepend>
+                                                <!-- <template v-slot:prepend>
                                                     <v-btn icon="mdi-minus" size="small" variant="text"
                                                         @click="decrement('fontsize')" data-id="fontsize"></v-btn>
                                                 </template>
@@ -144,7 +144,7 @@
                                                 <template v-slot:append>
                                                     <v-btn icon="mdi-plus" size="small" variant="text"
                                                         @click="increment('fontsize')" data-id="fontsize"></v-btn>
-                                                </template>
+                                                </template> -->
                                             </v-slider>
                                         </div>
                                     </div>

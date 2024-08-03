@@ -2,44 +2,46 @@
   <div class="main d-flex flex-column justify-center align-center">
     <div class="d-flex justify-center align-center">
       <div class="content-mode" ref="draggable" :style="styleObject">
-        <div class="card d-flex justify-center align-start pt-4 pb-4 px-4 flex-column"
+        <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
           :class="{ 'rounded-xl': styleObject.padding != '0px' }">
-          <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'd-none': !userConfig.show.title }" @input="updateConfig" data-key="title"
+          <div class="editable-element title " contenteditable="true" autocorrect="off"
+            autocomplete="off" :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
             @paste="getClipboardData">
             {{ userConfig.title }}
           </div>
-          <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'd-none': !userConfig.show.content }" @input="updateConfig" data-key="content"
+          <div class="editable-element content " contenteditable="true" autocorrect="off"
+            autocomplete="off" :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
             @paste="getClipboardData">
             {{ userConfig.content }}
           </div>
-          <div class="editable-element time justify-end mt-6" contenteditable="true" :class="{
-            'd-none': !userConfig.show.author,
-            'd-flex': userConfig.show.author,
+          <div class="editable-element time  d-flex justify-end mt-6" contenteditable="true" :class="{
+            'hidden': !userConfig.show.author
           }" @input="updateConfig" data-key="author" @paste="getClipboardData">
             {{ userConfig.author }}
           </div>
-          <div class="qrcode pt-2 flex-row justify-space-between align-center" :class="{
-            'd-none': !userConfig.show.qrcode,
-            'd-flex': userConfig.show.qrcode,
+
+          <div class="qrcode flex-cloumn" :class="{
+            'hidden': !userConfig.show.qrcode
           }">
-            <div>
-              <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
-                @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                {{ userConfig.qrCodeTitle }}
+            <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
+            <div class="d-flex flex-row  justify-space-between align-center">
+              <div>
+                <div class="editable-element qr-title " contenteditable="true" autocorrect="off"
+                  autocomplete="off" @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                  {{ userConfig.qrCodeTitle }}
+                </div>
+                <div class="editable-element qr-desc  mt-2" contenteditable="true"
+                  @paste="getClipboardData" @input="updateConfig" data-key="qrCodeDesc">
+                  {{ userConfig.qrCodeDesc }}
+                </div>
               </div>
-              <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
-                @input="updateConfig" data-key="qrCodeDesc">
-                {{ userConfig.qrCodeDesc }}
+              <div @click="dialog = true">
+                <ClientOnly>
+                  <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
+                    backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
+                  </vueQr>
+                </ClientOnly>
               </div>
-            </div>
-            <div @click="dialog = true">
-              <ClientOnly>
-                <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                  backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                </vueQr>
-              </ClientOnly>
             </div>
           </div>
         </div>
@@ -73,7 +75,6 @@
 <script setup>
 
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
-import { useDisplay } from "vuetify";
 
 const props = defineProps({
   isMobile: { type: Boolean, default: false },
@@ -104,44 +105,22 @@ const props = defineProps({
     }),
   },
 });
-const emit = defineEmits(["updateConfig", "generateImage", "copyImage", "getClipboardData","editQrData"]);
+const emit = defineEmits(["updateConfig", "generateImage", "copyImage", "getClipboardData", "editQrData"]);
 
 // const draggable = ref(null);
 const dialog = ref(false);
-const colorDark = ref("#101320");
+const colorDark = ref("#fff");//#101320
 const qrData = ref("https://labs.wowyou.cc/");
 const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
-const { width, xs } = useDisplay();
-
-
 function updateConfig(e) {
-  // doUpdateUserConfig(e.target.dataset.key, e.target.innerHTML)
   emit("updateConfig", { key: e.target.dataset.key, text: e.target.innerHTML });
-}
-
-function doUpdateUserConfig(key, text) {
-  if ("title" == key) {
-    userConfigStore.title = text;
-  }
-  if ("content" == key) {
-    userConfigStore.content = text;
-  }
-  if ("author" == key) {
-    userConfigStore.author = text;
-  }
-  if ("qrCodeTitle" == key) {
-    userConfigStore.qrCodeTitle = text;
-  }
-  if ("qrCodeDesc" == key) {
-    userConfigStore.qrCodeDesc = text;
-  }
 }
 
 function editQrData() {
   dialog.value = false
-  emit("editQrData",qrData.value)
+  emit("editQrData", qrData.value)
   // if (qrDataCopy.value) {
   //   qrData.value = this.qrDataCopy;
   //   dialog.value = false;
@@ -153,13 +132,6 @@ function getQrcode(data, id) {
 
 function getClipboardData(event) {
   emit("getClipboardData", event)
-  // event.preventDefault(); // 阻止默认粘贴行为
-
-  // // 获取剪贴板中的纯文本内容
-  // const text = (event.clipboardData || window.clipboardData).getData(
-  //   "text/plain"
-  // );
-  // doUpdateUserConfig(event.target.dataset.key, text);
 }
 
 function generateImage() {
@@ -174,19 +146,19 @@ function copyImage() {
 @property --angle {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 45deg;
+  initial-value: 145deg;
 }
 
 @property --colorA {
   syntax: "<color>";
   inherits: false;
-  initial-value: #5797f9;
+  initial-value: rgb(5, 174, 157);
 }
 
 @property --colorB {
   syntax: "<color>";
   inherits: false;
-  initial-value: #6cd5c4;
+  initial-value: rgb(17, 26, 35);
 }
 
 
@@ -202,48 +174,12 @@ function copyImage() {
 .content-mode {
   width: 100%;
   background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
-  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s;
+  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s;
   min-width: 393px;
   max-width: 940px;
   font-family: inherit;
-  /* 防止触摸屏设备上默认行为干扰 */
   box-sizing: border-box;
-  --base-font-size: 1rem;
-  /* 基准字体大小 */
-}
-
-.title,
-.content {
-  width: 100%;
-  height: auto;
-  font-family: inherit;
-}
-
-.title {
-  font-weight: 700;
-  line-height: 1.4;
-  font-size: calc(var(--base-font-size) * 0.875);
-}
-
-.content {
-  line-height: 1.8;
-  min-height: 2rem;
-  font-size: calc(var(--base-font-size) * 0.77);
-}
-
-.time {
-  width: 100%;
-  height: auto;
-  font-size: calc(var(--base-font-size) * 0.62);
-  opacity: 0.4;
-}
-
-.card {
-  width: 100%;
-  background-color: hsla(0, 0%, 100%, 0.5);
-  box-shadow: 0 10px 40px hsla(0, 0%, 39%, 0.4);
-  color: #000;
-  transition: all 500ms ease 0s;
+  --base-font-size: 1.1rem;
 }
 
 .editable-element {
@@ -252,23 +188,74 @@ function copyImage() {
   word-break: break-word;
   outline: none;
   width: 100%;
+  transition: opacity 0.5s, max-height 0.5s, font-size 0.5s;
+  max-height: 2000px;
+  overflow: hidden;
 }
+
 
 .qrcode {
   width: 100%;
   opacity: 0.5;
+  transition: opacity 0.5s, max-height 0.5s, font-size 0.5s;
+  max-height: 2000px;
+  overflow: hidden;
 }
 
 .qr-title {
-  font-size: calc(var(--base-font-size) * 0.875);
+  font-size: calc(var(--base-font-size) * 1.25);
   font-weight: 700;
+  line-height: 1.4;
+  opacity: .4;
+}
+
+.qr-desc {
+  font-size: calc(var(--base-font-size) * 0.875);
   line-height: 1.4;
   opacity: 0.5;
 }
 
-.qr-desc {
-  font-size: calc(var(--base-font-size) * 0.62);
-  line-height: 1.4;
-  opacity: 0.5;
+.editable-element.hidden,
+.qrcode.hidden {
+  opacity: 0;
+  max-height: 0;
 }
+
+.title,
+.content {
+  width: 100%;
+  font-family: inherit;
+}
+
+.title {
+  font-weight: 700;
+  line-height: 1.4;
+  font-size: calc(var(--base-font-size) * 1.25);
+  margin: .5rem 0;
+}
+
+.content {
+  line-height: 1.8;
+  /* min-height: 2rem; */
+  font-size: calc(var(--base-font-size) * 1.1);
+  opacity: .8;
+}
+
+.time {
+  width: 100%;
+  height: auto;
+  font-size: calc(var(--base-font-size) * 0.875);
+  opacity: 0.4;
+}
+
+.card {
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  color: #000;
+  transition: all 500ms ease 0s;
+  color: #fff;
+}
+
 </style>
