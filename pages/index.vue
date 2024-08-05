@@ -1,11 +1,18 @@
 <template>
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
+    <div> 
+        <CodeHighlight :code="myCode" initial-language="python" /> 
+    </div>
     <!-- 主体部分 -->
     <div>
       <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
         :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
         @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
     </div>
+    <!-- <div>
+      <CodeTemplate></CodeTemplate>
+    </div> -->
+   
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
@@ -27,6 +34,20 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 
 const { width, xs } = useDisplay();
+
+const myCode = ref(`  
+const props = defineProps({
+    code: {
+      type: String,
+      required: true
+    },
+    initialLanguage: {
+      type: String,
+      default: ''
+    }
+  });
+
+`);
 
 const isMobile = ref(false);
 const snackbar = ref(false);

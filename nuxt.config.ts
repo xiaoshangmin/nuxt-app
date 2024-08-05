@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     }
   },
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify','highlight.js'],
   },
   modules: [
     '@nuxtjs/i18n',

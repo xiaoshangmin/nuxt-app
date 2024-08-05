@@ -15,6 +15,7 @@
     "@imgly/background-removal-data": "^1.4.5",
     "@mdi/font": "^7.4.47",
     "dom-to-image-more": "^3.3.0",
+    "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
     "interactjs": "^1.10.27",
     "nuxt": "^3.12.3",
