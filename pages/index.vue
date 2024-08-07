@@ -1,8 +1,12 @@
 <template>
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
-    <div> 
-        <CodeHighlight :code="myCode" initial-language="python" /> 
+
+    <!-- <CodeHighlight :code="jsCode" language="javascript" :showLineNumbers="true" theme="dark" /> -->
+    <div>
+      <h1>代码编辑器</h1>
+      <HighlightJsTextarea />
     </div>
+
     <!-- 主体部分 -->
     <div>
       <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
@@ -12,7 +16,7 @@
     <!-- <div>
       <CodeTemplate></CodeTemplate>
     </div> -->
-   
+
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
@@ -28,6 +32,22 @@
 </template>
 
 <script setup>
+import 'highlight.js/styles/default.css'
+const jsCode = `
+function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+}
+
+greet('World');
+`
+
+const pythonCode = `
+def greet(name):
+    print(f"Hello, {name}!")
+
+greet("World")
+`
+
 import interact from "interactjs";
 import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
