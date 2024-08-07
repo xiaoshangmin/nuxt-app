@@ -1,28 +1,24 @@
 <template>
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
 
-    <!-- <CodeHighlight :code="jsCode" language="javascript" :showLineNumbers="true" theme="dark" /> -->
-    <div>
-      <h1>代码编辑器</h1>
+
+    <div> 
       <HighlightJsTextarea />
     </div>
 
     <!-- 主体部分 -->
-    <div>
+    <!-- <div>
       <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
         :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
         @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
-    </div>
-    <!-- <div>
-      <CodeTemplate></CodeTemplate>
-    </div> -->
-
+    </div> 
+    
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
       </CardOperation>
-    </div>
+    </div> -->
     <!-- qrcode edit -->
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
@@ -33,20 +29,6 @@
 
 <script setup>
 import 'highlight.js/styles/default.css'
-const jsCode = `
-function greet(name) {
-  console.log(\`Hello, \${name}!\`);
-}
-
-greet('World');
-`
-
-const pythonCode = `
-def greet(name):
-    print(f"Hello, {name}!")
-
-greet("World")
-`
 
 import interact from "interactjs";
 import domtoimage from "dom-to-image-more";
@@ -54,20 +36,6 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 
 const { width, xs } = useDisplay();
-
-const myCode = ref(`  
-const props = defineProps({
-    code: {
-      type: String,
-      required: true
-    },
-    initialLanguage: {
-      type: String,
-      default: ''
-    }
-  });
-
-`);
 
 const isMobile = ref(false);
 const snackbar = ref(false);
@@ -394,7 +362,7 @@ onMounted(async () => {
     styleObject.width = `${width.value}px`;
     isMobile.value = true
   } else {
-    initInteract();
+    // initInteract();
   }
   loadUserConfig();
 });
