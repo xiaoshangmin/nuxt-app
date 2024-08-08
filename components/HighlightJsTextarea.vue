@@ -11,21 +11,32 @@
     </div>
     <div class="code-editor" ref="editorContainer">
       <textarea v-model="code" @input="updateHighlight" class="code-input" ref="codeInput" spellcheck="false"
-        autocomplete="false"></textarea>
-      <pre class="code-output" ref="codeOutput"><code v-html="highlightedCode"></code></pre>
+        autocomplete="false" autocapitalize="false"></textarea>
+      <pre class="code-output" ref="codeOutput"><code v-html="highlightedCode" ></code></pre>
     </div>
+  </div>
+  <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
+    <v-btn @click="generateImage" class="text-none">
+      {{ $t("Download Image") }}
+    </v-btn>
+    <v-tooltip text="可直接粘贴在聊天框" v-if="!isMobile">
+      <template v-slot:activator="{ props }">
+        <v-btn v-bind="props" @click="copyImage" class="text-none">
+          {{ $t("Copy Image") }}</v-btn>
+      </template>
+    </v-tooltip>
   </div>
 </template>
 
 <script setup>
 
 
-// import { ref, onMounted, watch } from 'vue'
 import hljs from 'highlight.js/lib/common'
 // import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/atom-one-dark.min.css' // 使用默认主题
 
 // hljs.registerLanguage('javascript', javascript)
+const emit = defineEmits(["generateImage", "copyImage", "getClipboardData"]);
 
 const code = ref('')
 const language = ref("")
@@ -36,6 +47,7 @@ const editorContainer = ref(null)
 
 
 const props = defineProps({
+  isMobile: { type: Boolean, default: false },
   draggable: { type: Object },
   styleObject: {},
 });
@@ -48,7 +60,7 @@ const updateHighlight = () => {
     const highlighted = hljs.highlightAuto(code.value)
     language.value = highlighted.language
     highlightedCode.value = highlighted.value
-  } 
+  }
   adjustHeight()
 }
 
@@ -57,8 +69,7 @@ const adjustHeight = () => {
   if (codeInput.value && codeOutput.value && editorContainer.value) {
     codeInput.value.style.height = 'auto'
     codeOutput.value.style.height = 'auto'
-    console.log(codeOutput.value)
-    const scrollHeight = codeOutput.value.scrollHeight
+    const scrollHeight = codeInput.value.scrollHeight
     codeInput.value.style.height = `${scrollHeight}px`
     codeOutput.value.style.height = `${scrollHeight}px`
     editorContainer.value.style.height = `${scrollHeight}px`
@@ -92,6 +103,13 @@ onUnmounted(() => {
   // 移除键盘事件监听器
   document.removeEventListener('keydown', handleTabKey);
 });
+
+function generateImage() {
+  emit("generateImage")
+}
+function copyImage() {
+  emit("copyImage")
+}
 
 const styleObject = reactive(props.styleObject);
 
@@ -130,8 +148,8 @@ watch(props.styleObject, adjustHeight)
   box-sizing: border-box;
   --base-font-size: 1.1rem;
 
-  margin: 2rem auto;
-  border-radius: 8px;
+  margin: 1rem auto;
+  /* border-radius: 8px; */
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   /* background: rgba(255, 255, 255, 0.2); */
@@ -198,6 +216,7 @@ watch(props.styleObject, adjustHeight)
   left: 0;
   width: 100%;
   height: 100%;
+  min-height: 100px;
   margin: 0;
   padding: 1rem;
   border: none;
@@ -208,6 +227,7 @@ watch(props.styleObject, adjustHeight)
   word-wrap: break-word;
   overflow: hidden;
   background-color: rgba(209, 166, 66, .1);
+  letter-spacing: 1.5px;
 }
 
 .code-input {
@@ -217,7 +237,8 @@ watch(props.styleObject, adjustHeight)
   resize: none;
   z-index: 1;
   outline: none;
-  /* 移除默认的聚焦轮廓 */
+  text-size-adjust: none;
+  font-variant-ligatures: none;
 }
 
 /* .code-input:focus {

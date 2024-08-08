@@ -72,6 +72,7 @@
     </v-dialog>
   </div>
 </template>
+
 <script setup>
 
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
@@ -114,17 +115,14 @@ const qrData = ref("https://labs.wowyou.cc/");
 const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
+
 function updateConfig(e) {
   emit("updateConfig", { key: e.target.dataset.key, text: e.target.innerHTML });
 }
 
 function editQrData() {
   dialog.value = false
-  emit("editQrData", qrData.value)
-  // if (qrDataCopy.value) {
-  //   qrData.value = this.qrDataCopy;
-  //   dialog.value = false;
-  // }
+  emit("editQrData", qrData.value) 
 }
 function getQrcode(data, id) {
   // qrcode.value = data;

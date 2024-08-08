@@ -3,7 +3,7 @@
 
 
     <div>
-      <HighlightJsTextarea ref="draggable" :styleObject="styleObject" />
+      <HighlightJsTextarea ref="draggable"  @generateImage="generateImage" :styleObject="styleObject" />
     </div>
 
     <!-- 主体部分 -->
@@ -393,23 +393,7 @@ function updateConfig(e) {
   doUpdateUserConfig(e.key, e.text)
 }
 
-function doUpdateUserConfig(key, text) {
-  // if ('title' == key) {
-  //   userConfigStore.title = text;
-  // }
-  // if ('content' == key) {
-  //   userConfigStore.content = text;
-  // }
-  // if ('author' == key) {
-  //   userConfigStore.author = text;
-  // }
-  // if ('qrCodeTitle' == key) {
-  //   userConfigStore.qrCodeTitle = text;
-  // }
-  // if ('qrCodeDesc' == key) {
-  //   userConfigStore.qrCodeDesc = text;
-  // }
-
+function doUpdateUserConfig(key, text) { 
   userConfigStore[`${key}`] = text
 }
 function editQrData(e) {
@@ -471,6 +455,7 @@ function decrement(e) {
     draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
+
 function increment(e) {
   if ("padding" == e.action) {
     styleObject.padding = `${e.val}px`;
@@ -480,8 +465,9 @@ function increment(e) {
     draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
-function generateImage() {
-  if (isMobile.value) {
+
+function generateImage() { 
+  if (!isMobile.value) {
     html2canvas(draggable.value.$refs.draggable).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const blob = dataURItoBlob(imgData);
