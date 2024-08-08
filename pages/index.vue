@@ -2,8 +2,8 @@
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
 
 
-    <div> 
-      <HighlightJsTextarea />
+    <div>
+      <HighlightJsTextarea ref="draggable" :styleObject="styleObject" />
     </div>
 
     <!-- 主体部分 -->
@@ -12,13 +12,13 @@
         :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
         @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
     </div> 
-    
+     -->
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
         @onBtnToggleChange="onBtnToggleChange">
       </CardOperation>
-    </div> -->
+    </div>
     <!-- qrcode edit -->
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
@@ -296,7 +296,7 @@ const themeList = ref([
 ]);
 const styleObject = reactive({
   padding: "20px",
-  width: "393px"
+  width: "600px"
 });
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。

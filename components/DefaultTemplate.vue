@@ -168,7 +168,6 @@ function copyImage() {
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 30vh;
-
 }
 
 .content-mode {

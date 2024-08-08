@@ -1,6 +1,6 @@
 <!-- HighlightJsTextarea.vue -->
 <template>
-  <div class="editor-container">
+  <div class="editor-container" ref="draggable" :style="styleObject">
     <div class="editor-header">
       <div class="editor-controls">
         <span class="control red"></span>
@@ -10,74 +10,150 @@
       <div class="editor-title">Code Editor</div>
     </div>
     <div class="code-editor" ref="editorContainer">
-      <textarea v-model="code" @input="updateHighlight" class="code-input" ref="codeInput"
-        spellcheck="false"></textarea>
+      <textarea v-model="code" @input="updateHighlight" class="code-input" ref="codeInput" spellcheck="false"
+        autocomplete="false"></textarea>
       <pre class="code-output" ref="codeOutput"><code v-html="highlightedCode"></code></pre>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import hljs from 'highlight.js/lib/core'
-import javascript from 'highlight.js/lib/languages/javascript'
+
+
+// import { ref, onMounted, watch } from 'vue'
+import hljs from 'highlight.js/lib/common'
+// import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/atom-one-dark.min.css' // 使用默认主题
 
-hljs.registerLanguage('javascript', javascript)
+// hljs.registerLanguage('javascript', javascript)
 
 const code = ref('')
+const language = ref("")
 const highlightedCode = ref('')
 const codeInput = ref(null)
 const codeOutput = ref(null)
 const editorContainer = ref(null)
 
+
+const props = defineProps({
+  draggable: { type: Object },
+  styleObject: {},
+});
+
 const updateHighlight = () => {
-  const highlighted = hljs.highlight(code.value, { language: 'javascript' })
-  highlightedCode.value = highlighted.value
+  if (language.value) {
+    const highlighted = hljs.highlight(code.value, { "language": language.value })
+    highlightedCode.value = highlighted.value
+  } else {
+    const highlighted = hljs.highlightAuto(code.value)
+    language.value = highlighted.language
+    highlightedCode.value = highlighted.value
+  } 
   adjustHeight()
 }
 
 const adjustHeight = () => {
+  console.log(45123)
   if (codeInput.value && codeOutput.value && editorContainer.value) {
     codeInput.value.style.height = 'auto'
     codeOutput.value.style.height = 'auto'
-    const scrollHeight = codeInput.value.scrollHeight
+    console.log(codeOutput.value)
+    const scrollHeight = codeOutput.value.scrollHeight
     codeInput.value.style.height = `${scrollHeight}px`
     codeOutput.value.style.height = `${scrollHeight}px`
     editorContainer.value.style.height = `${scrollHeight}px`
   }
 }
 
+function handleTabKey(event) {
+  if (event.keyCode === 9) { // 检查是否是 tab 键
+    event.preventDefault(); // 阻止默认行为
+    // 这里可以添加你希望 tab 键执行的操作，例如插入空格
+    // 例如：插入两个空格
+    const start = codeInput.value.selectionStart;
+    const end = codeInput.value.selectionEnd;
+
+    // 假设我们简单地将光标位置的文本替换为两个空格
+    const value = codeInput.value.value;
+    codeInput.value.value =
+      value.substring(0, start) + '  ' +
+      value.substring(end);
+    // 移动光标到两个空格之后
+    codeInput.value.selectionStart =
+      codeInput.value.selectionEnd = start + 2;
+  }
+}
+
 onMounted(() => {
   updateHighlight()
+  document.addEventListener('keydown', handleTabKey);
 })
+onUnmounted(() => {
+  // 移除键盘事件监听器
+  document.removeEventListener('keydown', handleTabKey);
+});
+
+const styleObject = reactive(props.styleObject);
 
 watch(code, adjustHeight)
+watch(props.styleObject, adjustHeight)
+// watch(() => props.styleObject, adjustHeight)
+
+
 </script>
 
 <style scoped>
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 145deg;
+}
+
+@property --colorA {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(5, 174, 157);
+}
+
+@property --colorB {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(17, 26, 35);
+}
+
+
 .editor-container {
-  width: 600px;
-  max-width: 800px;
+
+  background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
+  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s, font-size .5s;
+  font-family: inherit;
+  box-sizing: border-box;
+  --base-font-size: 1.1rem;
+
   margin: 2rem auto;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.2);
+  /* background: rgba(255, 255, 255, 0.2); */
   backdrop-filter: blur(10px);
 }
 
 .editor-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 0.5rem 1rem;
   background: rgba(240, 240, 240, 0.8);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .editor-controls {
   display: flex;
   gap: 0.5rem;
+  position: absolute;
+  padding: 0 16px;
+  left: 0;
 }
 
 .control {
@@ -115,6 +191,8 @@ watch(code, adjustHeight)
 
 .code-input,
 .code-output {
+  tab-size: 2;
+  transition: font-size .5s;
   position: absolute;
   top: 0;
   left: 0;
@@ -123,12 +201,13 @@ watch(code, adjustHeight)
   margin: 0;
   padding: 1rem;
   border: none;
-  font-family: 'Fira Code', monospace;
-  font-size: 14px;
+  font-family: 'Roboto';
+  font-size: calc(var(--base-font-size));
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
-  overflow: auto;
+  overflow: hidden;
+  background-color: rgba(209, 166, 66, .1);
 }
 
 .code-input {
@@ -137,12 +216,13 @@ watch(code, adjustHeight)
   background: transparent;
   resize: none;
   z-index: 1;
-  outline: none; /* 移除默认的聚焦轮廓 */
+  outline: none;
+  /* 移除默认的聚焦轮廓 */
 }
 
-.code-input:focus {
+/* .code-input:focus {
   box-shadow: inset 0 0 0 2px rgba(0, 120, 212, 0.1);
-}
+} */
 
 .code-output {
   pointer-events: none;
