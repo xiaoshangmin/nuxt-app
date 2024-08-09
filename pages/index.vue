@@ -3,7 +3,9 @@
 
 
     <div>
-      <HighlightJsTextarea ref="draggable"  @generateImage="generateImage" :styleObject="styleObject" />
+      <!-- <HighlightJsTextarea ref="draggable"  @generateImage="generateImage" :styleObject="styleObject" /> -->
+      <CodeInput :styleObject="styleObject"/>
+
     </div>
 
     <!-- 主体部分 -->
@@ -296,7 +298,8 @@ const themeList = ref([
 ]);
 const styleObject = reactive({
   padding: "20px",
-  width: "600px"
+  width: "600px",
+  fontSize:'1rem'
 });
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
@@ -366,6 +369,9 @@ onMounted(async () => {
   }
   loadUserConfig();
 });
+
+ 
+
 function initInteract() {
   interact(draggable.value.$refs.draggable).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
@@ -441,8 +447,8 @@ function onBtnToggleChange(e) {
     styleObject.transition = "500ms"
   }
   if (e.action == "fontsize") {
-    // styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    styleObject.fontSize = `${e.val}rem`;
+    // draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`); 
   }
 }
 function decrement(e) {
@@ -451,8 +457,8 @@ function decrement(e) {
   } else if ("width" == e.action) {
     styleObject.width = `${e.val}px`;
   } else {
-    // styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    styleObject.fontSize = `${e.val}rem`;
+    // draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 

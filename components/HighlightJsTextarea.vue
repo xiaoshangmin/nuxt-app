@@ -30,13 +30,14 @@
 
 <script setup>
 
+import { codeToHtml } from 'shiki'
 
 import hljs from 'highlight.js/lib/common'
 // import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/atom-one-dark.min.css' // 使用默认主题
 
 // hljs.registerLanguage('javascript', javascript)
-const emit = defineEmits(["generateImage", "copyImage", "getClipboardData"]);
+const emit = defineEmits(["generateImage", "copyImage"]);
 
 const code = ref('')
 const language = ref("")
@@ -49,7 +50,7 @@ const editorContainer = ref(null)
 const props = defineProps({
   isMobile: { type: Boolean, default: false },
   draggable: { type: Object },
-  styleObject: {},
+  styleObject: { type: Object },
 });
 
 const updateHighlight = () => {
@@ -65,10 +66,10 @@ const updateHighlight = () => {
 }
 
 const adjustHeight = () => {
-  console.log(45123)
   if (codeInput.value && codeOutput.value && editorContainer.value) {
     codeInput.value.style.height = 'auto'
     codeOutput.value.style.height = 'auto'
+    void codeInput.value.offsetHeight
     const scrollHeight = codeInput.value.scrollHeight
     codeInput.value.style.height = `${scrollHeight}px`
     codeOutput.value.style.height = `${scrollHeight}px`
@@ -111,12 +112,20 @@ function copyImage() {
   emit("copyImage")
 }
 
-const styleObject = reactive(props.styleObject);
 
-watch(code, adjustHeight)
-watch(props.styleObject, adjustHeight)
-// watch(() => props.styleObject, adjustHeight)
+watch(code, () => {
+  updateHighlight()
+}, { deep: true })
 
+watch(() => props.styleObject, (newVal, oldVal) => {
+  
+    console.log('styleObject 对象变化了');
+    setTimeout(()=>{
+
+      updateHighlight()
+    },100)
+ 
+}, { deep: true })
 
 </script>
 
@@ -143,7 +152,7 @@ watch(props.styleObject, adjustHeight)
 .editor-container {
 
   background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
-  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s, font-size .5s;
+  transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s;
   font-family: inherit;
   box-sizing: border-box;
   --base-font-size: 1.1rem;
@@ -160,7 +169,7 @@ watch(props.styleObject, adjustHeight)
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.5rem;
   background: rgba(240, 240, 240, 0.8);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   position: relative;
@@ -195,7 +204,8 @@ watch(props.styleObject, adjustHeight)
 .editor-title {
   flex-grow: 1;
   text-align: center;
-  font-size: 14px;
+  /* font-size: 14px; */
+  font-size: inherit;
   font-weight: 500;
   color: #333;
 }
@@ -204,7 +214,7 @@ watch(props.styleObject, adjustHeight)
   position: relative;
   width: 100%;
   /* min-height: 300px; */
-  transition: height 0.2s;
+  /* transition: height 0.2s; */
 }
 
 .code-input,
@@ -221,7 +231,8 @@ watch(props.styleObject, adjustHeight)
   padding: 1rem;
   border: none;
   font-family: 'Roboto';
-  font-size: calc(var(--base-font-size));
+  /* font-size: calc(var(--base-font-size)); */
+  font-size: inherit;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
