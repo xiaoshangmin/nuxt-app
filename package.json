@@ -14,18 +14,17 @@
     "@imgly/background-removal": "^1.5.3",
     "@imgly/background-removal-data": "^1.4.5",
     "@mdi/font": "^7.4.47",
+    "axios": "^1.7.3",
     "dom-to-image-more": "^3.3.0",
-    "highlight.js": "^11.10.0",
     "html2canvas": "^1.4.1",
     "interactjs": "^1.10.27",
     "nuxt": "^3.12.3",
+    "shiki": "^1.12.1",
     "vue": "^3.4.35",
     "vue-qr": "^4.0.9"
   },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.3.0",
-    "@vueuse/core": "^10.11.1",
-    "shiki": "^1.12.1",
     "vite-plugin-vuetify": "^2.0.3",
     "vuetify": "^3.6.13"
   }

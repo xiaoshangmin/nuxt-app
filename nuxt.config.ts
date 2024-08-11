@@ -13,8 +13,7 @@ export default defineNuxtConfig({
   },
   build: {
     transpile: ['vuetify'],
-  },
-  plugins: ['~/plugins/highlight.ts'],
+  }, 
   modules: [
     '@nuxtjs/i18n',
     (_options, nuxt) => {
@@ -58,6 +57,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03', 
   devServer: {
     host: "0.0.0.0"
+  },
+  runtimeConfig: {
+    public: {
+      NODE_ENV: process.env.NODE_ENV,
+      CHATWOOT_WEBSITE_TOKEN: process.env.CHATWOOT_WEBSITE_TOKEN,
+      UMAMI_WEBSITE_ID: process.env.UMAMI_WEBSITE_ID
+    }
   },
   devtools: { enabled: false }
 })

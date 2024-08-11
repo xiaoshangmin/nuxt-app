@@ -2,19 +2,33 @@
   <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
 
 
-    <div>
-      <!-- <HighlightJsTextarea ref="draggable"  @generateImage="generateImage" :styleObject="styleObject" /> -->
-      <CodeInput :styleObject="styleObject"/>
+    <!-- 主体部分 -->
+    <div id="card">
+      <CardTemplate ref="draggable" :styleObject="styleObject"  :userConfig="userConfig"></CardTemplate>
+    </div>
+    <!-- <div id="code">
+      <CodeTemplate ref="draggable" @getClipboardData="getClipboardData" :styleObject="styleObject" />
+    </div> -->
+    <!-- <div id="card">
+      <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
+        :styleObject="styleObject" @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile">
+      </DefaultTemplate>
+    </div> -->
 
+
+    <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
+      <v-btn @click="generateImage" class="text-none">
+        {{ $t("Download Image") }}
+      </v-btn>
+      <v-tooltip text="可直接粘贴在聊天框" v-if="!isMobile">
+        <template v-slot:activator="{ props }">
+          <v-btn v-bind="props" @click="copyImage" class="text-none">
+            {{ $t("Copy Image") }}</v-btn>
+        </template>
+      </v-tooltip>
     </div>
 
-    <!-- 主体部分 -->
-    <!-- <div>
-      <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
-        :styleObject="styleObject" @generateImage="generateImage" @copyImage="copyImage"
-        @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile"></DefaultTemplate>
-    </div> 
-     -->
+
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
         @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
@@ -29,9 +43,7 @@
   </div>
 </template>
 
-<script setup>
-import 'highlight.js/styles/default.css'
-
+<script setup> 
 import interact from "interactjs";
 import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
@@ -299,7 +311,7 @@ const themeList = ref([
 const styleObject = reactive({
   padding: "20px",
   width: "600px",
-  fontSize:'1rem'
+  fontSize: '1rem'
 });
 const userConfig = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
@@ -365,12 +377,12 @@ onMounted(async () => {
     styleObject.width = `${width.value}px`;
     isMobile.value = true
   } else {
-    // initInteract();
+    initInteract();
   }
   loadUserConfig();
 });
 
- 
+
 
 function initInteract() {
   interact(draggable.value.$refs.draggable).resizable({
@@ -384,12 +396,12 @@ function initInteract() {
 
         // x = (parseFloat(x) || 0) + event.deltaRect.left;
         // y = (parseFloat(y) || 0) + event.deltaRect.top;
-
-        Object.assign(event.target.style, {
-          width: `${event.rect.width}px`,
-          // height: `${event.rect.height}px`,
-          translate: '500ms'
-        });
+        styleObject.width = `${event.rect.width}px`;
+        // Object.assign(event.target.style, {
+        //   width: `${event.rect.width}px`,
+        //   // height: `${event.rect.height}px`,
+        //   translate: '500ms'
+        // });
         // Object.assign(event.target.dataset, { x, y });
       },
     },
@@ -399,7 +411,7 @@ function updateConfig(e) {
   doUpdateUserConfig(e.key, e.text)
 }
 
-function doUpdateUserConfig(key, text) { 
+function doUpdateUserConfig(key, text) {
   userConfigStore[`${key}`] = text
 }
 function editQrData(e) {
@@ -417,6 +429,7 @@ function changeColor(theme) {
   draggable.value.$refs.draggable.style.setProperty("--colorB", theme.colorB);
   draggable.value.$refs.draggable.style.setProperty("--angle", theme.angle);
 }
+
 function onSwitchChange(e) {
   //无边框
   if (e.val.padding == true) {
@@ -435,6 +448,7 @@ function onSliderChange(e) {
     styleObject.width = `${e.val}px`;
   }
   if (e.action == "fontsize") {
+    styleObject.fontSize = `${e.val}rem`;
     draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
@@ -448,7 +462,7 @@ function onBtnToggleChange(e) {
   }
   if (e.action == "fontsize") {
     styleObject.fontSize = `${e.val}rem`;
-    // draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`); 
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function decrement(e) {
@@ -458,7 +472,7 @@ function decrement(e) {
     styleObject.width = `${e.val}px`;
   } else {
     styleObject.fontSize = `${e.val}rem`;
-    // draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 
@@ -468,13 +482,14 @@ function increment(e) {
   } else if ("width" == e.action) {
     styleObject.width = `${e.val}px`;
   } else {
+    styleObject.fontSize = `${e.val}rem`;
     draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 
-function generateImage() { 
+function generateImage() {
   if (!isMobile.value) {
-    html2canvas(draggable.value.$refs.draggable).then((canvas) => {
+    html2canvas(draggable.value.$refs.draggable, { scale: 3 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const blob = dataURItoBlob(imgData);
 
@@ -517,8 +532,8 @@ const dataURItoBlob = (dataURI) => {
 };
 
 function copyImage() {
-  if (isMobile.value) {
-    html2canvas(draggable.value.$refs.draggable).then((canvas) => {
+  if (!isMobile.value) {
+    html2canvas(draggable.value.$refs.draggable, { scale: 3 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       copyBase64Img(imgData);
     });
@@ -560,20 +575,6 @@ function getClipboardData(event) {
   userConfig[`${event.target.dataset.key}`] = text
   doUpdateUserConfig(event.target.dataset.key, text)
   // 获取当前选中的范围
-  // const selection = window.getSelection();
-  // if (!selection.rangeCount) return;
-  // const range = selection.getRangeAt(0);
-
-  // // 创建一个文本节点并插入到当前范围
-  // const textNode = document.createTextNode(text);
-  // range.deleteContents(); // 删除选中内容
-  // range.insertNode(textNode);
-
-  // // 调整光标位置
-  // range.setStartAfter(textNode);
-  // range.setEndAfter(textNode);
-  // selection.removeAllRanges();
-  // selection.addRange(range);
 }
 
 
@@ -604,5 +605,9 @@ const loadUserConfig = () => {
   position: fixed;
   bottom: 0px;
   overflow: hidden;
+}
+
+code {
+  font-family: inherit !important;
 }
 </style>

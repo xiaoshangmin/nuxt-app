@@ -47,17 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
-      <v-btn @click="generateImage" class="text-none">
-        {{ $t("Download Image") }}
-      </v-btn>
-      <v-tooltip text="可直接粘贴在聊天框" v-if="!isMobile">
-        <template v-slot:activator="{ props }">
-          <v-btn v-bind="props" @click="copyImage" class="text-none">
-            {{ $t("Copy Image") }}</v-btn>
-        </template>
-      </v-tooltip>
-    </div>
+   
     <!-- qrcode edit -->
     <v-dialog v-model="dialog" max-width="500">
       <v-card hover title="编辑二维码">
@@ -106,7 +96,7 @@ const props = defineProps({
     }),
   },
 });
-const emit = defineEmits(["updateConfig", "generateImage", "copyImage", "getClipboardData", "editQrData"]);
+const emit = defineEmits(["updateConfig", "getClipboardData", "editQrData"]);
 
 // const draggable = ref(null);
 const dialog = ref(false);
@@ -132,12 +122,6 @@ function getClipboardData(event) {
   emit("getClipboardData", event)
 }
 
-function generateImage() {
-  emit("generateImage")
-}
-function copyImage() {
-  emit("copyImage")
-} 
 </script>
 
 <style scoped>
@@ -165,7 +149,6 @@ function copyImage() {
   font-family: inherit;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 30vh;
 }
 
 .content-mode {
