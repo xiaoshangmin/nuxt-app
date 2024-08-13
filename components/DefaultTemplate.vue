@@ -4,13 +4,13 @@
       <div class="content-mode" ref="draggable" :style="styleObject">
         <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
           :class="{ 'rounded-xl': styleObject.padding != '0px' }">
-          <div class="editable-element title " contenteditable="true" autocorrect="off"
-            autocomplete="off" :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
+          <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
+            :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
             @paste="getClipboardData">
             {{ userConfig.title }}
           </div>
-          <div class="editable-element content " contenteditable="true" autocorrect="off"
-            autocomplete="off" :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
+          <div class="editable-element content " contenteditable="true" autocorrect="off" autocomplete="off"
+            :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
             @paste="getClipboardData">
             {{ userConfig.content }}
           </div>
@@ -26,12 +26,12 @@
             <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
             <div class="d-flex flex-row  justify-space-between align-center">
               <div>
-                <div class="editable-element qr-title " contenteditable="true" autocorrect="off"
-                  autocomplete="off" @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                <div class="editable-element qr-title " contenteditable="true" autocorrect="off" autocomplete="off"
+                  @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
                   {{ userConfig.qrCodeTitle }}
                 </div>
-                <div class="editable-element qr-desc  mt-2" contenteditable="true"
-                  @paste="getClipboardData" @input="updateConfig" data-key="qrCodeDesc">
+                <div class="editable-element qr-desc  mt-2" contenteditable="true" @paste="getClipboardData"
+                  @input="updateConfig" data-key="qrCodeDesc">
                   {{ userConfig.qrCodeDesc }}
                 </div>
               </div>
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-   
+
     <!-- qrcode edit -->
     <v-dialog v-model="dialog" max-width="500">
       <v-card hover title="编辑二维码">
@@ -112,7 +112,7 @@ function updateConfig(e) {
 
 function editQrData() {
   dialog.value = false
-  emit("editQrData", qrData.value) 
+  emit("editQrData", qrData.value)
 }
 function getQrcode(data, id) {
   // qrcode.value = data;
@@ -237,5 +237,4 @@ function getClipboardData(event) {
   transition: all 500ms ease 0s;
   color: #fff;
 }
-
 </style>

@@ -4,7 +4,8 @@
 
     <!-- 主体部分 -->
     <div id="card">
-      <CardTemplate ref="draggable" :styleObject="styleObject"  :userConfig="userConfig"></CardTemplate>
+      <CardTemplate ref="draggable" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading"
+        :metaData="metaData"></CardTemplate>
     </div>
     <!-- <div id="code">
       <CodeTemplate ref="draggable" @getClipboardData="getClipboardData" :styleObject="styleObject" />
@@ -31,7 +32,7 @@
 
     <div class="operation">
       <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
-        @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment"
+        @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
         @onBtnToggleChange="onBtnToggleChange">
       </CardOperation>
     </div>
@@ -43,11 +44,13 @@
   </div>
 </template>
 
-<script setup> 
+<script setup>
+import axios from 'axios'
 import interact from "interactjs";
 import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
+import { getBase64Image } from '@/utils'
 
 const { width, xs } = useDisplay();
 
@@ -57,6 +60,8 @@ const draggable = ref(null);
 const dialog = ref(false);
 const showWidth = ref("0px");
 const qrcode = ref("");
+const url = ref("");
+const isLoading = ref(false)
 
 const themeList = ref([
   [
@@ -310,7 +315,7 @@ const themeList = ref([
 ]);
 const styleObject = reactive({
   padding: "20px",
-  width: "600px",
+  width: "340px",
   fontSize: '1rem'
 });
 const userConfig = reactive({
@@ -407,6 +412,12 @@ function initInteract() {
     },
   });
 }
+
+function onUrlChange(url) {
+  console.log(url)
+  queryOg(url)
+}
+
 function updateConfig(e) {
   doUpdateUserConfig(e.key, e.text)
 }
@@ -440,6 +451,7 @@ function onSwitchChange(e) {
   // show = e.val
   Object.assign(userConfig.show, e.val);
 }
+
 function onSliderChange(e) {
   if (e.action == "padding") {
     styleObject.padding = `${e.val}px`;
@@ -564,7 +576,6 @@ function copyBase64Img(base64Data) {
   let blob = new Blob([ab], { type });
   // “navigator.clipboard.write”该方法的确只能在本地localhost 、127.0.0.1 或者 https 协议下使用，否则navigator没有clipboard方法。
   navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
-  // showToast('已复制到你的剪贴板');
   snackbar.value = true;
 }
 function getClipboardData(event) {
@@ -594,6 +605,57 @@ const loadUserConfig = () => {
     Object.assign(userConfig, config);
   }
 };
+
+
+
+const API_PREFIX_VERCEL = 'https://doc.wowyou.cc/api/web/og'
+const metaData = reactive({
+  title: '',
+  description: '',
+  url: '',
+  image: '',
+  logo: '',
+  author: '',
+  publisher: '',
+  base64Image: '',
+  base64Logo: ''
+})
+
+const queryOg = async (url) => {
+  isLoading.value = true
+
+  const { data } = await axios.post(`${API_PREFIX_VERCEL}`, { "url": url })
+
+  if (data) {
+    let base64Image = ''
+    if (data?.image) {
+      try {
+        base64Image = await getBase64Image(data.image)
+      } catch (error) {
+        console.log(`Oops, something went wrong: Maybe caused by CORS!!!`)
+      }
+    }
+
+    metaData.title = data.title
+    metaData.description = data.description
+    metaData.url = url
+    metaData.image = data.image
+    metaData.logo = data.logo
+    metaData.author = data.author
+    metaData.publisher = data.publisher
+    metaData.base64Image = base64Image
+  } else {
+    metaData.description = 'description'
+    metaData.image = 'https://labs.wowyou.cc/preview.png'
+    metaData.logo = 'https://labs.wowyou.cc/favicon.svg'
+    metaData.title = 'title'
+    metaData.url = url
+  }
+
+  isLoading.value = false
+}
+
+
 </script>
 
 <style scoped>

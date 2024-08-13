@@ -10,14 +10,14 @@
                         </div>
                         <!-- content -->
                         <div v-if="!isLoading">
-                            <v-img class="img" :src="base64Image"></v-img>
-                            <div class="qrcode-container flex-cloumn mt-3 px-3">
+                            <v-img class="img" :src="metaData.base64Image"></v-img>
+                            <div class="qrcode-container flex-cloumn mt-3 px-1">
                                 <div class="d-flex flex-row  justify-space-between align-center ga-2">
-                                    <div class="qrcode" :class="{
+                                    <div class="qrcode d-flex" :class="{
                                         'hidden': !userConfig.show.qrcode
-                                    }">
+                                    }" v-if="metaData.url">
                                         <ClientOnly>
-                                            <vueQr :text="userConfig.qrData" :size="100" :margin="0"
+                                            <vueQr :text="metaData.url" :size="100" :margin="0"
                                                 colorLight="transparent" backgroundColor="transparent"
                                                 :colorDark="colorDark">
                                             </vueQr>
@@ -25,17 +25,12 @@
                                     </div>
                                     <div :class="{ 'hidden': !userConfig.show.content }">
                                         <div class="editable-element qr-title " data-key="qrCodeTitle"
-                                            @paste="getClipboardData">GitHub: Let’s build from here
+                                            @paste="getClipboardData">{{metaData.title}}
                                         </div>
-                                        <div class="editable-element qr-desc mt-2" data-key="qrCodeDesc">GitHub is
-                                            where over 100 million developers shape the future of software,
-                                            together. Contribute to the open source community, manage your Git
-                                            repositories,
-                                            review code like a pro, track bugs and fea
-                                        </div>
+                                        <div class="editable-element qr-desc mt-1" data-key="qrCodeDesc">{{metaData.description}}</div>
                                         <div class="d-flex flex-row ga-2 mt-1 align-center" style="opacity: .7;">
-                                            <div> <v-img :width="20" cover :src="base64ImageLogo"></v-img></div>
-                                            <div>GitHub</div>
+                                            <div> <v-img :width="20" cover :src="metaData.logo"></v-img></div>
+                                            <div>{{metaData.publisher}}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -50,14 +45,37 @@
 
 <script setup>
 
-import axios from 'axios'
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
+
+// const metaData = reactive({
+//     title: '',
+//     description: '',
+//     url: '',
+//     image: '',
+//     logo: '',
+//     author: '',
+//     publisher: '',
+//     base64Image: '',
+//     base64Logo: ''
+// })
 
 const props = defineProps({
     isMobile: { type: Boolean, default: false },
+    isLoading: { type: Boolean, default: false },
     draggable: { type: Object },
     url: { type: String, default: "https://labs.wowyou.cc" },
     styleObject: {},
+    metaData: {
+        title: '',
+        description: '',
+        url: '',
+        image: '',
+        logo: '',
+        author: '',
+        publisher: '',
+        base64Image: '',
+        base64Logo: ''
+    },
     userConfig: {
         type: Object,
         default: () => ({
@@ -87,91 +105,15 @@ const emit = defineEmits(["updateConfig", "getClipboardData", "editQrData"]);
 
 // const draggable = ref(null); 
 const colorDark = ref("#fff");//#101320 
-const base64Image = ref('')
+// const base64Image = ref('')
 const base64ImageLogo = ref('')
-const isLoading = ref(false)
-
-
-async function fetchImageAsBase64(url, target) {
-    try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            target.value = reader.result;
-        };
-        reader.readAsDataURL(blob);
-    } catch (error) {
-        console.error('Error fetching and converting image:', error);
-    }
-}
 
 function getClipboardData(event) {
     emit("getClipboardData", event)
 }
 
 onMounted(() => {
-    fetchImageAsBase64('https://labs.wowyou.cc/preview.png', base64Image)
-    fetchImageAsBase64('https://logo.clearbit.com/github.com', base64ImageLogo);
 })
-
-const API_PREFIX_VERCEL = 'https://labs.wowyou.cc/api?url='
-const metaData = reactive({
-    title: '',
-    description: '',
-    url: '',
-    image: '',
-    logo: '',
-    author: '',
-    publisher: '',
-    base64Image: '',
-    base64Logo: ''
-})
-
-const init = async () => {
-    isLoading.value = true
-
-    const { data } = await axios.get(`${API_PREFIX_VERCEL}${props.url}`)
-
-    if (data) {
-        let base64Image = ''
-        if (data?.image) {
-            try {
-                base64Image = await fetchImageAsBase64(data.image, base64Image)
-            } catch (error) {
-                console.log(`Oops, something went wrong: Maybe caused by CORS!!!`)
-            }
-        }
-
-        metaData.title = data.title
-        metaData.description = data.description
-        metaData.url = props.url
-        metaData.image = data.image
-        metaData.logo = data.logo
-        metaData.author = data.author
-        metaData.publisher = data.publisher
-        metaData.base64Image = base64Image
-    } else {
-        metaData.description =
-            'description'
-        metaData.image = 'https://labs.wowyou.cc/preview.png'
-        metaData.logo = 'https://labs.wowyou.cc/favicon.svg'
-        metaData.title = 'title'
-        metaData.url = props.url
-    }
-
-    isLoading.value = false
-}
-
-watch(
-    () => props.url,
-    async (newVal) => {
-        if (newVal !== '') {
-            await init()
-        }
-    },
-    { deep: true, immediate: true }
-)
 
 </script>
 

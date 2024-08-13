@@ -51,12 +51,7 @@ import { useI18n } from 'vue-i18n';
 const { mobile } = useDisplay();
 const { t,locale, locales, setLocale } = useI18n();
 
-const drawer = ref(false)
-// const items = reactive([
-//     { title: t("Simple Card"), to: '/' },
-//     { title: t('Bg Remove'), to: '/bgremoval' },
-//     { title: t('IT Tools'), href: 'https://tools.wowyou.cc' },
-// ])
+const drawer = ref(false) 
 
 const items = computed(() => [
       { title: t("Simple Card"), to: '/' },
