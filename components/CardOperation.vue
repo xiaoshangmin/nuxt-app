@@ -294,7 +294,6 @@ function increment(e) {
   right: -2px;
   bottom: -2px;
   left: -2px;
-  opacity: 1; 
+  opacity: 1;
 }
- 
 </style>

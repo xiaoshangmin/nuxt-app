@@ -3,18 +3,18 @@
 
 
     <!-- 主体部分 -->
-    <div id="card">
+    <!-- <div id="card">
       <CardTemplate ref="draggable" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading"
         :metaData="metaData"></CardTemplate>
-    </div>
+    </div> -->
     <!-- <div id="code">
       <CodeTemplate ref="draggable" @getClipboardData="getClipboardData" :styleObject="styleObject" />
     </div> -->
-    <!-- <div id="card">
+    <div id="card">
       <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
         :styleObject="styleObject" @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile">
       </DefaultTemplate>
-    </div> -->
+    </div>
 
 
     <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
@@ -31,34 +31,23 @@
 
 
     <div class="operation">
-      <CardOperation :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
-        @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
-        @onBtnToggleChange="onBtnToggleChange">
-      </CardOperation>
+
     </div>
     <!-- qrcode edit -->
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
       复制成功
     </v-snackbar>
-     <!-- 浮动按钮 -->
-     <v-btn
-      color="primary"
-      fab
-      bottom
-      right
-      fixed
-      @click="sheet = true"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-
-     <!-- 底部弹出区域 -->
-     <v-bottom-sheet v-model="sheet">
+    <!-- 浮动按钮 -->
+    <v-fab icon="mdi-pencil" @click="sheet = true" absolute location="bottom end" app color="primary"></v-fab>
+    <!-- 底部弹出区域 -->
+    <v-bottom-sheet v-model="sheet" inset :opacity="0">
       <v-card>
         <v-card-text>
-          <!-- 在这里添加你的内容 -->
-          <p>这是一个空白区域</p>
+          <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+            @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
+            @onBtnToggleChange="onBtnToggleChange">
+          </CardOperation2>
         </v-card-text>
       </v-card>
     </v-bottom-sheet>
@@ -82,7 +71,7 @@ const draggable = ref(null);
 const dialog = ref(false);
 const showWidth = ref("0px");
 const qrcode = ref("");
-const url = ref("");
+const sheet = ref(false);
 const isLoading = ref(false)
 
 const themeList = ref([
