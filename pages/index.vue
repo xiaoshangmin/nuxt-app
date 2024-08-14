@@ -41,6 +41,28 @@
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
       复制成功
     </v-snackbar>
+     <!-- 浮动按钮 -->
+     <v-btn
+      color="primary"
+      fab
+      bottom
+      right
+      fixed
+      @click="sheet = true"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+
+     <!-- 底部弹出区域 -->
+     <v-bottom-sheet v-model="sheet">
+      <v-card>
+        <v-card-text>
+          <!-- 在这里添加你的内容 -->
+          <p>这是一个空白区域</p>
+        </v-card-text>
+      </v-card>
+    </v-bottom-sheet>
+
   </div>
 </template>
 
