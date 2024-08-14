@@ -1,6 +1,11 @@
 <template>
   <figure>
     <v-tabs-window v-model="tab">
+      <v-tabs-window-item value="template">
+        <div class="d-flex align-center justify-center">
+          
+        </div>
+      </v-tabs-window-item>
       <v-tabs-window-item value="url">
         <div class="d-flex align-center justify-center">
           <v-text-field clearable variant="outlined" placeholder="请输入url地址" v-model="url"></v-text-field>
@@ -152,6 +157,7 @@
     </v-tabs-window>
     <!-- </v-card-text> -->
     <v-tabs v-model="tab" align-tabs="center">
+      <v-tab value="template" class="text-none">模板</v-tab>
       <v-tab value="url" class="text-none">URL</v-tab>
       <v-tab value="one" class="text-none">{{ $t("Bg Color") }}</v-tab>
       <v-tab value="two" class="text-none">{{ $t("Display") }}</v-tab>
