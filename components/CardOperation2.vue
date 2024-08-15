@@ -2,20 +2,25 @@
   <figure>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
-        <div class="d-flex align-center justify-center">
-          
+        <div class="d-flex align-center template ga-6 py-4 px-4">
+          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-1' == tempId }" @click="changeTemp('temp-1')">
+            <v-img src="~/assets/temp-1.png" :width="80"></v-img></div>
+          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-2' == tempId }" @click="changeTemp('temp-2')">
+            <v-img src="~/assets/temp-2.png" :width="80"></v-img></div>
+          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-3' == tempId }" @click="changeTemp('temp-3')">
+            <v-img src="~/assets/temp-3.png" :width="80"></v-img></div>
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="url">
-        <div class="d-flex align-center justify-center">
+        <div class="d-flex align-center justify-center py-2 px-2">
           <v-text-field clearable variant="outlined" placeholder="请输入url地址" v-model="url"></v-text-field>
         </div>
       </v-tabs-window-item>
-      <v-tabs-window-item value="one">
-        <div class="d-flex align-center justify-center">
-          <v-carousel :continuous="false" :show-arrows="false" color="#033" height="100" hide-delimiter-background
+      <v-tabs-window-item value="bg">
+        <div class="d-flex align-center justify-center py-2 px-2">
+          <v-carousel :continuous="false" :show-arrows="false" color="#fff" height="100" hide-delimiter-background
             class="d-flex  align-center justify-center custom">
-            <v-carousel-item v-for="(theme, i) in themeList" :key="i" cover content-class="ccccc">
+            <v-carousel-item v-for="(theme, i) in themeList" :key="i" cover>
               <div class="d-flex flex-row ga-2 align-center justify-start flex-wrap px-1 py-1">
                 <div v-for="(item, index) in theme" class="d-flex cursor-pointer item"
                   :class="{ 'item-activate': String(i) + String(index) == selectedColorIndex }"
@@ -27,18 +32,18 @@
           </v-carousel>
         </div>
       </v-tabs-window-item>
-      <v-tabs-window-item value="two">
-        <div class="d-flex flex-row ga-3 flex-wrap align-center justify-center">
+      <v-tabs-window-item value="display">
+        <div class="d-flex flex-row ga-3 align-center justify-start  py-2 px-2 crtl">
           <v-switch v-model="show.title" :label="$t('Title')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('title')"></v-switch>
+            @update:modelValue="onSwitchChange('title')" min-width="100"></v-switch>
           <v-switch v-model="show.content" :label="$t('Content')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('content')"></v-switch>
-          <v-switch v-model="show.qrcode" :label="$t('QR Code')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('qrcode')"></v-switch>
+            @update:modelValue="onSwitchChange('content')" min-width="100"></v-switch>
           <v-switch v-model="show.author" :label="$t('Author')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('author')"></v-switch>
+            @update:modelValue="onSwitchChange('author')" min-width="100"></v-switch>
           <v-switch v-model="show.padding" :label="$t('Padding')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('padding')"></v-switch>
+            @update:modelValue="onSwitchChange('padding')" min-width="100"></v-switch>
+          <v-switch v-model="show.qrcode" :label="$t('QR Code')" hide-details inset color="primary"
+            @update:modelValue="onSwitchChange('qrcode')" min-width="120"></v-switch>
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="three">
@@ -114,7 +119,7 @@
           </div>
         </div>
       </v-tabs-window-item>
-      <v-tabs-window-item value="four">
+      <v-tabs-window-item value="font">
         <div class="d-flex align-center justify-center">
           <div class="d-flex flex-row align-center ga-2 justify-start px-2">
             <div style="width: 4rem">
@@ -159,12 +164,12 @@
     <v-tabs v-model="tab" align-tabs="center">
       <v-tab value="template" class="text-none">模板</v-tab>
       <v-tab value="url" class="text-none">URL</v-tab>
-      <v-tab value="one" class="text-none">{{ $t("Bg Color") }}</v-tab>
-      <v-tab value="two" class="text-none">{{ $t("Display") }}</v-tab>
+      <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
+      <v-tab value="display" class="text-none">{{ $t("Display") }}</v-tab>
       <v-tab value="three" class="text-none d-none d-sm-flex">{{
         $t("Width And Padding")
       }}</v-tab>
-      <v-tab value="four" class="text-none">{{ $t("Font") }}</v-tab>
+      <v-tab value="font" class="text-none">{{ $t("Font") }}</v-tab>
     </v-tabs>
   </figure>
 </template>
@@ -181,10 +186,11 @@ const emit = defineEmits([
   "decrement",
   "increment",
   "onUrlChange",
+  "onChangeTemp",
 ]);
 const tab = ref(null);
 const url = ref('')
-const showOperation = ref("showOperation");
+const tempId = ref("temp-1");
 const fontSizeSlider = ref("1.1");
 const widthSlider = ref("440");
 const paddingSlider = ref("20");
@@ -200,7 +206,11 @@ const show = reactive({
 watch(url, (newUrl) => {
   emit("onUrlChange", newUrl);
 })
-
+function changeTemp(e) {
+  tempId.value = e
+  console.log(tempId.value)
+  emit("onChangeTemp", e);
+}
 function onSwitchChange(e) {
   emit("onSwitchChange", { action: e, val: show });
 }
@@ -264,11 +274,53 @@ function increment(e) {
 }
 </script>
 <style scoped>
+.template {
+  overflow-x: auto;
+}
+
+.template::-webkit-scrollbar {
+  width: 2px;
+  /* 滚动条的宽度 */
+  height: 2px;
+}
+
+.template::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  /* 轨道背景颜色 */
+  border-radius: 5px;
+  /* 轨道圆角 */
+}
+
+/* 滚动条滑块 */
+.template::-webkit-scrollbar-thumb {
+  background: #888;
+  /* 滑块颜色 */
+  border-radius: 5px;
+  /* 滑块圆角 */
+}
+
+/* 滑块悬停时的颜色 */
+.template::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* 滑块悬停时颜色 */
+}
+
+.crtl {
+  overflow-x: auto;
+}
+
 .color-item {
   width: 1.75rem;
   height: 1.75rem;
   box-sizing: border-box;
   position: relative;
+}
+
+
+.item,
+.temp-item {
+  position: relative;
+  transition: all .2s ease-out;
 }
 
 .item::after {
@@ -289,23 +341,37 @@ function increment(e) {
   /* 边框显示的过渡效果 */
 }
 
-.item {
-  position: relative;
-}
-
 .item-activate::after {
-  top: -2px;
-  right: -2px;
-  bottom: -2px;
-  left: -2px;
   opacity: 1;
 }
+
+.template .temp-item::after {
+  border: 2px solid #63e2b7;
+  /* 边框颜色 */
+  border-radius: 16px;
+  /* 边框也是圆形 */
+  content: "";
+  top: -7px;
+  right: -7px;
+  bottom: -7px;
+  left: -7px;
+  position: absolute;
+  opacity: 0;
+  /* 初始时边框不可见 */
+  overflow: hidden;
+  transition: opacity .5s ease-out;
+}
+
+.template .temp-item-activate::after {
+  opacity: 1;
+}
+
 :deep(.v-carousel__controls) {
   height: 20px;
 
 }
-:deep(.v-btn--size-x-small){
+
+:deep(.v-btn--size-x-small) {
   --v-btn-height: 5px !important;
 }
-
 </style>

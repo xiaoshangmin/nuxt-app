@@ -1,7 +1,7 @@
 <template>
   <div class="main d-flex flex-column justify-center align-center">
     <div class="d-flex justify-center align-center">
-      <div class="content-mode" ref="draggable" :style="styleObject">
+      <div class="content-mode" ref="template" :style="styleObject">
         <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
           :class="{ 'rounded-xl': styleObject.padding != '0px' }">
           <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
@@ -69,7 +69,7 @@ import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
 const props = defineProps({
   isMobile: { type: Boolean, default: false },
-  draggable: { type: Object },
+  template: { type: Object },
   styleObject: {},
   userConfig: {
     type: Object,
@@ -97,8 +97,7 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(["updateConfig", "getClipboardData", "editQrData"]);
-
-// const draggable = ref(null);
+ 
 const dialog = ref(false);
 const colorDark = ref("#fff");//#101320
 const qrData = ref("https://labs.wowyou.cc/");

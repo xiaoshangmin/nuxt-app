@@ -1,6 +1,6 @@
 <template>
     <figure>
-        <div class="d-flex code-container" ref="draggable" :style="styleObject">
+        <div class="d-flex code-container" ref="template" :style="styleObject">
             <div class="editor-container">
                 <div class="editor-header">
                     <div class="editor-controls">
@@ -30,7 +30,7 @@ const highlightedCode = ref('')
 
 const props = defineProps({
     isMobile: { type: Boolean, default: false },
-    draggable: { type: Object },
+    template: { type: Object },
     styleObject: { type: Object },
 });
 const emit = defineEmits(["getClipboardData"]);

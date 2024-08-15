@@ -1,21 +1,18 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center ga-4 " :class="{ 'mt-4': !isMobile }">
-
-
+  <div class="container d-flex flex-column justify-center align-center" :class="{ 'mt-4': !isMobile }">
     <!-- 主体部分 -->
-    <!-- <div id="card">
-      <CardTemplate ref="draggable" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading"
-        :metaData="metaData"></CardTemplate>
-    </div> -->
-    <!-- <div id="code">
-      <CodeTemplate ref="draggable" @getClipboardData="getClipboardData" :styleObject="styleObject" />
-    </div> -->
-    <div id="card">
-      <DefaultTemplate ref="draggable" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
+    <div id="temp-1" v-show="'temp-1' == tempId">
+      <DefaultTemplate ref="temp1" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
         :styleObject="styleObject" @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile">
       </DefaultTemplate>
     </div>
-
+    <div id="temp-2" v-show="'temp-2' == tempId">
+      <CodeTemplate ref="temp2" @getClipboardData="getClipboardData" :styleObject="styleObject" />
+    </div>
+    <div id="temp-3" v-show="'temp-3' == tempId">
+      <CardTemplate ref="temp3" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading"
+        :metaData="metaData"></CardTemplate>
+    </div>
 
     <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
       <v-btn @click="generateImage" class="text-none">
@@ -29,10 +26,6 @@
       </v-tooltip>
     </div>
 
-
-    <div class="operation">
-
-    </div>
     <!-- qrcode edit -->
     <!-- 消息条 -->
     <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
@@ -43,12 +36,12 @@
     <!-- 底部弹出区域 -->
     <v-bottom-sheet v-model="sheet" inset :opacity="0">
       <v-card>
-        <v-card-text>
-          <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
-            @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
-            @onBtnToggleChange="onBtnToggleChange">
-          </CardOperation2>
-        </v-card-text>
+        <!-- <v-card-text> -->
+        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
+          @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
+          @onBtnToggleChange="onBtnToggleChange" @onChangeTemp="onChangeTemp">
+        </CardOperation2>
+        <!-- </v-card-text> -->
       </v-card>
     </v-bottom-sheet>
 
@@ -67,12 +60,15 @@ const { width, xs } = useDisplay();
 
 const isMobile = ref(false);
 const snackbar = ref(false);
-const draggable = ref(null);
+const temp1 = ref(null);
+const temp2 = ref(null);
+const temp3 = ref(null);
 const dialog = ref(false);
 const showWidth = ref("0px");
 const qrcode = ref("");
 const sheet = ref(false);
 const isLoading = ref(false)
+const tempId = ref("temp-1")
 
 const themeList = ref([
   [
@@ -325,7 +321,7 @@ const themeList = ref([
     },]
 ]);
 const styleObject = reactive({
-  padding: "20px",
+  padding: "30px",
   width: "340px",
   fontSize: '1rem'
 });
@@ -401,7 +397,8 @@ onMounted(async () => {
 
 
 function initInteract() {
-  interact(draggable.value.$refs.draggable).resizable({
+  console.log('initInteract')
+  interact(getChildRef()).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
       start(event) {
@@ -425,7 +422,6 @@ function initInteract() {
 }
 
 function onUrlChange(url) {
-  console.log(url)
   queryOg(url)
 }
 
@@ -447,9 +443,13 @@ function getQrcode(data, id) {
 }
 function changeColor(theme) {
   styleObject.transition = ""
-  draggable.value.$refs.draggable.style.setProperty("--colorA", theme.colorA);
-  draggable.value.$refs.draggable.style.setProperty("--colorB", theme.colorB);
-  draggable.value.$refs.draggable.style.setProperty("--angle", theme.angle);
+
+  // temp1.value.$refs.template.style.setProperty("--colorA", theme.colorA);
+  // temp1.value.$refs.template.style.setProperty("--colorB", theme.colorB);
+  // temp1.value.$refs.template.style.setProperty("--angle", theme.angle);
+  getChildRef().style.setProperty("--colorA", theme.colorA);
+  getChildRef().style.setProperty("--colorB", theme.colorB);
+  getChildRef().style.setProperty("--angle", theme.angle);
 }
 
 function onSwitchChange(e) {
@@ -472,7 +472,7 @@ function onSliderChange(e) {
   }
   if (e.action == "fontsize") {
     styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    getChildRef().style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 function onBtnToggleChange(e) {
@@ -485,9 +485,15 @@ function onBtnToggleChange(e) {
   }
   if (e.action == "fontsize") {
     styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    getChildRef().style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
+
+function onChangeTemp(e) {
+  console.log(e)
+  tempId.value = e
+}
+
 function decrement(e) {
   if ("padding" == e.action) {
     styleObject.padding = `${e.val}px`;
@@ -495,7 +501,7 @@ function decrement(e) {
     styleObject.width = `${e.val}px`;
   } else {
     styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    temp1.value.$refs.template.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 
@@ -506,13 +512,13 @@ function increment(e) {
     styleObject.width = `${e.val}px`;
   } else {
     styleObject.fontSize = `${e.val}rem`;
-    draggable.value.$refs.draggable.style.setProperty("--base-font-size", `${e.val}rem`);
+    temp1.value.$refs.template.style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
 
 function generateImage() {
   if (!isMobile.value) {
-    html2canvas(draggable.value.$refs.draggable, { scale: 3 }).then((canvas) => {
+    html2canvas(temp1.value.$refs.template, { scale: 3 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const blob = dataURItoBlob(imgData);
 
@@ -529,7 +535,7 @@ function generateImage() {
     });
   } else {
     document.fonts.ready.then(() => {
-      domtoimage.toJpeg(draggable.value.$refs.draggable).then(dataUrl => {
+      domtoimage.toJpeg(temp1.value.$refs.template).then(dataUrl => {
         const link = document.createElement('a');
         link.download = '创图卡片-screenshot.png';
         link.href = dataUrl;
@@ -556,14 +562,14 @@ const dataURItoBlob = (dataURI) => {
 
 function copyImage() {
   if (!isMobile.value) {
-    html2canvas(draggable.value.$refs.draggable, { scale: 3 }).then((canvas) => {
+    html2canvas(temp1.value.$refs.template, { scale: 3 }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       copyBase64Img(imgData);
     });
   } else {
     document.fonts.ready.then(() => {
       domtoimage
-        .toPng(draggable.value.$refs.draggable)
+        .toPng(temp1.value.$refs.template)
         .then((dataUrl) => {
           copyBase64Img(dataUrl);
         })
@@ -617,6 +623,17 @@ const loadUserConfig = () => {
   }
 };
 
+function getChildRef() {
+  if ('temp-1' == tempId.value) {
+    return temp1.value.$refs.template;
+  }
+  if ('temp-2' == tempId.value) {
+    return temp2.value.$refs.template;
+  }
+  if ('temp-3' == tempId.value) {
+    return temp3.value.$refs.template;
+  }
+}
 
 
 const API_PREFIX_VERCEL = 'https://doc.wowyou.cc/api/web/og'
@@ -672,12 +689,6 @@ const queryOg = async (url) => {
 <style scoped>
 .container {
   font-family: "Roboto", sans-serif;
-}
-
-.operation {
-  position: fixed;
-  bottom: 0px;
-  overflow: hidden;
 }
 
 code {

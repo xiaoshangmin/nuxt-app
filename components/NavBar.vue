@@ -21,18 +21,20 @@
                 <v-icon icon="mdi-message-alert-outline " size="x-large"></v-icon>
             </v-btn>
         </div>
-        <v-menu>
-            <template v-slot:activator="{ props }">
-                <v-btn icon="mdi-translate " v-bind="props">
-                </v-btn>
-            </template>
-            <v-list>
-                <v-list-item v-for="loc in availableLocales" :key="loc.code" @click="updateLocale(loc.code)">
-                    <v-list-item-title>{{ loc.name }}</v-list-item-title>
-                </v-list-item>
-            </v-list>
-        </v-menu>
-        <v-btn :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" slim @click="onClick"></v-btn>
+        <div v-if="!isMobile">
+            <v-menu>
+                <template v-slot:activator="{ props }">
+                    <v-btn icon="mdi-translate " v-bind="props">
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item v-for="loc in availableLocales" :key="loc.code" @click="updateLocale(loc.code)">
+                        <v-list-item-title>{{ loc.name }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <v-btn :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" slim @click="onClick"></v-btn>
+        </div>
     </v-app-bar>
 
     <v-navigation-drawer app v-model="drawer" temporary>
@@ -49,15 +51,15 @@ import { ref, computed } from 'vue'
 import { useDisplay } from 'vuetify'
 import { useI18n } from 'vue-i18n';
 const { mobile } = useDisplay();
-const { t,locale, locales, setLocale } = useI18n();
+const { t, locale, locales, setLocale } = useI18n();
 
-const drawer = ref(false) 
+const drawer = ref(false)
 
 const items = computed(() => [
-      { title: t("Simple Card"), to: '/' },
-      { title: t('Bg Remove'), to: '/bgremoval' },
-      { title: t('IT Tools'), href: 'https://tools.wowyou.cc' }
-    ]);
+    { title: t("Simple Card"), to: '/' },
+    { title: t('Bg Remove'), to: '/bgremoval' },
+    { title: t('IT Tools'), href: 'https://tools.wowyou.cc' }
+]);
 
 const mobileItems = ref([
     { title: t("Simple Card"), to: '/' },

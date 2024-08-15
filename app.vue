@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-const theme = ref('light');
+const theme = ref('dark');
 
 onMounted(() => {
   theme.value = localStorage.getItem('theme') || 'light'; // 默认使用light主题
