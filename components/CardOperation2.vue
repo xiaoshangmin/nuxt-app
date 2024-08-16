@@ -4,11 +4,14 @@
       <v-tabs-window-item value="template">
         <div class="d-flex align-center template ga-6 py-4 px-4">
           <div class="temp-item" :class="{ 'temp-item-activate': 'temp-1' == tempId }" @click="changeTemp('temp-1')">
-            <v-img src="~/assets/temp-1.png" :width="80"></v-img></div>
+            <v-img src="~/assets/temp-1.png" :width="80"></v-img>
+          </div>
           <div class="temp-item" :class="{ 'temp-item-activate': 'temp-2' == tempId }" @click="changeTemp('temp-2')">
-            <v-img src="~/assets/temp-2.png" :width="80"></v-img></div>
+            <v-img src="~/assets/temp-2.png" :width="80"></v-img>
+          </div>
           <div class="temp-item" :class="{ 'temp-item-activate': 'temp-3' == tempId }" @click="changeTemp('temp-3')">
-            <v-img src="~/assets/temp-3.png" :width="80"></v-img></div>
+            <v-img src="~/assets/temp-3.png" :width="80"></v-img>
+          </div>
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="url">
@@ -179,7 +182,6 @@ const props = defineProps({
   themeList: { type: Object }
 });
 const emit = defineEmits([
-  "onSwitchChange",
   "onBtnToggleChange",
   "changeColor",
   "onSliderChange",
@@ -188,6 +190,9 @@ const emit = defineEmits([
   "onUrlChange",
   "onChangeTemp",
 ]);
+
+const { userConfig, updateShareUserConfig } = useSharedConfig();
+
 const tab = ref(null);
 const url = ref('')
 const tempId = ref("temp-1");
@@ -203,16 +208,20 @@ const show = reactive({
   padding: false,
 });
 
+onMounted(() => { 
+  Object.assign(show, userConfig.value.show)
+});
+
+
 watch(url, (newUrl) => {
   emit("onUrlChange", newUrl);
 })
 function changeTemp(e) {
   tempId.value = e
-  console.log(tempId.value)
   emit("onChangeTemp", e);
 }
 function onSwitchChange(e) {
-  emit("onSwitchChange", { action: e, val: show });
+  updateShareUserConfig({ show: show })
 }
 function onBtnToggle(e) {
   let val =

@@ -2,7 +2,7 @@
   <div class="container d-flex flex-column justify-center align-center" :class="{ 'mt-4': !isMobile }">
     <!-- 主体部分 -->
     <div id="temp-1" v-show="'temp-1' == tempId">
-      <DefaultTemplate ref="temp1" :userConfig="userConfig" @updateConfig="updateConfig" :dialog="dialog"
+      <DefaultTemplate ref="temp1" @updateConfig="updateConfig" :dialog="dialog" :userConfig="userConfig" 
         :styleObject="styleObject" @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile">
       </DefaultTemplate>
     </div>
@@ -14,7 +14,7 @@
         :metaData="metaData"></CardTemplate>
     </div>
 
-    <div class="d-flex mt-5 mb-16 flex-row align-center justify-center ga-4">
+    <div class="d-flex mt-5 mb-5 flex-row align-center justify-center ga-4">
       <v-btn @click="generateImage" class="text-none">
         {{ $t("Download Image") }}
       </v-btn>
@@ -26,26 +26,25 @@
       </v-tooltip>
     </div>
 
-    <!-- qrcode edit -->
-    <!-- 消息条 -->
-    <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
-      复制成功
-    </v-snackbar>
-    <!-- 浮动按钮 -->
-    <v-fab icon="mdi-pencil" @click="sheet = true" absolute location="bottom end" app color="primary"></v-fab>
     <!-- 底部弹出区域 -->
     <v-bottom-sheet v-model="sheet" inset :opacity="0">
       <v-card>
         <!-- <v-card-text> -->
-        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSwitchChange="onSwitchChange"
-          @onSliderChange="onSliderChange" @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
+        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
+          @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
           @onBtnToggleChange="onBtnToggleChange" @onChangeTemp="onChangeTemp">
         </CardOperation2>
         <!-- </v-card-text> -->
       </v-card>
     </v-bottom-sheet>
-
   </div>
+  <!-- qrcode edit -->
+  <!-- 消息条 -->
+  <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
+    复制成功
+  </v-snackbar>
+  <!-- 浮动按钮 -->
+  <v-fab icon="mdi-pencil" @click="sheet = true" location="bottom end" app color="primary"></v-fab>
 </template>
 
 <script setup>
@@ -56,7 +55,9 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 import { getBase64Image } from '@/utils'
 
-const { width, xs } = useDisplay();
+const { width, xs } = useDisplay(); 
+const { userConfig, initUserConfig, updateShareUserConfig } = useSharedConfig();
+
 
 const isMobile = ref(false);
 const snackbar = ref(false);
@@ -325,27 +326,6 @@ const styleObject = reactive({
   width: "340px",
   fontSize: '1rem'
 });
-const userConfig = reactive({
-  content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
-    显示的文字都可以修改，点击二维码可以修改内容
-    电脑上鼠标拖动左右边框进行缩放
-    在电脑上全选文字后支持下面快捷键
-    - Ctrl+B 加粗文本
-    - Ctrl+I 斜体文本
-    - Ctrl+U 下划线文本`,
-  title: `创图卡片`,
-  author: "创图卡片 2024-07-15 18:20 广东",
-  qrCodeTitle: "创图卡片",
-  qrCodeDesc: "扫描二维码",
-  qrData: "https://labs.wowyou.cc/",
-  show: {
-    title: true,
-    content: true,
-    qrcode: true,
-    author: true,
-    padding: false,
-  },
-})
 
 const userConfigStore = reactive({
   content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
@@ -383,7 +363,12 @@ useSeoMeta({
 
 });
 
+// onBeforeMount(() => {
+//   loadUserConfig(); 
+// })
+
 onMounted(async () => {
+  loadUserConfig();   
   await new Promise(resolve => setTimeout(resolve, 0.5))
   if (xs.value) {
     styleObject.width = `${width.value}px`;
@@ -391,7 +376,6 @@ onMounted(async () => {
   } else {
     initInteract();
   }
-  loadUserConfig();
 });
 
 
@@ -460,7 +444,11 @@ function onSwitchChange(e) {
     styleObject.padding = "20px";
   }
   // show = e.val
-  Object.assign(userConfig.show, e.val);
+  // Object.assign(userConfig.show, e.val);
+  // Object.assign(userConfigStore.show, e.val);
+  console.log(e.val)
+  updateShareUserConfig({ show: e.val })
+
 }
 
 function onSliderChange(e) {
@@ -490,7 +478,6 @@ function onBtnToggleChange(e) {
 }
 
 function onChangeTemp(e) {
-  console.log(e)
   tempId.value = e
 }
 
@@ -607,20 +594,16 @@ function getClipboardData(event) {
 
 
 // 监视状态变化，并将其保存到 localStorage
-watch(
-  userConfigStore,
-  (newState) => {
-    localStorage.setItem("userConfigStore", JSON.stringify(newState));
-  },
-  { deep: true }
-);
+// watch(
+//   userConfigStore,
+//   (newState) => {
+//     localStorage.setItem("userConfigStore", JSON.stringify(newState));
+//   },
+//   { deep: true }
+// );
 
 const loadUserConfig = () => {
-  const savedUserConfig = localStorage.getItem("userConfigStore");
-  if (savedUserConfig) {
-    const config = JSON.parse(savedUserConfig);
-    Object.assign(userConfig, config);
-  }
+  initUserConfig() 
 };
 
 function getChildRef() {
@@ -689,6 +672,7 @@ const queryOg = async (url) => {
 <style scoped>
 .container {
   font-family: "Roboto", sans-serif;
+  overflow-x: hidden;
 }
 
 code {
