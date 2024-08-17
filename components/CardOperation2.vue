@@ -2,14 +2,17 @@
   <figure>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
-        <div class="d-flex align-center template ga-6 py-4 px-4">
-          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-1' == tempId }" @click="changeTemp('temp-1')">
+        <div class="d-flex align-center template ga-6 py-4 px-4"> 
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == tempId }"
+            @click="changeTemp('temp-1')">
             <v-img src="~/assets/temp-1.png" :width="80"></v-img>
           </div>
-          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-2' == tempId }" @click="changeTemp('temp-2')">
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-2' == tempId }"
+            @click="changeTemp('temp-2')">
             <v-img src="~/assets/temp-2.png" :width="80"></v-img>
           </div>
-          <div class="temp-item" :class="{ 'temp-item-activate': 'temp-3' == tempId }" @click="changeTemp('temp-3')">
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-3' == tempId }"
+            @click="changeTemp('temp-3')">
             <v-img src="~/assets/temp-3.png" :width="80"></v-img>
           </div>
         </div>
@@ -36,7 +39,7 @@
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="display">
-        <div class="d-flex flex-row ga-3 align-center justify-start  py-2 px-2 crtl">
+        <div class="d-flex flex-row ga-3 align-center justify-start  py-3 px-3 crtl">
           <v-switch v-model="show.title" :label="$t('Title')" hide-details inset color="primary"
             @update:modelValue="onSwitchChange('title')" min-width="100"></v-switch>
           <v-switch v-model="show.content" :label="$t('Content')" hide-details inset color="primary"
@@ -124,10 +127,10 @@
       </v-tabs-window-item>
       <v-tabs-window-item value="font">
         <div class="d-flex align-center justify-center">
-          <div class="d-flex flex-row align-center ga-2 justify-start px-2">
-            <div style="width: 4rem">
+          <div class="d-flex flex-row align-center px-2 py-2">
+            <!-- <div style="width: 4rem">
               {{ $t("Font") }}
-            </div>
+            </div> -->
             <div>
               <v-btn-toggle v-model="fontSizeSlider" color="deep-purple-accent-3" rounded="0"
                 @click="onBtnToggle('fontsize')">
@@ -166,7 +169,7 @@
     <!-- </v-card-text> -->
     <v-tabs v-model="tab" align-tabs="center">
       <v-tab value="template" class="text-none">模板</v-tab>
-      <v-tab value="url" class="text-none">URL</v-tab>
+      <v-tab value="url" class="text-none" v-show="'temp-3' == tempId">URL</v-tab>
       <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
       <v-tab value="display" class="text-none">{{ $t("Display") }}</v-tab>
       <v-tab value="three" class="text-none d-none d-sm-flex">{{
@@ -182,7 +185,6 @@ const props = defineProps({
   themeList: { type: Object }
 });
 const emit = defineEmits([
-  "onBtnToggleChange",
   "changeColor",
   "onSliderChange",
   "decrement",
@@ -207,8 +209,13 @@ const show = reactive({
   author: true,
   padding: false,
 });
+const styleObject = reactive({
+  padding: "30px",
+  width: "340px",
+  fontSize: '1rem'
+});
 
-onMounted(() => { 
+onMounted(() => {
   Object.assign(show, userConfig.value.show)
 });
 
@@ -221,7 +228,12 @@ function changeTemp(e) {
   emit("onChangeTemp", e);
 }
 function onSwitchChange(e) {
-  updateShareUserConfig({ show: show })
+  if (show.padding == true) {
+    styleObject.padding = "0px";
+  } else {
+    styleObject.padding = "20px";
+  }
+  updateShareUserConfig({ show: show, styleObject: styleObject })
 }
 function onBtnToggle(e) {
   let val =
@@ -229,8 +241,18 @@ function onBtnToggle(e) {
       ? paddingSlider.value
       : e == "width"
         ? widthSlider.value
-        : fontSizeSlider.value;
-  emit("onBtnToggleChange", { action: e, val: val });
+        : fontSizeSlider.value; 
+  if (e == "padding") {
+    styleObject.padding = `${paddingSlider.value}px`;
+  }
+  if (e == "width") {
+    styleObject.width = `${widthSlider.value}px`;
+    styleObject.transition = "500ms"
+  }
+  if (e == "fontsize") {
+    styleObject['--base-font-size'] = `${fontSizeSlider.value}rem`
+  }
+  updateShareUserConfig({ show: show, styleObject: styleObject })
 }
 function changeColor(e, index, i) {
   selectedColorIndex.value = String(i) + String(index);

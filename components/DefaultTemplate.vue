@@ -1,28 +1,27 @@
 <template>
   <div class="main d-flex flex-column justify-center align-center">
     <div class="d-flex justify-center align-center">
-      <div class="content-mode" ref="template" :style="styleObject">
+      <div class="content-mode" ref="template" :style="isClient && userConfig.styleObject">
         <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
-          :class="{ 'rounded-xl': styleObject.padding != '0px' }">
+          :class="{ 'rounded-xl': isClient && userConfig.styleObject.padding != '0px' }">
           <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
+            :class="{ 'hidden': isClient && !userConfig.show.title }" @input="updateConfig" data-key="title"
             @paste="getClipboardData">
             {{ userConfig.title }}
           </div>
           <div class="editable-element content " contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
+            :class="{ 'hidden': isClient && !userConfig.show.content }" @input="updateConfig" data-key="content"
             @paste="getClipboardData">
             {{ userConfig.content }}
           </div>
-          <div class="editable-element time  d-flex justify-end mt-6" contenteditable="true" :class="{
-            'hidden': !userConfig.show.author
-          }" @input="updateConfig" data-key="author" @paste="getClipboardData">
-            {{ userConfig.author }}
+          <div class="editable-element " :class="{ 'hidden': isClient && !userConfig.show.author }">
+            <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
+              @paste="getClipboardData">
+              {{ userConfig.author }}
+            </div>
           </div>
 
-          <div class="qrcode flex-cloumn" :class="{
-            'hidden': !userConfig.show.qrcode
-          }">
+          <div class="qrcode flex-cloumn" :class="{ 'hidden': isClient && !userConfig.show.qrcode }">
             <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
             <div class="d-flex flex-row  justify-space-between align-center">
               <div>
@@ -52,7 +51,7 @@
     <v-dialog v-model="dialog" max-width="500">
       <v-card hover title="编辑二维码">
         <v-card-text>
-          <v-text-field v-model="qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
+          <v-text-field v-model="userConfig.qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
             clearable></v-text-field>
           <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
             更新二维码
@@ -64,43 +63,23 @@
 </template>
 
 <script setup>
-// const { userConfig, initUserConfig, updateShareUserConfig } = useSharedConfig();
-// const isClient = ref(false); 
-// onMounted(() => {
-//   isClient.value = true; // 标记已经进入客户端渲染阶段
-//   initUserConfig()  
-// })
- 
 
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
+
+const { userConfig, updateShareUserConfig } = useSharedConfig();
+
+const isClient = ref(false);
+onMounted(() => {
+  isClient.value = true;
+
+});
 
 const props = defineProps({
   isMobile: { type: Boolean, default: false },
   template: { type: Object },
-  styleObject: {},
-  userConfig:{
-        content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
-        显示的文字都可以修改，点击二维码可以修改内容
-        电脑上鼠标拖动左右边框进行缩放
-        在电脑上全选文字后支持下面快捷键
-        - Ctrl+B 加粗文本
-        - Ctrl+I 斜体文本
-        - Ctrl+U 下划线文本`,
-        title: `创图卡片`,
-        author: "创图卡片 2024-07-15 18:20 广东",
-        qrCodeTitle: "创图卡片",
-        qrCodeDesc: "扫描二维码",
-        qrData: "https://labs.wowyou.cc/",
-        show: {
-            title: true,
-            content: true,
-            qrcode: true,
-            author: true,
-            padding: false,
-        },
-    },
+  styleObject: {}
 });
-const emit = defineEmits(["updateConfig", "getClipboardData", "editQrData"]);
+const emit = defineEmits(["updateConfig", "getClipboardData"]);
 
 const dialog = ref(false);
 const colorDark = ref("#fff");//#101320
@@ -109,13 +88,17 @@ const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
 
-function updateConfig(e) {
-  emit("updateConfig", { key: e.target.dataset.key, text: e.target.innerHTML });
+function updateConfig(e) { 
+  let key = e.target.dataset.key
+  let val = e.target.innerHTML
+  let config = { [key]: val }
+  updateShareUserConfig(config)
 }
 
 function editQrData() {
-  dialog.value = false
-  emit("editQrData", qrData.value)
+  dialog.value = false 
+  let config = { qrData: userConfig.value.qrData }
+  updateShareUserConfig(config)
 }
 function getQrcode(data, id) {
   // qrcode.value = data;

@@ -2,16 +2,16 @@
   <div class="container d-flex flex-column justify-center align-center" :class="{ 'mt-4': !isMobile }">
     <!-- 主体部分 -->
     <div id="temp-1" v-show="'temp-1' == tempId">
-      <DefaultTemplate ref="temp1" @updateConfig="updateConfig" :dialog="dialog" :userConfig="userConfig" 
-        :styleObject="styleObject" @getClipboardData="getClipboardData" @editQrData="editQrData" :isMobile="isMobile">
+      <DefaultTemplate ref="temp1" @updateConfig="updateConfig" :dialog="dialog" :styleObject="styleObject"
+        @getClipboardData="getClipboardData" :isMobile="isMobile">
       </DefaultTemplate>
     </div>
     <div id="temp-2" v-show="'temp-2' == tempId">
       <CodeTemplate ref="temp2" @getClipboardData="getClipboardData" :styleObject="styleObject" />
     </div>
     <div id="temp-3" v-show="'temp-3' == tempId">
-      <CardTemplate ref="temp3" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading"
-        :metaData="metaData"></CardTemplate>
+      <CardTemplate ref="temp3" :styleObject="styleObject" :userConfig="userConfig" :isLoading="isLoading">
+      </CardTemplate>
     </div>
 
     <div class="d-flex mt-5 mb-5 flex-row align-center justify-center ga-4">
@@ -27,24 +27,23 @@
     </div>
 
     <!-- 底部弹出区域 -->
-    <v-bottom-sheet v-model="sheet" inset :opacity="0">
+    <v-bottom-sheet v-model="sheet" inset :opacity="0.2">
       <v-card>
         <!-- <v-card-text> -->
         <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
-          @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange"
-          @onBtnToggleChange="onBtnToggleChange" @onChangeTemp="onChangeTemp">
+          @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange" @onChangeTemp="onChangeTemp">
         </CardOperation2>
         <!-- </v-card-text> -->
       </v-card>
     </v-bottom-sheet>
+    <!-- 消息条 -->
+    <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
+      复制成功
+    </v-snackbar>
+    <!-- 浮动按钮 -->
+    <v-fab icon="mdi-pencil" @click="sheet = true" location="bottom end" app color="primary"></v-fab>
   </div>
-  <!-- qrcode edit -->
-  <!-- 消息条 -->
-  <v-snackbar v-model="snackbar" elevation="24" timeout="3000" color="red">
-    复制成功
-  </v-snackbar>
-  <!-- 浮动按钮 -->
-  <v-fab icon="mdi-pencil" @click="sheet = true" location="bottom end" app color="primary"></v-fab>
+
 </template>
 
 <script setup>
@@ -55,7 +54,7 @@ import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 import { getBase64Image } from '@/utils'
 
-const { width, xs } = useDisplay(); 
+const { width, xs } = useDisplay();
 const { userConfig, initUserConfig, updateShareUserConfig } = useSharedConfig();
 
 
@@ -363,12 +362,8 @@ useSeoMeta({
 
 });
 
-// onBeforeMount(() => {
-//   loadUserConfig(); 
-// })
-
 onMounted(async () => {
-  loadUserConfig();   
+  // loadUserConfig();   
   await new Promise(resolve => setTimeout(resolve, 0.5))
   if (xs.value) {
     styleObject.width = `${width.value}px`;
@@ -416,12 +411,7 @@ function updateConfig(e) {
 function doUpdateUserConfig(key, text) {
   userConfigStore[`${key}`] = text
 }
-function editQrData(e) {
-  if (e) {
-    userConfigStore.qrData = e;
-    userConfig.qrData = e
-  }
-}
+
 function getQrcode(data, id) {
   qrcode.value = data;
 }
@@ -443,10 +433,6 @@ function onSwitchChange(e) {
   } else if (styleObject.padding == "0px") {
     styleObject.padding = "20px";
   }
-  // show = e.val
-  // Object.assign(userConfig.show, e.val);
-  // Object.assign(userConfigStore.show, e.val);
-  console.log(e.val)
   updateShareUserConfig({ show: e.val })
 
 }
@@ -457,19 +443,6 @@ function onSliderChange(e) {
   }
   if (e.action == "width") {
     styleObject.width = `${e.val}px`;
-  }
-  if (e.action == "fontsize") {
-    styleObject.fontSize = `${e.val}rem`;
-    getChildRef().style.setProperty("--base-font-size", `${e.val}rem`);
-  }
-}
-function onBtnToggleChange(e) {
-  if (e.action == "padding") {
-    styleObject.padding = `${e.val}px`;
-  }
-  if (e.action == "width") {
-    styleObject.width = `${e.val}px`;
-    styleObject.transition = "500ms"
   }
   if (e.action == "fontsize") {
     styleObject.fontSize = `${e.val}rem`;
@@ -504,22 +477,24 @@ function increment(e) {
 }
 
 function generateImage() {
+  html2canvas(getChildRef(), { scale: 3 }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const blob = dataURItoBlob(imgData);
+
+    // 创建下载链接
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "创图卡片-screenshot.png"; // 设置下载文件名
+
+    // 触发下载
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+  return
   if (!isMobile.value) {
-    html2canvas(temp1.value.$refs.template, { scale: 3 }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const blob = dataURItoBlob(imgData);
 
-      // 创建下载链接
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "创图卡片-screenshot.png"; // 设置下载文件名
-
-      // 触发下载
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
   } else {
     document.fonts.ready.then(() => {
       domtoimage.toJpeg(temp1.value.$refs.template).then(dataUrl => {
@@ -603,7 +578,7 @@ function getClipboardData(event) {
 // );
 
 const loadUserConfig = () => {
-  initUserConfig() 
+  initUserConfig()
 };
 
 function getChildRef() {
@@ -620,17 +595,6 @@ function getChildRef() {
 
 
 const API_PREFIX_VERCEL = 'https://doc.wowyou.cc/api/web/og'
-const metaData = reactive({
-  title: '',
-  description: '',
-  url: '',
-  image: '',
-  logo: '',
-  author: '',
-  publisher: '',
-  base64Image: '',
-  base64Logo: ''
-})
 
 const queryOg = async (url) => {
   isLoading.value = true
@@ -639,30 +603,28 @@ const queryOg = async (url) => {
 
   if (data) {
     let base64Image = ''
+    let base64Logo = '';
     if (data?.image) {
       try {
         base64Image = await getBase64Image(data.image)
+        base64Logo = await getBase64Image(data.logo)
       } catch (error) {
         console.log(`Oops, something went wrong: Maybe caused by CORS!!!`)
       }
     }
-
-    metaData.title = data.title
-    metaData.description = data.description
-    metaData.url = url
-    metaData.image = data.image
-    metaData.logo = data.logo
-    metaData.author = data.author
-    metaData.publisher = data.publisher
-    metaData.base64Image = base64Image
-  } else {
-    metaData.description = 'description'
-    metaData.image = 'https://labs.wowyou.cc/preview.png'
-    metaData.logo = 'https://labs.wowyou.cc/favicon.svg'
-    metaData.title = 'title'
-    metaData.url = url
+    const metaData = {
+      title: data.title,
+      description: data.description,
+      url: url,
+      image: data.image,
+      logo: data.logo,
+      author: data.author,
+      publisher: data.publisher,
+      base64Image: base64Image,
+      base64Logo: base64Logo
+    }
+    updateShareUserConfig({ metaData: metaData })
   }
-
   isLoading.value = false
 }
 

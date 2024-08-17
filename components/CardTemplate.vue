@@ -2,7 +2,8 @@
     <figure>
         <div class="main d-flex flex-column justify-center align-center">
             <div class="d-flex justify-center align-center">
-                <div class="content-mode" ref="template" :style="styleObject">
+                <div class="content-mode" ref="template" :style="userConfig.styleObject">
+
                     <div class="card d-flex justify-center align-start pb-2 flex-column">
                         <!-- loading -->
                         <div v-if="isLoading" class="d-flex justify-center align-start py-10" style="width: 100%;">
@@ -10,33 +11,37 @@
                         </div>
                         <!-- content -->
                         <div v-if="!isLoading">
-                            <v-img class="img" :src="metaData.base64Image"></v-img>
-                            <div class="qrcode-container flex-cloumn mt-3 px-1">
+                            <v-img class="img" :src="userConfig.metaData.base64Image"></v-img>
+                            <div class="qrcode-container flex-cloumn my-2 px-2">
                                 <div class="d-flex flex-row  justify-space-between align-center ga-2">
                                     <div class="qrcode d-flex" :class="{
-                                        'hidden': !userConfig.show.qrcode
-                                    }" v-if="metaData.url">
+                                        'hidden': isClient && !userConfig.show.qrcode
+                                    }" v-if="userConfig.metaData.url">
                                         <ClientOnly>
-                                            <vueQr :text="metaData.url" :size="100" :margin="0"
+                                            <vueQr :text="userConfig.metaData.url" :size="100" :margin="0"
                                                 colorLight="transparent" backgroundColor="transparent"
                                                 :colorDark="colorDark">
                                             </vueQr>
                                         </ClientOnly>
                                     </div>
-                                    <div :class="{ 'hidden': !userConfig.show.content }">
+                                    <div :class="{ 'hidden': isClient && !userConfig.show.content }">
                                         <div class="editable-element qr-title " data-key="qrCodeTitle"
-                                            @paste="getClipboardData">{{metaData.title}}
+                                            @paste="getClipboardData">{{ userConfig.metaData.title }}
                                         </div>
-                                        <div class="editable-element qr-desc mt-1" data-key="qrCodeDesc">{{metaData.description}}</div>
+                                        <div class="editable-element qr-desc mt-1" data-key="qrCodeDesc">
+                                            {{ userConfig.metaData.description }}</div>
                                         <div class="d-flex flex-row ga-2 mt-1 align-center" style="opacity: .7;">
-                                            <div> <v-img :width="20" cover :src="metaData.logo"></v-img></div>
-                                            <div>{{metaData.publisher}}</div>
+                                            <div> <v-img :width="20" cover
+                                                    :src="userConfig.metaData.base64Logo"></v-img>
+                                            </div>
+                                            <div>{{ userConfig.metaData.publisher }}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -47,64 +52,22 @@
 
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
-// const metaData = reactive({
-//     title: '',
-//     description: '',
-//     url: '',
-//     image: '',
-//     logo: '',
-//     author: '',
-//     publisher: '',
-//     base64Image: '',
-//     base64Logo: ''
-// })
+const { userConfig, updateShareUserConfig } = useSharedConfig();
+
+const isClient = ref(false);
+onMounted(() => {
+    isClient.value = true;
+});
 
 const props = defineProps({
     isMobile: { type: Boolean, default: false },
     isLoading: { type: Boolean, default: false },
     template: { type: Object },
     url: { type: String, default: "https://labs.wowyou.cc" },
-    styleObject: {},
-    metaData: {
-        title: '',
-        description: '',
-        url: '',
-        image: '',
-        logo: '',
-        author: '',
-        publisher: '',
-        base64Image: '',
-        base64Logo: ''
-    },
-    userConfig: {
-        type: Object,
-        default: () => ({
-            content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
-      显示的文字都可以修改，点击二维码可以修改内容
-      电脑上鼠标拖动左右边框进行缩放
-      在电脑上全选文字后支持下面快捷键
-      - Ctrl+B 加粗文本
-      - Ctrl+I 斜体文本
-      - Ctrl+U 下划线文本`,
-            title: `创图卡片`,
-            author: "创图卡片 2024-07-15 18:20 广东",
-            qrCodeTitle: "创图卡片",
-            qrCodeDesc: "扫描二维码",
-            qrData: "https://labs.wowyou.cc/",
-            show: {
-                title: true,
-                content: true,
-                qrcode: true,
-                author: true,
-                padding: false,
-            },
-        }),
-    },
 });
-const emit = defineEmits(["updateConfig", "getClipboardData", "editQrData"]);
+const emit = defineEmits(["getClipboardData"]);
 
-const colorDark = ref("#fff");//#101320 
-
+const colorDark = ref("#fff");
 
 function getClipboardData(event) {
     emit("getClipboardData", event)
@@ -168,20 +131,20 @@ function getClipboardData(event) {
 
 .qrcode-container {
     width: 100%;
-    opacity: 0.9;
+    opacity: 1;
     transition: opacity 0.5s, max-width 0.5s, font-size 0.5s;
     max-height: 2000px;
     overflow: hidden;
 }
 
 .qrcode {
-    opacity: 0.9;
+    opacity: 0.8;
     transition: opacity 0.5s, max-width 0.5s, font-size 0.5s;
     max-width: 2000px;
 }
 
 .qr-title {
-    font-size: calc(var(--base-font-size) * 1.25);
+    font-size: calc(var(--base-font-size) * 1.1);
     font-weight: 700;
     line-height: 1.4;
     text-overflow: ellipsis;
@@ -192,7 +155,7 @@ function getClipboardData(event) {
 }
 
 .qr-desc {
-    font-size: calc(var(--base-font-size) * 0.875);
+    font-size: calc(var(--base-font-size) * 0.8);
     line-height: 1.4;
     opacity: 0.6;
     text-overflow: ellipsis;
@@ -207,12 +170,11 @@ function getClipboardData(event) {
     max-width: 0;
 }
 
-
 .card {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: 0px 7px 8px -4px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)), 0px 12px 17px 2px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)), 0px 5px 22px 4px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
+    box-shadow: 0px 7px 8px -4px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)), 0px 12px 17px 2px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)), 0px 5px 22px 4px var(--v-shadow-key-ambient-opacity, rgba(0, 0, 0, 0.12));
     color: #000;
     transition: all 500ms ease 0s;
     color: #fff;
