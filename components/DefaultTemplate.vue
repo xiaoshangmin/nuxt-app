@@ -1,65 +1,67 @@
 <template>
-  <div class="main d-flex flex-column justify-center align-center">
-    <div class="d-flex justify-center align-center">
-      <div class="content-mode" ref="template" :style="isClient && userConfig.styleObject">
-        <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
-          :class="{ 'rounded-xl': isClient && userConfig.styleObject.padding != '0px' }">
-          <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'hidden': isClient && !userConfig.show.title }" @input="updateConfig" data-key="title"
-            @paste="getClipboardData">
-            {{ userConfig.title }}
-          </div>
-          <div class="editable-element content " contenteditable="true" autocorrect="off" autocomplete="off"
-            :class="{ 'hidden': isClient && !userConfig.show.content }" @input="updateConfig" data-key="content"
-            @paste="getClipboardData">
-            {{ userConfig.content }}
-          </div>
-          <div class="editable-element " :class="{ 'hidden': isClient && !userConfig.show.author }">
-            <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
+  <figure>
+    <div class="main d-flex flex-column justify-center align-center" v-if="isClient">
+      <div class="d-flex justify-center align-center">
+        <div class="content-mode" ref="template" :style="userConfig.styleObject">
+          <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
+            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }">
+            <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
+              :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
               @paste="getClipboardData">
-              {{ userConfig.author }}
+              {{ userConfig.title }}
             </div>
-          </div>
-
-          <div class="qrcode flex-cloumn" :class="{ 'hidden': isClient && !userConfig.show.qrcode }">
-            <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
-            <div class="d-flex flex-row  justify-space-between align-center">
-              <div>
-                <div class="editable-element qr-title " contenteditable="true" autocorrect="off" autocomplete="off"
-                  @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                  {{ userConfig.qrCodeTitle }}
-                </div>
-                <div class="editable-element qr-desc  mt-2" contenteditable="true" @paste="getClipboardData"
-                  @input="updateConfig" data-key="qrCodeDesc">
-                  {{ userConfig.qrCodeDesc }}
-                </div>
+            <div class="editable-element content " contenteditable="true" autocorrect="off" autocomplete="off"
+              :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
+              @paste="getClipboardData">
+              {{ userConfig.content }}
+            </div>
+            <div class="editable-element " :class="{ 'hidden': !userConfig.show.author }">
+              <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
+                @paste="getClipboardData">
+                {{ userConfig.author }}
               </div>
-              <div @click="dialog = true">
-                <ClientOnly>
-                  <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                    backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                  </vueQr>
-                </ClientOnly>
+            </div>
+
+            <div class="qrcode flex-cloumn" :class="{ 'hidden': !userConfig.show.qrcode }">
+              <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
+              <div class="d-flex flex-row  justify-space-between align-center">
+                <div>
+                  <div class="editable-element qr-title " contenteditable="true" autocorrect="off" autocomplete="off"
+                    @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                    {{ userConfig.qrCodeTitle }}
+                  </div>
+                  <div class="editable-element qr-desc  mt-2" contenteditable="true" @paste="getClipboardData"
+                    @input="updateConfig" data-key="qrCodeDesc">
+                    {{ userConfig.qrCodeDesc }}
+                  </div>
+                </div>
+                <div @click="dialog = true">
+                  <ClientOnly>
+                    <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
+                      backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
+                    </vueQr>
+                  </ClientOnly>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- qrcode edit -->
-    <v-dialog v-model="dialog" max-width="500">
-      <v-card hover title="编辑二维码">
-        <v-card-text>
-          <v-text-field v-model="userConfig.qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
-            clearable></v-text-field>
-          <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
-            更新二维码
-          </v-btn>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-  </div>
+      <!-- qrcode edit -->
+      <v-dialog v-model="dialog" max-width="500">
+        <v-card hover title="编辑二维码">
+          <v-card-text>
+            <v-text-field v-model="userConfig.qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
+              clearable></v-text-field>
+            <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
+              更新二维码
+            </v-btn>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+    </div>
+  </figure>
 </template>
 
 <script setup>
@@ -69,26 +71,24 @@ import vueQr from "vue-qr/src/packages/vue-qr.vue";
 const { userConfig, updateShareUserConfig } = useSharedConfig();
 
 const isClient = ref(false);
-onMounted(() => {
-  isClient.value = true;
 
+onMounted(async () => {
+  isClient.value = true;
 });
 
 const props = defineProps({
   isMobile: { type: Boolean, default: false },
-  template: { type: Object },
-  styleObject: {}
+  template: { type: Object }
 });
-const emit = defineEmits(["updateConfig", "getClipboardData"]);
+const emit = defineEmits(["getClipboardData"]);
 
 const dialog = ref(false);
-const colorDark = ref("#fff");//#101320
-const qrData = ref("https://labs.wowyou.cc/");
+const colorDark = ref("#fff");//#101320 
 const rules = reactive({
   required: (value) => !!value || "请输入二维码内容.",
 });
 
-function updateConfig(e) { 
+function updateConfig(e) {
   let key = e.target.dataset.key
   let val = e.target.innerHTML
   let config = { [key]: val }
@@ -96,7 +96,7 @@ function updateConfig(e) {
 }
 
 function editQrData() {
-  dialog.value = false 
+  dialog.value = false
   let config = { qrData: userConfig.value.qrData }
   updateShareUserConfig(config)
 }
@@ -169,7 +169,7 @@ function getClipboardData(event) {
 }
 
 .qr-title {
-  font-size: calc(var(--base-font-size) * 1.25);
+  font-size: calc(var(--base-font-size) * 1.3);
   font-weight: 700;
   line-height: 1.4;
   opacity: .4;

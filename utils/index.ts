@@ -1,8 +1,12 @@
-export const getBase64Image = (url: string): Promise<string> => {
+export const getBase64Image = (url: string, proxy: boolean): Promise<string> => {
   const img = new Image()
   // img.setAttribute("crossOrigin", 'anonymous');
   img.crossOrigin = 'anonymous';
-  img.src = url;
+  if (proxy) {
+    img.src = `https://images.weserv.nl/?url=${url}`;
+  } else {
+    img.src = url
+  }
   return new Promise((resolve, reject) => {
     img.onload = () => {
       const canvas = document.createElement("canvas");

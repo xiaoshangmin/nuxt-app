@@ -1,6 +1,6 @@
 <template>
     <figure>
-        <div class="d-flex code-container" ref="template" :style="styleObject">
+        <div class="d-flex code-container" ref="template" :style="userConfig.styleObject">
             <div class="editor-container">
                 <div class="editor-header">
                     <div class="editor-controls">
@@ -14,7 +14,8 @@
                     <textarea v-model="code" ref="textarea" @input="highlightCode" placeholder="Enter your code here"
                         class="code-input" style="letter-spacing: 0.2px;" autocomplete="off" spellcheck="false"
                         autocapitalize="off" data-enable-grammarly="false"></textarea>
-                    <div class="code-output" style="letter-spacing: 0.2px;" v-html="highlightedCode"></div>
+                    <div class="code-output" style="letter-spacing: 0.2px;" v-html="highlightedCode" v-if="isClient">
+                    </div>
                 </div>
             </div>
         </div>
@@ -22,16 +23,23 @@
 </template>
 
 <script setup>
+const { userConfig, updateShareUserConfig } = useSharedConfig();
 import { codeToHtml } from 'shiki'
+
 
 const code = ref('')
 const lang = ref('js')
 const highlightedCode = ref('')
+const isClient = ref(false);
+onMounted(() => {
+    isClient.value = true;
+    code.value = userConfig.value.codeData.code;
+    highlightedCode.value = userConfig.value.codeData.highlightedCode;
+});
 
 const props = defineProps({
     isMobile: { type: Boolean, default: false },
-    template: { type: Object },
-    styleObject: { type: Object },
+    template: { type: Object }, 
 });
 const emit = defineEmits(["getClipboardData"]);
 
@@ -45,6 +53,11 @@ const highlightCode = async () => {
         lineNumbers: true,
         wordWrap: true
     })
+    let codeData = {
+        highlightedCode: highlightedCode.value,
+        code: code.value
+    }
+    updateShareUserConfig({ codeData: codeData })
 }
 onMounted(() => {
     highlightCode()

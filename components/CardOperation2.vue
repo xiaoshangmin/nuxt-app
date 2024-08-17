@@ -2,7 +2,7 @@
   <figure>
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
-        <div class="d-flex align-center template ga-6 py-4 px-4"> 
+        <div class="d-flex align-center template ga-6 py-4 px-4">
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == tempId }"
             @click="changeTemp('temp-1')">
             <v-img src="~/assets/temp-1.png" :width="80"></v-img>
@@ -54,7 +54,7 @@
       </v-tabs-window-item>
       <v-tabs-window-item value="three">
         <div class="d-flex align-center justify-center">
-          <div class="d-flex flex-row ga-4">
+          <div class="d-flex flex-row ga-4 py-2">
             <div class="flex-row d-flex align-center justify-start">
               <div style="width: 4rem">
                 {{ $t("Padding") }}
@@ -209,11 +209,6 @@ const show = reactive({
   author: true,
   padding: false,
 });
-const styleObject = reactive({
-  padding: "30px",
-  width: "340px",
-  fontSize: '1rem'
-});
 
 onMounted(() => {
   Object.assign(show, userConfig.value.show)
@@ -229,30 +224,24 @@ function changeTemp(e) {
 }
 function onSwitchChange(e) {
   if (show.padding == true) {
-    styleObject.padding = "0px";
+    userConfig.value.styleObject.padding = "0px";
   } else {
-    styleObject.padding = "20px";
-  }
-  updateShareUserConfig({ show: show, styleObject: styleObject })
+    userConfig.value.styleObject.padding = "20px";
+  } 
+  updateShareUserConfig({ show: show, styleObject: userConfig.value.styleObject })
 }
 function onBtnToggle(e) {
-  let val =
-    e == "padding"
-      ? paddingSlider.value
-      : e == "width"
-        ? widthSlider.value
-        : fontSizeSlider.value; 
   if (e == "padding") {
-    styleObject.padding = `${paddingSlider.value}px`;
+    userConfig.value.styleObject.padding = `${paddingSlider.value}px`;
   }
   if (e == "width") {
-    styleObject.width = `${widthSlider.value}px`;
-    styleObject.transition = "500ms"
+    userConfig.value.styleObject.width = `${widthSlider.value}px`;
+    userConfig.value.styleObject.transition = "500ms"
   }
   if (e == "fontsize") {
-    styleObject['--base-font-size'] = `${fontSizeSlider.value}rem`
+    userConfig.value.styleObject['--base-font-size'] = `${fontSizeSlider.value}rem`
   }
-  updateShareUserConfig({ show: show, styleObject: styleObject })
+  updateShareUserConfig({ show: show, styleObject: userConfig.value.styleObject })
 }
 function changeColor(e, index, i) {
   selectedColorIndex.value = String(i) + String(index);

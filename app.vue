@@ -14,7 +14,7 @@
 const theme = ref('dark');
 
 onMounted(() => {
-  theme.value = localStorage.getItem('theme') || 'light'; // 默认使用light主题
+  theme.value = localStorage.getItem('theme') || 'dark'; // 默认使用light主题 
 })
 
 function onClick() {

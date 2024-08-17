@@ -4,7 +4,7 @@
             <div class="d-flex justify-center align-center">
                 <div class="content-mode" ref="template" :style="userConfig.styleObject">
 
-                    <div class="card d-flex justify-center align-start pb-2 flex-column">
+                    <div class="card d-flex justify-center flex-column">
                         <!-- loading -->
                         <div v-if="isLoading" class="d-flex justify-center align-start py-10" style="width: 100%;">
                             <v-progress-circular indeterminate :size="80" :width="4" color="#fff"></v-progress-circular>
@@ -13,7 +13,7 @@
                         <div v-if="!isLoading">
                             <v-img class="img" :src="userConfig.metaData.base64Image"></v-img>
                             <div class="qrcode-container flex-cloumn my-2 px-2">
-                                <div class="d-flex flex-row  justify-space-between align-center ga-2">
+                                <div class="d-flex flex-row align-center ga-2">
                                     <div class="qrcode d-flex" :class="{
                                         'hidden': isClient && !userConfig.show.qrcode
                                     }" v-if="userConfig.metaData.url">

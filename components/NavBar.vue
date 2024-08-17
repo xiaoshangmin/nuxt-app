@@ -37,7 +37,7 @@
         </div>
     </v-app-bar>
 
-    <v-navigation-drawer app v-model="drawer" temporary>
+    <v-navigation-drawer app v-model="drawer" temporary style="z-index: 1006;">
         <v-list>
             <v-list-item v-for="item in mobileItems" :key="item.title" :to="item.to" :href="item.href">
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
