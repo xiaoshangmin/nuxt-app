@@ -14,6 +14,7 @@ export const useSharedConfig = () => {
         qrCodeDesc: "扫描二维码",
         qrData: "https://labs.wowyou.cc/",
         update: false,
+        tempId:'temp-1',
         styleObject: {
             padding: "30px",
             width: "390px",
@@ -48,7 +49,7 @@ helloWorld.greet();`,
         metaData: {
             title: '创图卡片',
             description: '创图卡片让你体验全新的文字分享，让你的文字更具特色',
-            url: 'https://labs.wowyou.cc/',
+            url: 'https://labs.wowyou.cc',
             image: '',
             logo: '',
             author: '',

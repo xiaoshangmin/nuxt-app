@@ -31,7 +31,7 @@
                                         <div class="editable-element qr-desc mt-1" data-key="qrCodeDesc">
                                             {{ userConfig.metaData.description }}</div>
                                         <div class="d-flex flex-row ga-2 mt-1 align-center" style="opacity: .7;">
-                                            <div> <v-img :width="20" cover
+                                            <div v-if="userConfig.metaData.base64Logo"> <v-img :width="20" cover
                                                     :src="userConfig.metaData.base64Logo"></v-img>
                                             </div>
                                             <div>{{ userConfig.metaData.publisher }}</div>

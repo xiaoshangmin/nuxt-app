@@ -3,15 +3,15 @@
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
         <div class="d-flex align-center template ga-6 py-4 px-4">
-          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == tempId }"
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == userConfig.tempId }"
             @click="changeTemp('temp-1')">
             <v-img src="~/assets/temp-1.png" :width="80"></v-img>
           </div>
-          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-2' == tempId }"
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-2' == userConfig.tempId }"
             @click="changeTemp('temp-2')">
             <v-img src="~/assets/temp-2.png" :width="80"></v-img>
           </div>
-          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-3' == tempId }"
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-3' == userConfig.tempId }"
             @click="changeTemp('temp-3')">
             <v-img src="~/assets/temp-3.png" :width="80"></v-img>
           </div>
@@ -167,9 +167,9 @@
       </v-tabs-window-item>
     </v-tabs-window>
     <!-- </v-card-text> -->
-    <v-tabs v-model="tab" align-tabs="center">
+    <v-tabs v-model="tab" align-tabs="center" center-active>
       <v-tab value="template" class="text-none">模板</v-tab>
-      <v-tab value="url" class="text-none" v-show="'temp-3' == tempId">URL</v-tab>
+      <v-tab value="url" class="text-none" v-show="'temp-3' == userConfig.tempId">URL</v-tab>
       <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
       <v-tab value="display" class="text-none">{{ $t("Display") }}</v-tab>
       <v-tab value="three" class="text-none d-none d-sm-flex">{{
@@ -220,14 +220,15 @@ watch(url, (newUrl) => {
 })
 function changeTemp(e) {
   tempId.value = e
-  emit("onChangeTemp", e);
+  // emit("onChangeTemp", e);
+  updateShareUserConfig({ tempId: e })
 }
 function onSwitchChange(e) {
   if (show.padding == true) {
     userConfig.value.styleObject.padding = "0px";
   } else {
     userConfig.value.styleObject.padding = "20px";
-  } 
+  }
   updateShareUserConfig({ show: show, styleObject: userConfig.value.styleObject })
 }
 function onBtnToggle(e) {
