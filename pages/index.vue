@@ -329,6 +329,7 @@ useSeoMeta({
   ogLocale: "zh",
   ogPublisher: '创图卡片',
   ogLogo: 'https://labs.wowyou.cc/logo.png',
+  ogImage: 'https://labs.wowyou.cc/preview.png',
   robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
 
 });
