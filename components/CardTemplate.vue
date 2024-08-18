@@ -168,6 +168,7 @@ function getClipboardData(event) {
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
+    -webkit-line-clamp:1;
 }
 
 .hidden {

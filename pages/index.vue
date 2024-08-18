@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center mb-10" :class="{ 'mt-4': !isMobile }">
+  <div class="container d-flex flex-column justify-center align-center mb-4 pb-2" :class="{ 'mt-4': !isMobile }">
     <!-- 主体部分 -->
     <div id="temp-1" v-show="'temp-1' == userConfig.tempId">
       <DefaultTemplate ref="temp1" @getClipboardData="getClipboardData" :isMobile="isMobile">
