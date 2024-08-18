@@ -1,5 +1,5 @@
 <template>
-  <figure>
+  <figure  style="padding-bottom: env(safe-area-inset-bottom);">
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
         <div class="d-flex align-center template ga-6 py-4 px-4">
@@ -167,7 +167,7 @@
       </v-tabs-window-item>
     </v-tabs-window>
     <!-- </v-card-text> -->
-    <v-tabs v-model="tab" align-tabs="center" center-active>
+    <v-tabs v-model="tab" align-tabs="center" center-active >
       <v-tab value="template" class="text-none">模板</v-tab>
       <v-tab value="url" class="text-none" v-show="'temp-3' == userConfig.tempId">URL</v-tab>
       <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
@@ -177,6 +177,7 @@
       }}</v-tab>
       <v-tab value="font" class="text-none">{{ $t("Font") }}</v-tab>
     </v-tabs>
+  
   </figure>
 </template>
 
@@ -249,13 +250,18 @@ function changeColor(e, index, i) {
   emit("changeColor", e);
 }
 function onSliderChange(e) {
-  let val =
-    e == "padding"
-      ? paddingSlider.value
-      : e == "width"
-        ? widthSlider.value
-        : fontSizeSlider.value;
-  emit("onSliderChange", { action: e, val: val });
+  if (e == "padding") {
+    userConfig.value.styleObject.padding = `${paddingSlider.value}px`;
+  }
+  if (e == "width") {
+    userConfig.value.styleObject.width = `${widthSlider.value}px`;
+    userConfig.value.styleObject.transition = "500ms"
+  }
+  if (e == "fontsize") {
+    userConfig.value.styleObject['--base-font-size'] = `${fontSizeSlider.value}rem`
+  }
+  updateShareUserConfig({styleObject: userConfig.value.styleObject })
+
 }
 function decrement(e) {
   let val = 0;

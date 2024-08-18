@@ -1,6 +1,6 @@
 <template>
     <figure>
-        <div class="d-flex code-container" ref="template" :style="userConfig.styleObject">
+        <div class="d-flex code-container" ref="template" :style="userConfig.styleObject" v-if="isClient">
             <div class="editor-container">
                 <div class="editor-header">
                     <div class="editor-controls">
@@ -44,8 +44,28 @@ const props = defineProps({
 const emit = defineEmits(["getClipboardData"]);
 
 function getClipboardData(event) {
-    emit("getClipboardData", event)
+    // emit("getClipboardData", event)
+    event.preventDefault(); // 阻止默认粘贴行为
+
+// 获取剪贴板中的纯文本内容
+const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+// const text = await navigator.clipboard.readText()
+insertTextAtCursor(text)
 }
+const insertTextAtCursor = (text) => {
+  const selection = window.getSelection()
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    range.deleteContents()
+    const textNode = document.createTextNode(text)
+    range.insertNode(textNode)
+    range.setStartAfter(textNode)
+    range.setEndAfter(textNode)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
+
 const highlightCode = async () => {
     highlightedCode.value = await codeToHtml(code.value, {
         lang: 'javascript',
@@ -89,8 +109,8 @@ watch(code, highlightCode)
     background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
     transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s;
     font-family: inherit;
+    font-size: calc(var(--base-font-size));
     padding: 60px;
-    /* width: 100%; */
     width: 800px;
 }
 
@@ -140,7 +160,7 @@ watch(code, highlightCode)
 .editor-title {
     flex-grow: 1;
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     color: #333;
 }
@@ -176,7 +196,6 @@ watch(code, highlightCode)
     font-family: inherit;
     -webkit-font-feature-settings: inherit;
     font-feature-settings: inherit;
-    font-size: inherit;
     -webkit-font-variant-ligatures: none;
     font-variant-ligatures: none;
     font-variation-settings: inherit;

@@ -5,20 +5,20 @@
         <div class="content-mode" ref="template" :style="userConfig.styleObject">
           <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
             :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }">
-            <div class="editable-element title " contenteditable="true" autocorrect="off" autocomplete="off"
+            <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
               :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
               @paste="getClipboardData">
-              {{ userConfig.title }}
+              {{ title }}
             </div>
-            <div class="editable-element content " contenteditable="true" autocorrect="off" autocomplete="off"
+            <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
               :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
               @paste="getClipboardData">
-              {{ userConfig.content }}
+              {{ content }}
             </div>
-            <div class="editable-element " :class="{ 'hidden': !userConfig.show.author }">
+            <div class="editable-element" :class="{ 'hidden': !userConfig.show.author }">
               <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
                 @paste="getClipboardData">
-                {{ userConfig.author }}
+                {{ author }}
               </div>
             </div>
 
@@ -26,13 +26,13 @@
               <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
               <div class="d-flex flex-row  justify-space-between align-center">
                 <div>
-                  <div class="editable-element qr-title " contenteditable="true" autocorrect="off" autocomplete="off"
+                  <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
                     @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                    {{ userConfig.qrCodeTitle }}
+                    {{ qrCodeTitle }}
                   </div>
-                  <div class="editable-element qr-desc  mt-2" contenteditable="true" @paste="getClipboardData"
+                  <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
                     @input="updateConfig" data-key="qrCodeDesc">
-                    {{ userConfig.qrCodeDesc }}
+                    {{ qrCodeDesc }}
                   </div>
                 </div>
                 <div @click="dialog = true">
@@ -71,9 +71,18 @@ import vueQr from "vue-qr/src/packages/vue-qr.vue";
 const { userConfig, updateShareUserConfig } = useSharedConfig();
 
 const isClient = ref(false);
-
+const content = ref('')
+const title = ref('')
+const author= ref('')
+const qrCodeTitle = ref('')
+const qrCodeDesc = ref('qrCodeDesc')
 onMounted(async () => {
   isClient.value = true;
+  content.value = userConfig.value.content
+  title.value = userConfig.value.title
+  author.value = userConfig.value.author
+  qrCodeTitle.value = userConfig.value.qrCodeTitle
+  qrCodeDesc.value = userConfig.value.qrCodeDesc
 });
 
 const props = defineProps({
@@ -104,8 +113,50 @@ function getQrcode(data, id) {
   // qrcode.value = data;
 }
 
-function getClipboardData(event) {
-  emit("getClipboardData", event)
+async function getClipboardData(event) {
+  // emit("getClipboardData", event)
+  event.preventDefault(); // 阻止默认粘贴行为
+
+  // 获取剪贴板中的纯文本内容
+  const text = (event.clipboardData || window.clipboardData).getData('text/plain');
+  // const text = await navigator.clipboard.readText()
+  insertTextAtCursor(text)
+  return
+
+  let key = event.target.dataset.key
+  if('content'==key){
+    content.value = text
+    updateShareUserConfig({content:text})
+  }
+  if('title'==key){
+    title.value = text
+    updateShareUserConfig({title:text})
+  }
+  if('author'==key){
+    author.value = text
+    updateShareUserConfig({author:text})
+  }
+  if('qrCodeTitle'==key){
+    qrCodeTitle.value = text
+    updateShareUserConfig({qrCodeTitle:text})
+  }
+  if('qrCodeDesc'==key){
+    qrCodeDesc.value = text
+    updateShareUserConfig({qrCodeDesc:text})
+  }
+}
+const insertTextAtCursor = (text) => {
+  const selection = window.getSelection()
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    range.deleteContents()
+    const textNode = document.createTextNode(text)
+    range.insertNode(textNode)
+    range.setStartAfter(textNode)
+    range.setEndAfter(textNode)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
 }
 
 </script>

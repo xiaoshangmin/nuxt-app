@@ -1,8 +1,8 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center" :class="{ 'mt-4': !isMobile }">
+  <div class="container d-flex flex-column justify-center align-center mb-10" :class="{ 'mt-4': !isMobile }">
     <!-- 主体部分 -->
     <div id="temp-1" v-show="'temp-1' == userConfig.tempId">
-      <DefaultTemplate ref="temp1" :dialog="dialog" @getClipboardData="getClipboardData" :isMobile="isMobile">
+      <DefaultTemplate ref="temp1" @getClipboardData="getClipboardData" :isMobile="isMobile">
       </DefaultTemplate>
     </div>
     <div id="temp-2" v-show="'temp-2' == userConfig.tempId">
@@ -13,7 +13,7 @@
       </CardTemplate>
     </div>
 
-    <div class="d-flex mt-5 mb-5 flex-row align-center justify-center ga-4">
+    <div class="d-flex mt-5 flex-row align-center justify-center ga-4">
       <v-btn @click="generateImage" class="text-none">
         {{ $t("Download Image") }}
       </v-btn>
@@ -24,9 +24,9 @@
         </template>
       </v-tooltip>
     </div>
-
+    
     <!-- 底部弹出区域 -->
-    <v-bottom-sheet v-model="sheet" inset :opacity="0.2" style="padding-bottom: env(safe-area-inset-bottom);">
+    <v-bottom-sheet v-model="sheet" inset :opacity="0.2">
       <v-card>
         <!-- <v-card-text> -->
         <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
@@ -49,7 +49,6 @@
 <script setup>
 import axios from 'axios'
 import interact from "interactjs";
-import domtoimage from "dom-to-image-more";
 import html2canvas from "html2canvas";
 import { getBase64Image } from '@/utils'
 import { useDisplay } from "vuetify";
@@ -62,9 +61,7 @@ const snackbar = ref(false);
 const temp1 = ref(null);
 const temp2 = ref(null);
 const temp3 = ref(null);
-const dialog = ref(false);
 const showWidth = ref("0px");
-const qrcode = ref("");
 const sheet = ref(false);
 const isLoading = ref(false)
 const tempId = ref("temp-1")
@@ -474,19 +471,24 @@ function getClipboardData(event) {
 
   // 获取剪贴板中的纯文本内容
   const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-  userConfig[`${event.target.dataset.key}`] = text
-  doUpdateUserConfig(event.target.dataset.key, text)
+  console.log(event.target.dataset.key)
+  let key = event.target.dataset.key
+  if('content'==key){
+
+  }
+  // userConfig[`${event.target.dataset.key}`] = text
+  // doUpdateUserConfig(event.target.dataset.key, text)
   // 获取当前选中的范围
 }
 
 function getChildRef() {
-  if ('temp-1' == tempId.value) {
+  if ('temp-1' == userConfig.value.tempId) {
     return temp1.value.$refs.template;
   }
-  if ('temp-2' == tempId.value) {
+  if ('temp-2' == userConfig.value.tempId) {
     return temp2.value.$refs.template;
   }
-  if ('temp-3' == tempId.value) {
+  if ('temp-3' == userConfig.value.tempId) {
     return temp3.value.$refs.template;
   }
 }

@@ -1,9 +1,8 @@
 <template>
     <figure>
-        <div class="main d-flex flex-column justify-center align-center">
+        <div class="main d-flex flex-column justify-center align-center" v-if="isClient">
             <div class="d-flex justify-center align-center">
                 <div class="content-mode" ref="template" :style="userConfig.styleObject">
-
                     <div class="card d-flex justify-center flex-column">
                         <!-- loading -->
                         <div v-if="isLoading" class="d-flex justify-center align-start py-10" style="width: 100%;">
@@ -24,7 +23,7 @@
                                             </vueQr>
                                         </ClientOnly>
                                     </div>
-                                    <div :class="{ 'hidden': isClient && !userConfig.show.content }">
+                                    <div>
                                         <div class="editable-element qr-title " data-key="qrCodeTitle"
                                             @paste="getClipboardData">{{ userConfig.metaData.title }}
                                         </div>
@@ -34,7 +33,7 @@
                                             <div v-if="userConfig.metaData.base64Logo"> <v-img :width="20" cover
                                                     :src="userConfig.metaData.base64Logo"></v-img>
                                             </div>
-                                            <div>{{ userConfig.metaData.publisher }}</div>
+                                            <div class="qr-url">{{ userConfig.metaData.url }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -163,6 +162,12 @@ function getClipboardData(event) {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+}
+
+.qr-url{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
 }
 
 .hidden {
