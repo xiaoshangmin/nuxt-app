@@ -18,12 +18,12 @@
     "dom-to-image-more": "^3.3.0",
     "html2canvas": "^1.4.1",
     "interactjs": "^1.10.27",
-    "nuxt": "^3.12.3",
-    "shiki": "^1.12.1",
     "vue": "^3.4.35",
     "vue-qr": "^4.0.9"
   },
   "devDependencies": {
+    "shiki": "^1.12.1",
+    "nuxt": "^3.12.3",
     "@nuxtjs/i18n": "^8.3.0",
     "vite-plugin-vuetify": "^2.0.3",
     "vuetify": "^3.6.13"
