@@ -59,8 +59,12 @@
       ></v-btn>
     </div>
     <div>
+      <v-btn icon="mdi-help" slim @click="dialogHelp = true"></v-btn>
+    </div>
+    <div>
       <v-btn icon="mdi-eraser" slim @click="dialog = true"></v-btn>
     </div>
+    
   </v-app-bar>
 
   <v-navigation-drawer app v-model="drawer" temporary style="z-index: 1006">
@@ -91,6 +95,21 @@
       </template>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="dialogHelp" max-width="400">
+    <v-card
+      prepend-icon="mdi-alert"
+      text="确定要重置目前所有文本内容及配置并刷新页面吗？"
+      title="重置所有内容"
+    >
+      <template v-slot:actions>
+        <v-spacer></v-spacer>
+
+        <v-btn @click="dialog = false"> 取消 </v-btn>
+
+        <v-btn @click="onReset"> 重置 </v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -102,6 +121,7 @@ const { t, locale, locales, setLocale } = useI18n();
 
 const drawer = ref(false);
 const dialog = ref(false);
+const dialogHelp = ref(false);
 
 const items = computed(() => [
   { title: t("Simple Card"), to: "/" },
