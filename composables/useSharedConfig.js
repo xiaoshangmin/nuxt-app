@@ -1,15 +1,9 @@
 // 用于管理和同步卡片数据的composable
 export const useSharedConfig = () => {
     const defaultUserConfig = {
-        content: `这是简单的文字卡片生成工具，帮你发布社交媒体内容更有特色。
-        显示的文字都可以修改，点击二维码可以修改内容
-        电脑上鼠标拖动左右边框进行缩放
-        在电脑上全选文字后支持下面快捷键
-        - Ctrl+B 加粗文本
-        - Ctrl+I 斜体文本
-        - Ctrl+U 下划线文本`,
-        title: `创图卡片`,
-        author: "创图卡片 2024-07-15 18:20 广东",
+        content: `在这输入正文...`,
+        title: `在这输入标题`,
+        author: "在这可以自定义时间/作者/地点",
         qrCodeTitle: "创图卡片",
         qrCodeDesc: "扫描二维码",
         qrData: "https://labs.wowyou.cc/",
@@ -80,6 +74,6 @@ helloWorld.greet();`,
             localStorage.setItem('userConfigStore', JSON.stringify(userConfig.value));
         }
     };
-
+    
     return { userConfig, initUserConfig, updateShareUserConfig };
 };

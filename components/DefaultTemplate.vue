@@ -22,8 +22,8 @@
               </div>
             </div>
 
-            <div class="qrcode flex-cloumn" :class="{ 'hidden': !userConfig.show.qrcode }">
-              <v-divider class=" mt-4 mb-4" length="100%"></v-divider>
+            <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode}" style="width: 100%;">
+            <div class="qrcode flex-cloumn pt-4 mt-6">
               <div class="d-flex flex-row  justify-space-between align-center">
                 <div>
                   <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
@@ -44,6 +44,7 @@
                 </div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -99,7 +100,7 @@ const rules = reactive({
 
 function updateConfig(e) {
   let key = e.target.dataset.key
-  let val = e.target.innerHTML
+  let val = e.target.innerText
   let config = { [key]: val }
   updateShareUserConfig(config)
 }
@@ -210,20 +211,24 @@ const insertTextAtCursor = (text) => {
   overflow: hidden;
 }
 
+.qrcode-container{
+  max-height: 2000px;
+  transition:  max-height 0.5s, opacity 0.5s,font-size 0.5s;
+}
 
 .qrcode {
   width: 100%;
   opacity: 0.5;
-  transition: opacity 0.5s, max-height 0.5s, font-size 0.5s;
-  max-height: 2000px;
   overflow: hidden;
+  border-top: 1px solid rgb(97, 93, 93); /* 2像素宽的红色虚线边框 */
+
 }
 
 .qr-title {
-  font-size: calc(var(--base-font-size) * 1.3);
+  font-size: calc(var(--base-font-size) * 1.2);
   font-weight: 700;
   line-height: 1.4;
-  opacity: .4;
+  opacity: .6;
 }
 
 .qr-desc {
@@ -233,7 +238,8 @@ const insertTextAtCursor = (text) => {
 }
 
 .editable-element.hidden,
-.qrcode.hidden {
+.qrcode.hidden ,
+.qrcode-container.hidden{
   opacity: 0;
   max-height: 0;
 }
@@ -248,7 +254,7 @@ const insertTextAtCursor = (text) => {
   font-weight: 700;
   line-height: 1.4;
   font-size: calc(var(--base-font-size) * 1.25);
-  margin: .5rem 0;
+  margin: 1.5rem 0;
 }
 
 .content {
@@ -263,6 +269,7 @@ const insertTextAtCursor = (text) => {
   height: auto;
   font-size: calc(var(--base-font-size) * 0.875);
   opacity: 0.4;
+  outline: none;
 }
 
 .card {
