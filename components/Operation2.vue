@@ -1,5 +1,17 @@
 <template>
   <figure  style="padding-bottom: env(safe-area-inset-bottom);">
+
+    <v-tabs v-model="tab" align-tabs="center" center-active >
+      <v-tab value="template" class="text-none">模板</v-tab>
+      <v-tab value="url" class="text-none" v-show="'temp-3' == userConfig.tempId">URL</v-tab>
+      <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
+      <v-tab value="display" class="text-none">{{ $t("Display") }}</v-tab>
+      <v-tab value="three" class="text-none d-none d-sm-flex">{{
+        $t("Width And Padding")
+      }}</v-tab>
+      <v-tab value="font" class="text-none">{{ $t("Font") }}</v-tab>
+    </v-tabs>
+
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
         <div class="d-flex align-center template ga-6 py-4 px-4">
@@ -41,15 +53,15 @@
       <v-tabs-window-item value="display">
         <div class="d-flex flex-row ga-3 align-center justify-start  py-3 px-3 crtl">
           <v-switch v-model="show.title" :label="$t('Title')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('title')" min-width="100"></v-switch>
+            @update:modelValue="onSwitchChange('title')" min-width="100" v-show="'temp-1' == userConfig.tempId"></v-switch>
           <v-switch v-model="show.content" :label="$t('Content')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('content')" min-width="100"></v-switch>
+            @update:modelValue="onSwitchChange('content')" min-width="100" v-show="'temp-1' == userConfig.tempId"></v-switch>
           <v-switch v-model="show.author" :label="$t('Author')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('author')" min-width="100"></v-switch>
+            @update:modelValue="onSwitchChange('author')" min-width="100" v-show="'temp-1' == userConfig.tempId"></v-switch>
           <v-switch v-model="show.padding" :label="$t('Padding')" hide-details inset color="primary"
             @update:modelValue="onSwitchChange('padding')" min-width="100"></v-switch>
           <v-switch v-model="show.qrcode" :label="$t('QR Code')" hide-details inset color="primary"
-            @update:modelValue="onSwitchChange('qrcode')" min-width="120"></v-switch>
+            @update:modelValue="onSwitchChange('qrcode')" min-width="120"  v-show="'temp-2' != userConfig.tempId"></v-switch>
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="three">
@@ -167,16 +179,7 @@
       </v-tabs-window-item>
     </v-tabs-window>
     <!-- </v-card-text> -->
-    <v-tabs v-model="tab" align-tabs="center" center-active >
-      <v-tab value="template" class="text-none">模板</v-tab>
-      <v-tab value="url" class="text-none" v-show="'temp-3' == userConfig.tempId">URL</v-tab>
-      <v-tab value="bg" class="text-none">{{ $t("Bg Color") }}</v-tab>
-      <v-tab value="display" class="text-none">{{ $t("Display") }}</v-tab>
-      <v-tab value="three" class="text-none d-none d-sm-flex">{{
-        $t("Width And Padding")
-      }}</v-tab>
-      <v-tab value="font" class="text-none">{{ $t("Font") }}</v-tab>
-    </v-tabs>
+   
   
   </figure>
 </template>

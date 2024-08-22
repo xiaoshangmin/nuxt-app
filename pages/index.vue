@@ -1,8 +1,48 @@
 <template>
-  <div class="container d-flex flex-column justify-center align-center mb-4 pb-2" :class="{ 'mt-4': !isMobile }">
+  <!-- pc -->
+  <v-container v-if="!isMobile" class="fill-height">
+    <v-row>
+      <v-col cols="4">
+        <v-sheet rounded="lg" min-height="268">
+          <Operation :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
+            @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange">
+          </Operation>
+        </v-sheet>
+      </v-col>
+      <v-col>
+        <!-- 主体部分 -->
+        <div id="temp-1" v-show="'temp-1' == userConfig.tempId">
+          <DefaultTemplate ref="temp1" :isMobile="isMobile">
+          </DefaultTemplate>
+        </div>
+        <div id="temp-2" v-show="'temp-2' == userConfig.tempId">
+          <CodeTemplate ref="temp2" @getClipboardData="getClipboardData" />
+        </div>
+        <div id="temp-3" v-show="'temp-3' == userConfig.tempId">
+          <CardTemplate ref="temp3" :isLoading="isLoading">
+          </CardTemplate>
+        </div>
+
+        <div class="d-flex mt-5 flex-row align-center justify-center ga-4">
+          <v-btn @click="generateImage" class="text-none">
+            {{ $t("Download Image") }}
+          </v-btn>
+          <v-tooltip text="可直接粘贴在聊天框" v-if="!isMobile">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" @click="copyImage" class="text-none">
+                {{ $t("Copy Image") }}</v-btn>
+            </template>
+          </v-tooltip>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
+
+  <!-- mobile -->
+  <div v-else class="container d-flex flex-column justify-center align-center mb-4 pb-2">
     <!-- 主体部分 -->
     <div id="temp-1" v-show="'temp-1' == userConfig.tempId">
-      <DefaultTemplate ref="temp1" @getClipboardData="getClipboardData" :isMobile="isMobile">
+      <DefaultTemplate ref="temp1" :isMobile="isMobile">
       </DefaultTemplate>
     </div>
     <div id="temp-2" v-show="'temp-2' == userConfig.tempId">
@@ -24,14 +64,13 @@
         </template>
       </v-tooltip>
     </div>
-    
     <!-- 底部弹出区域 -->
     <v-bottom-sheet v-model="sheet" inset :opacity="0.2">
       <v-card>
         <!-- <v-card-text> -->
-        <CardOperation2 :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
+        <Operation :themeList="themeList" @changeColor="changeColor" @onSliderChange="onSliderChange"
           @decrement="decrement" @increment="increment" @onUrlChange="onUrlChange">
-        </CardOperation2>
+        </Operation>
         <!-- </v-card-text> -->
       </v-card>
     </v-bottom-sheet>
@@ -43,7 +82,6 @@
     <v-fab icon="mdi-pencil" @click="sheet = true" location="bottom end" app color="primary"
       style="z-index: 1006;"></v-fab>
   </div>
-
 </template>
 
 <script setup>
@@ -54,17 +92,15 @@ import { getBase64Image } from '@/utils'
 import { useDisplay } from "vuetify";
 
 const { userConfig, initUserConfig, updateShareUserConfig } = useSharedConfig();
-const { width, xs } = useDisplay();
+const { width, mobile } = useDisplay();
 
 const isMobile = ref(false);
 const snackbar = ref(false);
 const temp1 = ref(null);
 const temp2 = ref(null);
 const temp3 = ref(null);
-const showWidth = ref("0px");
 const sheet = ref(false);
 const isLoading = ref(false)
-const tempId = ref("temp-1")
 
 const themeList = ref([
   [
@@ -335,9 +371,8 @@ useSeoMeta({
 });
 
 onMounted(async () => {
-  // loadUserConfig();   
-  await new Promise(resolve => setTimeout(resolve, 0.5))
-  if (xs.value) {
+  await new Promise(resolve => setTimeout(resolve, 0.2))
+  if (mobile.value) {
     isMobile.value = true
     userConfig.value.styleObject.width = `${width.value}px`;
     updateShareUserConfig({ styleObject: userConfig.value.styleObject })
@@ -346,10 +381,7 @@ onMounted(async () => {
   }
 });
 
-
-
 function initInteract() {
-  console.log('initInteract')
   interact(getChildRef()).resizable({
     edges: { top: false, left: true, bottom: false, right: true },
     listeners: {
@@ -368,18 +400,15 @@ function initInteract() {
 function onUrlChange(url) {
   queryOg(url)
 }
- 
+
 function changeColor(theme) {
   userConfig.value.styleObject.transition = "";
   updateShareUserConfig({ styleObject: userConfig.value.styleObject })
-  // temp1.value.$refs.template.style.setProperty("--colorA", theme.colorA);
-  // temp1.value.$refs.template.style.setProperty("--colorB", theme.colorB);
-  // temp1.value.$refs.template.style.setProperty("--angle", theme.angle);
   getChildRef().style.setProperty("--colorA", theme.colorA);
   getChildRef().style.setProperty("--colorB", theme.colorB);
   getChildRef().style.setProperty("--angle", theme.angle);
 }
- 
+
 
 function onSliderChange(e) {
   if (e.action == "padding") {
@@ -393,7 +422,7 @@ function onSliderChange(e) {
     getChildRef().style.setProperty("--base-font-size", `${e.val}rem`);
   }
 }
- 
+
 function decrement(e) {
   if ("padding" == e.action) {
     styleObject.padding = `${e.val}px`;
@@ -431,7 +460,7 @@ function generateImage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }); 
+  });
 }
 // 将 base64 转换为 Blob 对象的函数
 const dataURItoBlob = (dataURI) => {
@@ -449,7 +478,7 @@ function copyImage() {
   html2canvas(getChildRef(), { scale: 3 }).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     copyBase64Img(imgData);
-  }); 
+  });
 }
 /*复制Base64图片*/
 function copyBase64Img(base64Data) {
@@ -473,13 +502,6 @@ function getClipboardData(event) {
   // 获取剪贴板中的纯文本内容
   const text = (event.clipboardData || window.clipboardData).getData('text/plain');
   console.log(event.target.dataset.key)
-  let key = event.target.dataset.key
-  if('content'==key){
-
-  }
-  // userConfig[`${event.target.dataset.key}`] = text
-  // doUpdateUserConfig(event.target.dataset.key, text)
-  // 获取当前选中的范围
 }
 
 function getChildRef() {

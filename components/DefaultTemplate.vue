@@ -1,6 +1,6 @@
 <template>
   <figure>
-    <div class="main d-flex flex-column justify-center align-center" v-if="isClient">
+    <div class="main d-flex flex-column justify-center align-center">
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="template" :style="userConfig.styleObject">
           <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
@@ -22,29 +22,29 @@
               </div>
             </div>
 
-            <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode}" style="width: 100%;">
-            <div class="qrcode flex-cloumn pt-4 mt-6">
-              <div class="d-flex flex-row  justify-space-between align-center">
-                <div>
-                  <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
-                    @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                    {{ qrCodeTitle }}
+            <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode }" style="width: 100%;">
+              <div class="qrcode flex-cloumn pt-4 mt-6">
+                <div class="d-flex flex-row  justify-space-between align-center">
+                  <div>
+                    <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
+                      @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                      {{ qrCodeTitle }}
+                    </div>
+                    <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
+                      @input="updateConfig" data-key="qrCodeDesc">
+                      {{ qrCodeDesc }}
+                    </div>
                   </div>
-                  <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
-                    @input="updateConfig" data-key="qrCodeDesc">
-                    {{ qrCodeDesc }}
+                  <div @click="dialog = true">
+                    <ClientOnly>
+                      <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
+                        backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
+                      </vueQr>
+                    </ClientOnly>
                   </div>
-                </div>
-                <div @click="dialog = true">
-                  <ClientOnly>
-                    <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                      backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                    </vueQr>
-                  </ClientOnly>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -74,7 +74,7 @@ const { userConfig, updateShareUserConfig } = useSharedConfig();
 const isClient = ref(false);
 const content = ref('')
 const title = ref('')
-const author= ref('')
+const author = ref('')
 const qrCodeTitle = ref('')
 const qrCodeDesc = ref('qrCodeDesc')
 onMounted(async () => {
@@ -90,7 +90,7 @@ const props = defineProps({
   isMobile: { type: Boolean, default: false },
   template: { type: Object }
 });
-const emit = defineEmits(["getClipboardData"]);
+const emit = defineEmits([]);
 
 const dialog = ref(false);
 const colorDark = ref("#fff");//#101320 
@@ -115,36 +115,11 @@ function getQrcode(data, id) {
 }
 
 async function getClipboardData(event) {
-  // emit("getClipboardData", event)
-  event.preventDefault(); // 阻止默认粘贴行为
-
+  event.preventDefault(); // 阻止默认粘贴行为 
   // 获取剪贴板中的纯文本内容
   const text = (event.clipboardData || window.clipboardData).getData('text/plain');
   // const text = await navigator.clipboard.readText()
   insertTextAtCursor(text)
-  return
-
-  let key = event.target.dataset.key
-  if('content'==key){
-    content.value = text
-    updateShareUserConfig({content:text})
-  }
-  if('title'==key){
-    title.value = text
-    updateShareUserConfig({title:text})
-  }
-  if('author'==key){
-    author.value = text
-    updateShareUserConfig({author:text})
-  }
-  if('qrCodeTitle'==key){
-    qrCodeTitle.value = text
-    updateShareUserConfig({qrCodeTitle:text})
-  }
-  if('qrCodeDesc'==key){
-    qrCodeDesc.value = text
-    updateShareUserConfig({qrCodeDesc:text})
-  }
 }
 const insertTextAtCursor = (text) => {
   const selection = window.getSelection()
@@ -211,16 +186,16 @@ const insertTextAtCursor = (text) => {
   overflow: hidden;
 }
 
-.qrcode-container{
+.qrcode-container {
   max-height: 2000px;
-  transition:  max-height 0.5s, opacity 0.5s,font-size 0.5s;
+  transition: max-height 0.5s, opacity 0.5s, font-size 0.5s;
 }
 
 .qrcode {
   width: 100%;
   opacity: 0.5;
   overflow: hidden;
-  border-top: 1px solid rgb(97, 93, 93); /* 2像素宽的红色虚线边框 */
+  border-top: 1px solid rgba(169, 167, 167, 0.5);
 
 }
 
@@ -238,8 +213,8 @@ const insertTextAtCursor = (text) => {
 }
 
 .editable-element.hidden,
-.qrcode.hidden ,
-.qrcode-container.hidden{
+.qrcode.hidden,
+.qrcode-container.hidden {
   opacity: 0;
   max-height: 0;
 }

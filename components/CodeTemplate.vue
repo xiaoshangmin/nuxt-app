@@ -1,6 +1,6 @@
 <template>
     <figure>
-        <div class="d-flex code-container" ref="template" :style="userConfig.styleObject" v-if="isClient">
+        <div class="main d-flex code-container " ref="template" :style="userConfig.styleObject" v-if="isClient">
             <div class="editor-container">
                 <div class="editor-header">
                     <div class="editor-controls">
@@ -105,6 +105,13 @@ watch(code, highlightCode)
     initial-value: rgb(17, 26, 35);
 }
 
+.main {
+  position: relative;
+  font-family: inherit;
+  margin-right: auto;
+  margin-left: auto;
+}
+
 .code-container {
     background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
     transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s;
@@ -163,6 +170,7 @@ watch(code, highlightCode)
     font-size: 13px;
     font-weight: 500;
     color: #333;
+    outline: none;
 }
 
 
