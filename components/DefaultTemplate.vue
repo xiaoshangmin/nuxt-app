@@ -217,6 +217,7 @@ const insertTextAtCursor = (text) => {
 .qrcode-container.hidden {
   opacity: 0;
   max-height: 0;
+  margin: 0;
 }
 
 .title,
