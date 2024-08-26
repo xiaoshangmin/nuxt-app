@@ -149,9 +149,42 @@ function initInteract() {
 function changePicScale(e) {
   let width = String(userConfig.value.styleObject.width)
   width = width.match(/(\d+)/)[1]
-  let height = (width / 3) * 4
-  userConfig.value.styleObject.height = `${height}px`;
-  updateShareUserConfig({ styleObject: userConfig.value.styleObject })
+  if (e == 0) {
+    let height = width
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+
+  if (e == 1) {
+    let height = (width / 3) * 4
+    userConfig.value.scale.minHeight = `${height}px`;
+
+  }
+  if (e == 2) {
+    let height = (width / 4) * 3
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+  if (e == 3) {
+    width = 1024
+    let height = (width / 7) * 5
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+  if (e == 4) {
+    width = 393
+    let height = (width / 9) * 16
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+  if (e == 5) {
+    width = 700
+    let height = (width / 16) * 9
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+  if (e == 6) {
+    width = 533
+    let height = (width / 12) * 16
+    userConfig.value.scale.minHeight = `${height}px`;
+  }
+  userConfig.value.styleObject.width = `${width}px`;
+  updateShareUserConfig({ scale: userConfig.value.scale, styleObject: userConfig.value.styleObject })
 }
 
 function onUrlChange(url) {

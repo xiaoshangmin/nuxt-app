@@ -57,7 +57,39 @@
             v-show="'temp-2' != userConfig.tempId"></v-switch>
         </div>
 
-        <div class="d-flex flex-row align-center justify-start py-2 px-2">
+        <div class="d-flex flex-row align-center justify-start py-3 px-2">
+          <div class="d-flex flex-row align-center">
+            <div style="width: 4rem">
+              比例
+            </div>
+            <div class="d-flex ga-2 flex-wrap">
+              <v-btn variant="tonal" @click="changePicScale(0)">
+                1:1
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(1)">
+                3:4
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(2)">
+                4:3
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(3)">
+                7:5
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(4)">
+                9:16
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(5)">
+                16:9
+              </v-btn>
+              <v-btn variant="tonal" @click="changePicScale(6)">
+                12:16
+              </v-btn>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="d-flex flex-row align-center justify-start px-2">
           <div style="width: 4rem">
             {{ $t("Padding") }}
           </div>
@@ -70,9 +102,10 @@
               <v-btn value="50"> 50 </v-btn>
               <v-btn value="60"> 60 </v-btn>
             </v-btn-toggle>
-            <v-slider v-model="paddingSlider" thumb-label :step="1" track-color="grey"
-              @update:modelValue="onSliderChange('padding')">
-              <!-- <template v-slot:prepend>
+            <div class="py-3">
+              <v-slider v-model="paddingSlider" thumb-label :step="1" track-color="grey"
+                @update:modelValue="onSliderChange('padding')">
+                <!-- <template v-slot:prepend>
                                                     <v-btn icon="mdi-minus" size="small" variant="text"
                                                         @click="decrement('padding')" data-id="padding"></v-btn>
                                                 </template>
@@ -81,7 +114,8 @@
                                                     <v-btn icon="mdi-plus" size="small" variant="text"
                                                         @click="increment('padding')" data-id="padding"></v-btn>
                                                 </template> -->
-            </v-slider>
+              </v-slider>
+            </div>
           </div>
         </div>
 
@@ -107,7 +141,7 @@
                 {{ $t("XL Large") }}
               </v-btn>
             </v-btn-toggle>
-            <div class="d-flex">
+            <div class="d-flex py-3">
               <v-slider v-model="widthSlider" thumb-label :step="5" track-color="grey" min="340" max="900"
                 @update:modelValue="onSliderChange('width')">
                 <!-- <template v-slot:prepend>
@@ -129,7 +163,7 @@
             <div style="width: 4rem">
               {{ $t("Font") }}
             </div>
-            <div>
+            <div class="py-3">
               <v-btn-toggle v-model="fontSizeSlider" color="deep-purple-accent-3" rounded="0"
                 @click="onBtnToggle('fontsize')">
                 <v-btn value="0.7" class="text-none">
@@ -162,37 +196,6 @@
             </div>
           </div>
         </div>
-
-        <div class=" d-flex flex-rowalign-center justify-start  py-2 px-2">
-          <div class="d-flex flex-row align-center">
-            <div style="width: 4rem">
-              比例
-            </div>
-            <div class="d-flex ga-2 flex-wrap">
-              <v-btn variant="tonal" @click="changePicScale(0)">
-                1:1
-              </v-btn>
-              <v-btn variant="tonal" @click="changePicScale(1)">
-                3:4
-              </v-btn>
-              <v-btn variant="tonal">
-                4:3
-              </v-btn>
-              <v-btn variant="tonal">
-                7:5
-              </v-btn>
-              <v-btn variant="tonal">
-                9:16
-              </v-btn>
-              <v-btn variant="tonal">
-                16:9
-              </v-btn>
-              <v-btn variant="tonal">
-                12:16
-              </v-btn>
-            </div>
-          </div>
-        </div>
       </v-tabs-window-item>
     </v-tabs-window>
 
@@ -203,10 +206,10 @@
 const props = defineProps({
 });
 const emit = defineEmits([
-  "changeColor", 
+  "changeColor",
   "decrement",
   "increment",
-  "onUrlChange", 
+  "onUrlChange",
   "changePicScale"
 ]);
 

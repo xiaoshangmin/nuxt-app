@@ -15,6 +15,9 @@ export const useSharedConfig = () => {
             transition: '',
             '--base-font-size': '1rem',
         },
+        scale:{
+            minHeight:'393px'
+        },
         show: {
             title: true,
             content: true,

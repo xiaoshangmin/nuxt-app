@@ -3,44 +3,47 @@
     <div class="main d-flex flex-column justify-center align-center">
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="template" :style="userConfig.styleObject">
-          <div class="card d-flex justify-center align-start pt-8 pb-8 px-6 flex-column"
-            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }">
-            <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
-              @paste="getClipboardData">
-              {{ title }}
-            </div>
-            <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-              :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
-              @paste="getClipboardData">
-              {{ content }}
-            </div>
-            <div class="editable-element" :class="{ 'hidden': !userConfig.show.author }">
-              <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
+          <div class="card d-flex justify-space-between align-start pt-8 pb-8 px-6 flex-column"
+            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }" :style="userConfig.scale">
+            <div style="width: 100%;">
+              <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
+                :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
                 @paste="getClipboardData">
-                {{ author }}
+                {{ title }}
+              </div>
+              <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
+                :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
+                @paste="getClipboardData">
+                {{ content }}
               </div>
             </div>
-
-            <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode }" style="width: 100%;">
-              <div class="qrcode flex-cloumn pt-4 mt-6">
-                <div class="d-flex flex-row  justify-space-between align-center">
-                  <div>
-                    <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
-                      @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                      {{ qrCodeTitle }}
+            <div class="d-flex flex-column" style="width: 100%;">
+              <div class="editable-element" :class="{ 'hidden': !userConfig.show.author }">
+                <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
+                  @paste="getClipboardData">
+                  {{ author }}
+                </div>
+              </div>
+              <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode }" style="width: 100%;">
+                <div class="qrcode flex-cloumn pt-4 mt-6">
+                  <div class="d-flex flex-row  justify-space-between align-center">
+                    <div>
+                      <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
+                        @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                        {{ qrCodeTitle }}
+                      </div>
+                      <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
+                        @input="updateConfig" data-key="qrCodeDesc">
+                        {{ qrCodeDesc }}
+                      </div>
                     </div>
-                    <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
-                      @input="updateConfig" data-key="qrCodeDesc">
-                      {{ qrCodeDesc }}
+                    <div @click="dialog = true">
+                      <ClientOnly>
+                        <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
+                          backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
+                        </vueQr>
+                      </ClientOnly>
                     </div>
-                  </div>
-                  <div @click="dialog = true">
-                    <ClientOnly>
-                      <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
-                        backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
-                      </vueQr>
-                    </ClientOnly>
                   </div>
                 </div>
               </div>
@@ -169,7 +172,7 @@ const insertTextAtCursor = (text) => {
   background-image: linear-gradient(var(--angle), var(--colorA), var(--colorB));
   transition: padding 0.5s, --angle 1s, --colorA 1s, --colorB 1s, opacity .5s;
   min-width: 393px;
-  max-width: 940px;
+  /* max-width: 940px; */
   font-family: inherit;
   box-sizing: border-box;
   --base-font-size: 1.1rem;
@@ -250,6 +253,7 @@ const insertTextAtCursor = (text) => {
 
 .card {
   width: 100%;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
