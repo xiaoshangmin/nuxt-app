@@ -94,7 +94,7 @@
   <v-dialog v-model="dialogOfficial" max-width="400">
     <v-card>
       <template v-slot:text>
-        <div>扫码关注公众号,获取最新功能更新或者留下您宝贵的建议</div>
+        <div>扫码关注公众号(微信里可以长按扫码),获取最新功能更新或者留下您宝贵的建议</div>
         <div class="d-flex">
         <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg"></v-img>
       </div>
