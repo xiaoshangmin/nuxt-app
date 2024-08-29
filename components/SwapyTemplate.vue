@@ -1,78 +1,95 @@
 <template>
   <figure>
     <div class="main d-flex flex-column justify-center align-center">
-      <div class="d-flex justify-center align-center">
-        <div class="content-mode" ref="template" :style="userConfig.styleObject">
-          <div class="card d-flex justify-space-between align-start pt-8 pb-8 px-6 flex-column"
-            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }" :style="userConfig.scale">
-            <div style="width: 100%;">
-              <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
-                :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
+      <div class="container content-mode" ref="template" :style="userConfig.styleObject">
+        <div class="section-1" data-swapy-slot="1">
+          <div class="content-a" data-swapy-item="a">
+            <v-sheet :elevation="24" rounded="lg">
+              <div class="editable-element py-2 px-2 my-1 title" contenteditable="true" autocorrect="off"
+                autocomplete="off" :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
                 @paste="getClipboardData">
                 {{ title }}
               </div>
-              <div class="editable-element content" contenteditable="true" autocorrect="off" autocomplete="off"
-                :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig" data-key="content"
-                @paste="getClipboardData">
+            </v-sheet>
+          </div>
+        </div>
+        <div class="section-2" data-swapy-slot="2">
+          <div class="content-b" data-swapy-item="b">
+            <v-sheet :elevation="24" rounded="lg">
+              <div class="editable-element py-2 px-2  my-1 content" contenteditable="true" autocorrect="off"
+                autocomplete="off" :class="{ 'hidden': !userConfig.show.content }" @input="updateConfig"
+                data-key="content" @paste="getClipboardData">
                 {{ content }}
               </div>
-            </div>
-            <div class="d-flex flex-column" style="width: 100%;">
-              <div class="editable-element" :class="{ 'hidden': !userConfig.show.author }">
-                <div class="time d-flex justify-end mt-6" contenteditable="true" @input="updateConfig" data-key="author"
-                  @paste="getClipboardData">
-                  {{ author }}
-                </div>
+            </v-sheet>
+          </div>
+        </div>
+        <div class="section-3" data-swapy-slot="3">
+          <div class="content-c" data-swapy-item="c">
+            <v-sheet :elevation="24" rounded="lg">
+              <div class="editable-element py-2 px-2  my-1 time" :class="{ 'hidden': !userConfig.show.author }"
+                contenteditable="true" @input="updateConfig" data-key="author" @paste="getClipboardData">
+                {{ author }}
               </div>
-              <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode }" style="width: 100%;">
-                <div class="qrcode flex-cloumn pt-4 mt-6">
-                  <div class="d-flex flex-row  justify-space-between align-center">
-                    <div>
-                      <div class="editable-element qr-title" contenteditable="true" autocorrect="off" autocomplete="off"
-                        @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
-                        {{ qrCodeTitle }}
+            </v-sheet>
+          </div>
+        </div>
+        <div class="section-4" data-swapy-slot="4">
+          <div class="content-d" data-swapy-item="d">
+            <div class="qrcode-container" :class="{ 'hidden': !userConfig.show.qrcode }">
+              <div class="qrcode flex-cloumn">
+                <div class="d-flex flex-row  justify-space-between align-center">
+                  <div class="handle" data-swapy-handle>
+                    <v-sheet :elevation="24" rounded="lg">
+                      <div class="px-2 py-2">
+                        <div class="editable-element qr-title" contenteditable="true" autocorrect="off"
+                          autocomplete="off" @input="updateConfig" data-key="qrCodeTitle" @paste="getClipboardData">
+                          {{ qrCodeTitle }}
+                        </div>
+                        <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
+                          @input="updateConfig" data-key="qrCodeDesc">
+                          {{ qrCodeDesc }}
+                        </div>
                       </div>
-                      <div class="editable-element qr-desc mt-2" contenteditable="true" @paste="getClipboardData"
-                        @input="updateConfig" data-key="qrCodeDesc">
-                        {{ qrCodeDesc }}
-                      </div>
-                    </div>
-                    <div @click="dialog = true">
-                      <ClientOnly>
+                    </v-sheet>
+                  </div>
+                  <ClientOnly>
+                    <v-sheet :elevation="24" rounded="lg">
+                      <div class="px-2 py-2">
                         <vueQr :text="userConfig.qrData" :size="60" :margin="0" colorLight="transparent"
                           backgroundColor="transparent" :colorDark="colorDark" :callback="getQrcode">
                         </vueQr>
-                      </ClientOnly>
-                    </div>
-                  </div>
+                      </div>
+                    </v-sheet>
+                  </ClientOnly>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- qrcode edit -->
-      <v-dialog v-model="dialog" max-width="500">
-        <v-card hover title="编辑二维码">
-          <v-card-text>
-            <v-text-field v-model="userConfig.qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
-              clearable></v-text-field>
-            <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
-              更新二维码
-            </v-btn>
-          </v-card-text>
-        </v-card>
-      </v-dialog>
     </div>
+    <!-- qrcode edit -->
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card hover title="编辑二维码">
+        <v-card-text>
+          <v-text-field v-model="userConfig.qrData" class="mb-2" :rules="[rules.required]" label="可输入文本或链接"
+            clearable></v-text-field>
+          <v-btn color="success" size="large" type="submit" variant="elevated" block @click="editQrData">
+            更新二维码
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </figure>
 </template>
 
 <script setup>
-
+import { createSwapy } from 'swapy'
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
 const { userConfig, updateShareUserConfig } = useSharedConfig();
+
 
 const isClient = ref(false);
 const content = ref('')
@@ -81,13 +98,21 @@ const author = ref('')
 const qrCodeTitle = ref('')
 const qrCodeDesc = ref('qrCodeDesc')
 
-onMounted(() => {
+onMounted(async () => {
   isClient.value = true;
   content.value = userConfig.value.content
   title.value = userConfig.value.title
   author.value = userConfig.value.author
   qrCodeTitle.value = userConfig.value.qrCodeTitle
   qrCodeDesc.value = userConfig.value.qrCodeDesc
+
+  const container = document.querySelector('.container')
+  const swapy = createSwapy(container, {
+    animation: 'dynamic' // or spring or none
+  })
+
+  // You can disable and enable it anytime you want
+  swapy.enable(true)
 });
 
 const props = defineProps({
@@ -199,7 +224,7 @@ const insertTextAtCursor = (text) => {
   width: 100%;
   opacity: 0.5;
   overflow: hidden;
-  border-top: 1px solid rgba(169, 167, 167, 0.5);
+  /* border-top: 1px solid rgba(169, 167, 167, 0.5); */
 
 }
 
@@ -234,7 +259,6 @@ const insertTextAtCursor = (text) => {
   font-weight: 700;
   line-height: 1.4;
   font-size: calc(var(--base-font-size) * 1.25);
-  margin: 1.5rem 0;
 }
 
 .content {

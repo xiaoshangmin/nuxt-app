@@ -41,23 +41,23 @@
         </div>
         <div class="mt-10">
             <div class="d-flex justify-center align-center flex-column">
-                <div class="d-flex  justify-center align-center ga-5 mb-6"> 
-                        <v-btn @click="upload" :text="$t('Upload Image')" prepend-icon="mdi-image" elevation="12"
-                            size="x-large" rounded="xl" width="180px" height="55px" class="text-none">
-                        </v-btn> 
-                        <v-btn @click="handleDownload" :text="$t('Download Image')" prepend-icon="mdi-download"
-                            elevation="12" size="x-large" width="180px" height="55px" rounded="xl" :disabled="disabled"
-                            class="text-none"></v-btn>
-                </div> 
-                    <v-tooltip text="电脑有GPU的话勾选出图更快">
-                        <template v-slot:activator="{ props }">
-                            <v-checkbox label="使用GPU" v-model="gpu" v-bind="props"></v-checkbox>
-                        </template>
-                    </v-tooltip> 
-            </div> 
-                <v-file-input ref="uploadRef" label="选择需要转换的文件" :rules="rules" prepend-icon="" v-model="files"
-                    @change="remove" class="custom-file-input">
-                </v-file-input> 
+                <div class="d-flex  justify-center align-center ga-5 mb-6">
+                    <v-btn @click="upload" :text="$t('Upload Image')" prepend-icon="mdi-image" elevation="12"
+                        size="x-large" rounded="xl" width="180px" height="55px" class="text-none">
+                    </v-btn>
+                    <v-btn @click="handleDownload" :text="$t('Download Image')" prepend-icon="mdi-download"
+                        elevation="12" size="x-large" width="180px" height="55px" rounded="xl" :disabled="disabled"
+                        class="text-none"></v-btn>
+                </div>
+                <v-tooltip text="电脑有GPU的话勾选出图更快">
+                    <template v-slot:activator="{ props }">
+                        <v-checkbox label="使用GPU" v-model="gpu" v-bind="props"></v-checkbox>
+                    </template>
+                </v-tooltip>
+            </div>
+            <v-file-input ref="uploadRef" label="选择需要转换的文件" :rules="rules" prepend-icon="" v-model="files"
+                @change="remove" class="custom-file-input">
+            </v-file-input>
         </div>
     </div>
     <!-- 对话框 -->
@@ -84,18 +84,18 @@
 import type { Config } from "@imgly/background-removal";
 import { removeBackground } from "@imgly/background-removal";
 import { ImgComparisonSlider } from '@img-comparison-slider/vue';
- 
+
 useSeoMeta({
-  title: "消除图片背景 - 在线抠图去除背景 | labs.wowyou.cc",
-  ogTitle: "消除图片背景 - 在线抠图去除背景",
-  keywords: "消除图片背景,抠图,去背景",
-  ogType: "website",
-  description: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
-  ogDescription: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
-  twitterCard: "summary_large_image",
-  ogUrl: "https://labs.wowyou.cc/bgremoval",
-  ogLocale: "zh",
-  robots:"index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    title: "消除图片背景 - 在线抠图去除背景 | labs.wowyou.cc",
+    ogTitle: "消除图片背景 - 在线抠图去除背景",
+    keywords: "消除图片背景,抠图,去背景",
+    ogType: "website",
+    description: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
+    ogDescription: "在线抠图工具轻松实现一键抠图，只需上传图片，无需其他操作，即可100%自动去除图片背景",
+    twitterCard: "summary_large_image",
+    ogUrl: "https://labs.wowyou.cc/bgremoval",
+    ogLocale: "zh",
+    robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
 });
 
 const uploadRef = ref(null)
@@ -108,19 +108,18 @@ const snackbar = ref(false);
 const disabled = ref(true);
 const downloadProgress = ref(0);
 const imgSliderVal = ref(75);
-const files = ref([]);
-const info = reactive({});
+const files = ref([]); 
 const rules = [
     value => {
         return !value || !value.length || value[0].size < 2000000 || 'Avatar size should be less than 2 MB!'
     },
 ]
-const before = ref("");//"https://oss.wowyou.cc/font/p1b5ovf8b7qb2jrb1dmjspo14991.jpg",
-const after = ref("");//"https://oss.wowyou.cc/font/p1b5ovf8b7qb2jrb1dmjspo14991.jpg"
+const before = ref(""); 
+const after = ref(""); 
 
 
 
-onMounted(() => {
+onMounted(() => { 
     const canvas = document.createElement('canvas');
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (gl && gl instanceof WebGLRenderingContext) {
@@ -147,11 +146,11 @@ function test(e: any) {
 }
 
 function upload() {
-    uploadRef.value.click()
+    uploadRef?.value.click()
 }
-function remove() {
+function remove() { 
     downloadProgress.value = 0;
-    let file = files.value[0]; //拿到上传的file  
+    let file = files.value; //拿到上传的file   
     const url = URL.createObjectURL(file)
     before.value = url;
     after.value = url;
@@ -248,12 +247,7 @@ function doRemove(url: string) {
     width: auto;
     object-fit: contain;
 }
-
-/* .icon {
-    --tw-text-opacity: 1;
-    color: rgb(115 115 115 / var(--tw-text-opacity));
-} */
-
+ 
 .custom-file-input {
     width: 0;
     height: 0;

@@ -65,5 +65,6 @@ export default defineNuxtConfig({
       UMAMI_WEBSITE_ID: process.env.UMAMI_WEBSITE_ID
     }
   },
-  devtools: { enabled: false }
+  devtools: { enabled: false },
+  sourcemap:false
 })

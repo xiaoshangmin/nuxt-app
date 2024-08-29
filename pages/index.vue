@@ -22,6 +22,9 @@
           <CardTemplate ref="temp3" :isLoading="isLoading">
           </CardTemplate>
         </div>
+        <!-- <div id="temp-4" v-show="'temp-4' == userConfig.tempId">
+          <SortableTemplate ref="temp4"></SortableTemplate>
+        </div> -->
 
         <div class="d-flex mt-5 flex-row align-center justify-center ga-4">
           <v-btn @click="generateImage" class="text-none">
@@ -99,6 +102,7 @@ const snackbar = ref(false);
 const temp1 = ref(null);
 const temp2 = ref(null);
 const temp3 = ref(null);
+const temp4 = ref(null);
 const sheet = ref(false);
 const isLoading = ref(false)
 
@@ -303,6 +307,9 @@ function getChildRef() {
   }
   if ('temp-3' == userConfig.value.tempId) {
     return temp3.value.$refs.template;
+  }
+  if ('temp-4' == userConfig.value.tempId) {
+    return temp4.value.$refs.template;
   }
 }
 
