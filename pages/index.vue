@@ -22,9 +22,9 @@
           <CardTemplate ref="temp3" :isLoading="isLoading">
           </CardTemplate>
         </div>
-        <!-- <div id="temp-4" v-show="'temp-4' == userConfig.tempId">
-          <SortableTemplate ref="temp4"></SortableTemplate>
-        </div> -->
+        <div id="temp-4" v-show="'temp-4' == userConfig.tempId">
+          <ImageTemplate ref="temp4"></ImageTemplate>
+        </div>
 
         <div class="d-flex mt-5 flex-row align-center justify-center ga-4">
           <v-btn @click="generateImage" class="text-none">

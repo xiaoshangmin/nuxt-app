@@ -12,15 +12,15 @@
         <div class="d-flex flex-wrap justify-space-between align-center template py-4 px-4">
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == userConfig.tempId }"
             @click="changeTemp('temp-1')">
-            <v-img src="~/assets/temp-1.png" :width="80"></v-img>
+            <v-img src="~/assets/temp-1.png" :width="80" alt="temp-1"></v-img>
           </div>
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-2' == userConfig.tempId }"
             @click="changeTemp('temp-2')">
-            <v-img src="~/assets/temp-2.png" :width="80"></v-img>
+            <v-img src="~/assets/temp-2.png" :width="80" alt="temp-2"></v-img>
           </div>
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-3' == userConfig.tempId }"
             @click="changeTemp('temp-3')">
-            <v-img src="~/assets/temp-3.png" :width="80"></v-img>
+            <v-img src="~/assets/temp-3.png" :width="80"  alt="temp-3"></v-img>
           </div>
           <!-- <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-4' == userConfig.tempId }"
             @click="changeTemp('temp-4')">
