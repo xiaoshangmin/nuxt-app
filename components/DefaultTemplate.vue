@@ -79,7 +79,7 @@ const content = ref('')
 const title = ref('')
 const author = ref('')
 const qrCodeTitle = ref('')
-const qrCodeDesc = ref('qrCodeDesc')
+const qrCodeDesc = ref('')
 
 onMounted(() => {
   isClient.value = true;
