@@ -3,10 +3,15 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   app: {
     head: {
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0,viewport-fit=cover',
-      link: [
-        // 添加一个favicon链接
+      meta: [
+        {
+          "name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0,viewport-fit=cover"
+        },
+        {
+          "charset": "utf-8"
+        }
+      ],
+      link: [ 
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ],
       script: [
