@@ -8,12 +8,24 @@ export default defineNuxtConfig({
       link: [
         // 添加一个favicon链接
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-      ]
+      ],
+      script: [
+        {
+          src: "https://hm.baidu.com/hm.js?33689b74c190f968430ea0b99c4497ac",
+          async: true
+        },
+      ],
     }
+  },
+  nitro: {
+    compressPublicAssets: true, // 启动压缩
   },
   build: {
     transpile: ['vuetify'],
-  }, 
+    analyze: {
+      filename: "stats.html",
+    },
+  },
   modules: [
     '@nuxtjs/i18n',
     (_options, nuxt) => {
@@ -54,7 +66,7 @@ export default defineNuxtConfig({
     defaultLocale: 'zh-CN',
   },
   components: true,
-  compatibilityDate: '2024-04-03', 
+  compatibilityDate: '2024-04-03',
   devServer: {
     host: "0.0.0.0"
   },
@@ -66,5 +78,5 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: false },
-  sourcemap:false
+  sourcemap: false
 })
