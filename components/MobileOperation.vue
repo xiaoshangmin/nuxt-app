@@ -15,6 +15,10 @@
             @click="changeTemp('temp-3')">
             <v-img src="~/assets/temp-3.png" :width="80"></v-img>
           </div>
+          <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-4' == userConfig.tempId }"
+            @click="changeTemp('temp-4')">
+            <v-img src="~/assets/temp-4.png" :width="80"  alt="temp-4"></v-img>
+          </div>
         </div>
       </v-tabs-window-item>
       <v-tabs-window-item value="url">

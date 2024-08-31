@@ -9,7 +9,7 @@
 
     <v-tabs-window v-model="tab">
       <v-tabs-window-item value="template">
-        <div class="d-flex flex-wrap justify-space-between align-center template py-4 px-4">
+        <div class="d-flex flex-wrap justify-space-between align-center template py-4 px-2">
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-1' == userConfig.tempId }"
             @click="changeTemp('temp-1')">
             <v-img src="~/assets/temp-1.png" :width="80" alt="temp-1"></v-img>
@@ -24,7 +24,7 @@
           </div>
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-4' == userConfig.tempId }"
             @click="changeTemp('temp-4')">
-            <v-img src="~/assets/temp-3.png" :width="80"></v-img>
+            <v-img src="~/assets/temp-4.png" :width="80"  alt="temp-4"></v-img>
           </div>
         </div>
       </v-tabs-window-item>
