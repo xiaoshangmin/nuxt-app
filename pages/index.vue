@@ -124,7 +124,8 @@ useSeoMeta({
 });
 
 onMounted(async () => {
-  await new Promise(resolve => setTimeout(resolve, 0.2))
+  await new Promise(resolve => setTimeout(resolve, 0.5))
+  console.log(width.value)
   if (mobile.value) {
     isMobile.value = true
     userConfig.value.styleObject.width = `${width.value}px`;
