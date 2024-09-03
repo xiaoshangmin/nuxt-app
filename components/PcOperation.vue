@@ -20,11 +20,11 @@
           </div>
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-3' == userConfig.tempId }"
             @click="changeTemp('temp-3')">
-            <v-img src="~/assets/temp-3.png" :width="80"  alt="temp-3"></v-img>
+            <v-img src="~/assets/temp-3.png" :width="80" alt="temp-3"></v-img>
           </div>
           <div class="temp-item cursor-pointer" :class="{ 'temp-item-activate': 'temp-4' == userConfig.tempId }"
             @click="changeTemp('temp-4')">
-            <v-img src="~/assets/temp-4.png" :width="80"  alt="temp-4"></v-img>
+            <v-img src="~/assets/temp-4.png" :width="80" alt="temp-4"></v-img>
           </div>
         </div>
       </v-tabs-window-item>
@@ -32,8 +32,8 @@
         <div class="d-flex align-center justify-center py-2 px-2">
           <div class="d-flex flex-row ga-3 align-center justify-start flex-wrap px-1 py-1">
             <div v-for="(item, index) in themeList" class="d-flex cursor-pointer item"
-              :class="{ 'item-activate': String(i) + String(index) == selectedColorIndex }"
-              @click="changeColor(item, index, i)">
+              :class="{ 'item-activate': String(index) == selectedColorIndex }"
+              @click="changeColor(item, index)">
               <div :style="item.bgcolor" class="color-item rounded-circle"></div>
             </div>
           </div>
@@ -241,6 +241,132 @@ const themeList = ref(
         "background-image: linear-gradient(150deg, rgb(5, 174, 157), rgb(17, 26, 35));",
       colorA: "rgb(5, 174, 157)",
       colorB: "rgb(17, 26, 35)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(0, 0, 0), rgb(0, 0, 0));",
+      colorA: "rgb(0, 0, 0)",
+      colorB: "rgb(0, 0, 0)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(256, 256, 256), rgb(256, 256, 256));",
+      colorA: "rgb(256, 256, 256)",
+      colorB: "rgb(256, 256, 256)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(50, 50, 50), rgb(30, 30, 30));",
+      colorA: " rgb(50, 50, 50)",
+      colorB: "rgb(30, 30, 30)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(18, 18, 18), rgb(18, 18, 18));",
+      colorA: "rgb(18, 18, 18)",
+      colorB: "rgb(18, 18, 18)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(136, 22, 22), rgb(241, 57, 63));",
+      colorA: "rgb(136, 22, 22)",
+      colorB: "rgb(241, 57, 63)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(177, 177, 177), rgb(24, 24, 24));",
+      colorA: "rgb(177, 177, 177)",
+      colorB: "rgb(24, 24, 24)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(255, 255, 255), rgb(128, 222, 234));",
+      colorA: "rgb(255, 255, 255)",
+      colorB: "rgb(128, 222, 234)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(238, 213, 182), rgb(175, 136, 86));",
+      colorA: "rgb(238, 213, 182)",
+      colorB: "rgb(175, 136, 86)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(80, 104, 83), rgb(33, 50, 35));",
+      colorA: "rgb(80, 104, 83)",
+      colorB: "rgb(33, 50, 35)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(51, 51, 51), rgb(24, 24, 24));",
+      colorA: "rgb(51, 51, 51)",
+      colorB: "rgb(24, 24, 24)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(207, 47, 152), rgb(106, 61, 236));",
+      colorA: "rgb(207, 47, 152)",
+      colorB: "rgb(106, 61, 236)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(165, 142, 251), rgb(233, 191, 248));",
+      colorA: "rgb(165, 142, 251)",
+      colorB: "rgb(233, 191, 248)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(255, 99, 99), rgb(115, 52, 52));",
+      colorA: "rgb(255, 99, 99)",
+      colorB: "rgb(115, 52, 52)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(189, 227, 236), rgb(54, 54, 84));",
+      colorA: "rgb(189, 227, 236)",
+      colorB: "rgb(54, 54, 84)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(89, 212, 153), rgb(160, 135, 45));",
+      colorA: "rgb(89, 212, 153)",
+      colorB: "rgb(160, 135, 45)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(76, 200, 200), rgb(32, 32, 51));",
+      colorA: "rgb(76, 200, 200)",
+      colorB: "rgb(32, 32, 51)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(142, 199, 251), rgb(28, 85, 170));",
+      colorA: "rgb(142, 199, 251)",
+      colorB: "rgb(28, 85, 170)",
+      angle: "150deg",
+    },
+    {
+      bgcolor:
+        "background-image: linear-gradient(140deg, rgb(255, 207, 115), rgb(255, 122, 47));",
+      colorA: "rgb(255, 207, 115)",
+      colorB: "rgb(255, 122, 47)",
       angle: "150deg",
     },
     {
@@ -522,8 +648,8 @@ function onBtnToggle(e) {
   }
   updateShareUserConfig({ show: show, styleObject: userConfig.value.styleObject })
 }
-function changeColor(e, index, i) {
-  selectedColorIndex.value = String(i) + String(index);
+function changeColor(e, index) {
+  selectedColorIndex.value = String(index);
   emit("changeColor", e);
 }
 function onSliderChange(e) {

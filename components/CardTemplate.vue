@@ -25,7 +25,7 @@
                                     </div>
                                     <div>
                                         <div class="editable-element qr-title " data-key="qrCodeTitle"
-                                            @paste="getClipboardData">{{ userConfig.metaData.title }}
+                                            >{{ userConfig.metaData.title }}
                                         </div>
                                         <div class="editable-element qr-desc mt-1" data-key="qrCodeDesc">
                                             {{ userConfig.metaData.description }}</div>
@@ -64,13 +64,9 @@ const props = defineProps({
     template: { type: Object },
     url: { type: String, default: "https://labs.wowyou.cc" },
 });
-const emit = defineEmits(["getClipboardData"]);
+const emit = defineEmits([]);
 
-const colorDark = ref("#fff");
-
-function getClipboardData(event) {
-    emit("getClipboardData", event)
-}
+const colorDark = ref("#fff"); 
 
 </script>
 

@@ -22,6 +22,22 @@ export const getBase64Image = (url: string, proxy: boolean): Promise<string> => 
   })
 }
 
+
+export const insertTextAtCursor = (text: string) => {
+  const selection = window.getSelection()
+  if (selection.rangeCount > 0) {
+    const range = selection.getRangeAt(0)
+    range.deleteContents()
+    const textNode = document.createTextNode(text)
+    range.insertNode(textNode)
+    range.setStartAfter(textNode)
+    range.setEndAfter(textNode)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  }
+}
+
+
 // export const fetchImageAsBase64 = (url, target) {
 //   try {
 //     const response = await fetch(url);

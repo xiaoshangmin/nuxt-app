@@ -25,6 +25,7 @@
 <script setup>
 const { userConfig, updateShareUserConfig } = useSharedConfig();
 import { codeToHtml } from 'shiki'
+import { insertTextAtCursor } from '@/utils'
 
 
 const code = ref('')
@@ -39,32 +40,30 @@ onMounted(() => {
 
 const props = defineProps({
     isMobile: { type: Boolean, default: false },
-    template: { type: Object }, 
+    template: { type: Object },
 });
-const emit = defineEmits(["getClipboardData"]);
+const emit = defineEmits([]);
 
-function getClipboardData(event) {
-    // emit("getClipboardData", event)
+function getClipboardData(event) { 
     event.preventDefault(); // 阻止默认粘贴行为
 
-// 获取剪贴板中的纯文本内容
-const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-// const text = await navigator.clipboard.readText()
-insertTextAtCursor(text)
+    // 获取剪贴板中的纯文本内容
+    const text = (event.clipboardData || window.clipboardData).getData('text/plain'); 
+    insertTextAtCursor(text)
 }
-const insertTextAtCursor = (text) => {
-  const selection = window.getSelection()
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0)
-    range.deleteContents()
-    const textNode = document.createTextNode(text)
-    range.insertNode(textNode)
-    range.setStartAfter(textNode)
-    range.setEndAfter(textNode)
-    selection.removeAllRanges()
-    selection.addRange(range)
-  }
-}
+// const insertTextAtCursor = (text) => {
+//     const selection = window.getSelection()
+//     if (selection.rangeCount > 0) {
+//         const range = selection.getRangeAt(0)
+//         range.deleteContents()
+//         const textNode = document.createTextNode(text)
+//         range.insertNode(textNode)
+//         range.setStartAfter(textNode)
+//         range.setEndAfter(textNode)
+//         selection.removeAllRanges()
+//         selection.addRange(range)
+//     }
+// }
 
 const highlightCode = async () => {
     highlightedCode.value = await codeToHtml(code.value, {
@@ -76,7 +75,7 @@ const highlightCode = async () => {
     let codeData = {
         highlightedCode: highlightedCode.value,
         code: code.value
-    }
+    } 
     updateShareUserConfig({ codeData: codeData })
 }
 onMounted(() => {
@@ -106,10 +105,10 @@ watch(code, highlightCode)
 }
 
 .main {
-  position: relative;
-  font-family: inherit;
-  margin-right: auto;
-  margin-left: auto;
+    position: relative;
+    font-family: inherit;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .code-container {

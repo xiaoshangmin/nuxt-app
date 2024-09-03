@@ -4,7 +4,7 @@
       <div class="d-flex justify-center align-center">
         <div class="content-mode" ref="template" :style="userConfig.styleObject">
           <div class="card d-flex justify-space-between align-start pt-8 pb-8 px-6 flex-column"
-            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }" :style="userConfig.scale">
+            :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }" style="min-height: inherit;">
             <div style="width: 100%;">
               <div class="editable-element title" contenteditable="true" autocorrect="off" autocomplete="off"
                 :class="{ 'hidden': !userConfig.show.title }" @input="updateConfig" data-key="title"
@@ -69,7 +69,7 @@
 </template>
 
 <script setup>
-
+import { insertTextAtCursor } from '@/utils'
 import vueQr from "vue-qr/src/packages/vue-qr.vue";
 
 const { userConfig, updateShareUserConfig } = useSharedConfig();
@@ -125,19 +125,19 @@ async function getClipboardData(event) {
   // const text = await navigator.clipboard.readText()
   insertTextAtCursor(text)
 }
-const insertTextAtCursor = (text) => {
-  const selection = window.getSelection()
-  if (selection.rangeCount > 0) {
-    const range = selection.getRangeAt(0)
-    range.deleteContents()
-    const textNode = document.createTextNode(text)
-    range.insertNode(textNode)
-    range.setStartAfter(textNode)
-    range.setEndAfter(textNode)
-    selection.removeAllRanges()
-    selection.addRange(range)
-  }
-}
+// const insertTextAtCursor = (text) => {
+//   const selection = window.getSelection()
+//   if (selection.rangeCount > 0) {
+//     const range = selection.getRangeAt(0)
+//     range.deleteContents()
+//     const textNode = document.createTextNode(text)
+//     range.insertNode(textNode)
+//     range.setStartAfter(textNode)
+//     range.setEndAfter(textNode)
+//     selection.removeAllRanges()
+//     selection.addRange(range)
+//   }
+// }
 
 </script>
 

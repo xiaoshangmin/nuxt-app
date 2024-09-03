@@ -16,7 +16,7 @@
           </DefaultTemplate>
         </div>
         <div id="temp-2" v-show="'temp-2' == userConfig.tempId">
-          <CodeTemplate ref="temp2" @getClipboardData="getClipboardData" />
+          <CodeTemplate ref="temp2" />
         </div>
         <div id="temp-3" v-show="'temp-3' == userConfig.tempId">
           <CardTemplate ref="temp3" :isLoading="isLoading">
@@ -49,11 +49,14 @@
       </DefaultTemplate>
     </div>
     <div id="temp-2" v-show="'temp-2' == userConfig.tempId">
-      <CodeTemplate ref="temp2" @getClipboardData="getClipboardData" />
+      <CodeTemplate ref="temp2" />
     </div>
     <div id="temp-3" v-show="'temp-3' == userConfig.tempId">
       <CardTemplate ref="temp3" :isLoading="isLoading">
       </CardTemplate>
+    </div>
+    <div id="temp-4" v-show="'temp-4' == userConfig.tempId">
+      <ImageTemplate ref="temp4"></ImageTemplate>
     </div>
 
     <div class="d-flex mt-5 flex-row align-center justify-center ga-4">
@@ -109,7 +112,7 @@ const isLoading = ref(false)
 useSeoMeta({
   title: "创图卡片 - 体验全新的文字卡片分享 | labs.wowyou.cc",
   ogTitle: "创图卡片 - 体验全新的文字卡片分享 | labs.wowyou.cc",
-  keywords: "创图卡片,卡片,文生图,文字卡片,工具,演示,生成器",
+  keywords: "创图卡片,卡片,文生图,文字卡片,工具,演示,生成器,小红书图文必备,图文神器",
   ogType: "website",
   description: "创图卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
   ogDescription: "创图卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
@@ -124,8 +127,8 @@ useSeoMeta({
 });
 
 onMounted(async () => {
+  initUserConfig()
   await new Promise(resolve => setTimeout(resolve, 0.5))
-  console.log(width.value)
   if (mobile.value) {
     isMobile.value = true
     userConfig.value.styleObject.width = `${width.value}px`;
@@ -154,40 +157,52 @@ function initInteract() {
 function changePicScale(e) {
   let width = String(userConfig.value.styleObject.width)
   width = width.match(/(\d+)/)[1]
+  let height = width
   if (e == 0) {
-    let height = width
-    userConfig.value.scale.minHeight = `${height}px`;
+    width = 400
+    height = width
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
 
   if (e == 1) {
-    let height = (width / 3) * 4
-    userConfig.value.scale.minHeight = `${height}px`;
+    width = 500
+    height = (width / 3) * 4
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
 
   }
   if (e == 2) {
-    let height = (width / 4) * 3
-    userConfig.value.scale.minHeight = `${height}px`;
+    width = 700
+    height = (width / 4) * 3
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
   if (e == 3) {
     width = 1024
-    let height = (width / 7) * 5
-    userConfig.value.scale.minHeight = `${height}px`;
+    height = (width / 7) * 5
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
   if (e == 4) {
     width = 393
-    let height = (width / 9) * 16
-    userConfig.value.scale.minHeight = `${height}px`;
+    height = (width / 9) * 16
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
   if (e == 5) {
     width = 700
-    let height = (width / 16) * 9
-    userConfig.value.scale.minHeight = `${height}px`;
+    height = (width / 16) * 9
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
   if (e == 6) {
     width = 533
-    let height = (width / 12) * 16
-    userConfig.value.scale.minHeight = `${height}px`;
+    height = (width / 12) * 16
+    // userConfig.value.scale.minHeight = `${height}px`;
+    // userConfig.value.styleObject.minHeight = `${height}px`;
   }
+  userConfig.value.styleObject.height = `${height}px`;
   userConfig.value.styleObject.width = `${width}px`;
   updateShareUserConfig({ scale: userConfig.value.scale, styleObject: userConfig.value.styleObject })
 }
@@ -290,13 +305,6 @@ function copyBase64Img(base64Data) {
   // “navigator.clipboard.write”该方法的确只能在本地localhost 、127.0.0.1 或者 https 协议下使用，否则navigator没有clipboard方法。
   navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
   snackbar.value = true;
-}
-function getClipboardData(event) {
-  event.preventDefault(); // 阻止默认粘贴行为
-
-  // 获取剪贴板中的纯文本内容
-  const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-  console.log(event.target.dataset.key)
 }
 
 function getChildRef() {

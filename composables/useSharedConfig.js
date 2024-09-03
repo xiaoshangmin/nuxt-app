@@ -16,7 +16,7 @@ export const useSharedConfig = () => {
             '--base-font-size': '1rem',
         },
         scale:{
-            minHeight:'393px'
+            minHeight:'4rem'
         },
         show: {
             title: true,
