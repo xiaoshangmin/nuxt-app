@@ -122,22 +122,8 @@ async function getClipboardData(event) {
   event.preventDefault(); // 阻止默认粘贴行为 
   // 获取剪贴板中的纯文本内容
   const text = (event.clipboardData || window.clipboardData).getData('text/plain');
-  // const text = await navigator.clipboard.readText()
   insertTextAtCursor(text)
 }
-// const insertTextAtCursor = (text) => {
-//   const selection = window.getSelection()
-//   if (selection.rangeCount > 0) {
-//     const range = selection.getRangeAt(0)
-//     range.deleteContents()
-//     const textNode = document.createTextNode(text)
-//     range.insertNode(textNode)
-//     range.setStartAfter(textNode)
-//     range.setEndAfter(textNode)
-//     selection.removeAllRanges()
-//     selection.addRange(range)
-//   }
-// }
 
 </script>
 

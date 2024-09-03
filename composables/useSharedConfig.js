@@ -8,15 +8,15 @@ export const useSharedConfig = () => {
         qrCodeDesc: "扫描二维码",
         qrData: "https://labs.wowyou.cc/",
         update: false,
-        tempId:'temp-1',
+        tempId: 'temp-1',
         styleObject: {
             padding: "30px",
             width: "390px",
             transition: '',
             '--base-font-size': '1rem',
         },
-        scale:{
-            minHeight:'4rem'
+        scale: {
+            minHeight: '4rem'
         },
         show: {
             title: true,
@@ -71,12 +71,16 @@ helloWorld.greet();`,
         }
     };
 
+    const setDefaultConfig = () => {
+        localStorage.setItem('userConfigStore', JSON.stringify(userConfig.value));
+    };
+
     const updateShareUserConfig = (newData) => {
         userConfig.value = { ...userConfig.value, ...newData };
         if (import.meta.client) {  // 确保 localStorage 只在客户端操作
             localStorage.setItem('userConfigStore', JSON.stringify(userConfig.value));
         }
     };
-    
-    return { userConfig, initUserConfig, updateShareUserConfig };
+
+    return { userConfig, initUserConfig, setDefaultConfig, updateShareUserConfig };
 };

@@ -15,7 +15,7 @@
             :class="{ 'rounded-xl': userConfig.styleObject.padding != '0px' }"
              @click="upload"
           >
-          <v-img v-if="base64Image" :src="base64Image"></v-img>
+          <v-img v-if="base64Image" :src="base64Image" alt="图片"></v-img>
             <v-icon  v-if="!base64Image" icon="mdi-plus-box" size="130px"></v-icon>
           </div>
         </div>

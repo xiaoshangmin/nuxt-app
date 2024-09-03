@@ -10,7 +10,7 @@
                         </div>
                         <!-- content -->
                         <div v-if="!isLoading">
-                            <v-img class="img" :src="userConfig.metaData.base64Image"></v-img>
+                            <v-img class="img" :src="userConfig.metaData.base64Image" alt="logo"></v-img>
                             <div class="qrcode-container flex-cloumn my-2 px-2">
                                 <div class="d-flex flex-row align-center ga-2">
                                     <div class="qrcode d-flex" :class="{

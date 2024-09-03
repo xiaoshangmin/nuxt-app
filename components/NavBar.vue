@@ -9,12 +9,12 @@
       <v-btn variant="text">
         <v-icon icon="mdi-account-circle" size="x-large"></v-icon>
         <v-tooltip activator="parent" location="bottom" class="custom-tooltip">
-          <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg"></v-img></v-tooltip>
+          <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg" alt="公众号二维码"></v-img></v-tooltip>
       </v-btn>
       <v-btn variant="text">
         <v-icon icon="mdi-wechat" size="x-large"></v-icon>
         <v-tooltip activator="parent" location="bottom" class="custom-tooltip">
-          <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_mini_program.jpg"></v-img></v-tooltip>
+          <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_mini_program.jpg" alt="小程序二维码"></v-img></v-tooltip>
       </v-btn>
       <v-btn variant="text" @click="feedback">
         <v-icon icon="mdi-message-alert-outline " size="x-large"></v-icon>
@@ -96,8 +96,8 @@
       <template v-slot:text>
         <div>扫码关注公众号(微信里可以长按扫码),获取最新功能更新或者留下您宝贵的建议</div>
         <div class="d-flex">
-        <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg"></v-img>
-      </div>
+          <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg" alt="公众号二维码"></v-img>
+        </div>
       </template>
     </v-card>
   </v-dialog>
@@ -110,6 +110,8 @@ import { useDisplay } from "vuetify";
 import { useI18n } from "vue-i18n";
 const { mobile } = useDisplay();
 const { t, locale, locales, setLocale } = useI18n();
+const { setDefaultConfig } = useSharedConfig();
+
 
 const drawer = ref(false);
 const dialog = ref(false);
@@ -156,7 +158,7 @@ function onClick() {
 }
 function onReset() {
   dialog.value = false
-  localStorage.setItem('userConfigStore', null)
+  setDefaultConfig()
   window.location.reload()
 }
 function feedback() {
