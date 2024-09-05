@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/i18n',
-    (_options, nuxt) => {
+    async (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
         config.plugins.push(vuetify({ autoImport: true }))
@@ -42,6 +42,22 @@ export default defineNuxtConfig({
     //...
   ],
   vite: {
+    build: {
+      minify: 'terser', // 使用 terser 来进行压缩
+      terserOptions: {
+        compress: {
+          drop_console: true, // 移除 console.log
+        },
+      },
+    },
+    ssr: {
+      noExternal: ['vuetify'],
+    },
+    plugins: [
+      vuetify({
+        autoImport: true,  // 启用按需加载
+      }),
+    ],
     vue: {
       template: {
         transformAssetUrls,

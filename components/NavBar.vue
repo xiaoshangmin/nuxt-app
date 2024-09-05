@@ -31,7 +31,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <v-btn :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" slim @click="onClick"></v-btn>
+      <!-- <v-btn :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" slim @click="onClick"></v-btn> -->
     </div>
     <div>
       <v-btn icon="mdi-help" slim @click="dialogHelp = true"></v-btn>

@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout>
-    <v-app id="app" :theme="theme">
+    <v-app id="app">
       <NavBar @onClick="onClick"></NavBar>
       <v-main>
         <NuxtLoadingIndicator />
