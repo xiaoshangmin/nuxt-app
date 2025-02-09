@@ -11,7 +11,7 @@ export default defineNuxtConfig({
           "charset": "utf-8"
         }
       ],
-      link: [ 
+      link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ],
       script: [
@@ -23,10 +23,25 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
+    preset: 'node', // 防止静态构建时的 WASM 错误
     compressPublicAssets: true, // 启动压缩
+    experimental: {
+      wasm: true,
+    },
+    // routeRules: {
+    //   '/**': {
+    //     headers: {
+    //       'Cross-Origin-Opener-Policy': 'same-origin',
+    //       'Cross-Origin-Embedder-Policy': 'require-corp',
+    //       'Cross-Origin-Resource-Policy': 'cross-origin',
+    //       'Origin-Agent-Cluster': '?1'
+    //     }
+    //   }
+    // }
   },
+
   build: {
-    transpile: ['vuetify'],
+    transpile: ['vuetify','@vueup/vue-quill'],
     analyze: {
       filename: "stats.html",
     },
@@ -42,6 +57,17 @@ export default defineNuxtConfig({
     //...
   ],
   vite: {
+    server: {
+      headers: {
+        'Cross-Origin-Opener-Policy': 'same-origin',
+        'Cross-Origin-Embedder-Policy': 'require-corp',
+        'Cross-Origin-Resource-Policy': 'cross-origin',
+        'Origin-Agent-Cluster': '?1'
+      }
+    },
+    optimizeDeps: {
+      exclude: ['@ffmpeg/ffmpeg', "@ffmpeg/util"], // 确保不被预编译
+    },
     build: {
       minify: 'terser', // 使用 terser 来进行压缩
       terserOptions: {
@@ -63,6 +89,7 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
+   
   },
   i18n: {
     detectBrowserLanguage: {
@@ -93,6 +120,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      crossOriginIsolated: true,
       NODE_ENV: process.env.NODE_ENV,
       CHATWOOT_WEBSITE_TOKEN: process.env.CHATWOOT_WEBSITE_TOKEN,
       UMAMI_WEBSITE_ID: process.env.UMAMI_WEBSITE_ID

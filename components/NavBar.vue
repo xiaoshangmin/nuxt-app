@@ -121,6 +121,7 @@ const dialogOfficial = ref(false);
 const items = computed(() => [
   { title: t("Simple Card"), to: "/" },
   { title: t("Bg Remove"), to: "/bgremoval" },
+  { title: t("Pinzimu"), to: "/pinzimu" },
   { title: t("IT Tools"), href: "https://tools.wowyou.cc" },
 ]);
 

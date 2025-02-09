@@ -323,7 +323,7 @@ function getChildRef() {
 }
 
 
-const API_PREFIX_VERCEL = 'https://doc.wowyou.cc/api/web/og'
+const API_PREFIX_VERCEL = 'https://api.wowyou.cc/api/web/og'
 
 const queryOg = async (url) => {
   isLoading.value = true

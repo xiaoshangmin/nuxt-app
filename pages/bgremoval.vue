@@ -161,7 +161,7 @@ function remove() {
 function doRemove(url: string) {
     let config: Config = {
         debug: false,
-        model: 'isnet',
+        model: 'isnet_fp16',
         output: {
             quality: 0.8,
             format: 'image/png' //image/jpeg, image/webp
