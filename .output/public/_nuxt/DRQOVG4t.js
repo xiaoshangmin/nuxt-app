@@ -1,0 +1,1 @@
+import{bA as t}from"./Bt768pSv.js";import{u as e}from"./Bx-rzOV6.js";function a(a,r){const{title:l,titleTemplate:o,...m}=a;return e({title:l,titleTemplate:o,_flatMeta:m},{...r,transform(e){const a=t({...e._flatMeta});return delete e._flatMeta,{...e,meta:a}}})}export{a as u};
