@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
 
   build: {
-    transpile: ['vuetify','@vueup/vue-quill'],
+    transpile: ['vuetify'],
     analyze: {
       filename: "stats.html",
     },
