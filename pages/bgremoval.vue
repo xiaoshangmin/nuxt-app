@@ -39,7 +39,7 @@
                 </ImgComparisonSlider>
             </ClientOnly>
         </div>
-        <div class="mt-10">
+        <div class="mt-10 mb-16">
             <div class="d-flex justify-center align-center flex-column">
                 <div class="d-flex  justify-center align-center ga-5 mb-6">
                     <v-btn @click="upload" :text="$t('Upload Image')" prepend-icon="mdi-image" elevation="12"

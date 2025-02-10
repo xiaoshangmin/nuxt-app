@@ -6,7 +6,7 @@
     </v-btn>
     <v-spacer></v-spacer>
     <div v-if="!isMobile" class="d-flex justify-center align-center">
-      <v-btn variant="text">
+      <!-- <v-btn variant="text">
         <v-icon icon="mdi-account-circle" size="x-large"></v-icon>
         <v-tooltip activator="parent" location="bottom" class="custom-tooltip">
           <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_official_account.jpg" alt="公众号二维码"></v-img></v-tooltip>
@@ -15,10 +15,10 @@
         <v-icon icon="mdi-wechat" size="x-large"></v-icon>
         <v-tooltip activator="parent" location="bottom" class="custom-tooltip">
           <v-img :width="150" aspect-ratio="1" src="~/assets/qrcode_mini_program.jpg" alt="小程序二维码"></v-img></v-tooltip>
-      </v-btn>
-      <v-btn variant="text" @click="feedback">
+      </v-btn> 
+       <v-btn variant="text" @click="feedback">
         <v-icon icon="mdi-message-alert-outline " size="x-large"></v-icon>
-      </v-btn>
+      </v-btn> -->
     </div>
     <div v-if="!isMobile">
       <v-menu>
@@ -33,12 +33,12 @@
       </v-menu>
       <!-- <v-btn :icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'" slim @click="onClick"></v-btn> -->
     </div>
-    <div>
+    <!-- <div>
       <v-btn icon="mdi-help" slim @click="dialogHelp = true"></v-btn>
-    </div>
+    </div> 
     <div>
       <v-btn icon="mdi-eraser" slim @click="dialog = true"></v-btn>
-    </div>
+    </div>-->
 
   </v-app-bar>
 

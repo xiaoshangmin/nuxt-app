@@ -2,10 +2,14 @@
   <v-container>
     <v-row class="flex-column flex-md-row">
       <!-- 左侧富文本编辑区域 -->
-      <v-col cols="12" md="4" order="2" order-md="1">
+      <v-col cols="12" md="6" order="2" order-md="1" class="pl-16">
         <v-sheet rounded="lg" class="pa-4 editor-sheet">
           <div v-if="isClient">
-            <div ref="quillEditor" class="quill-container" @click="focusEditor"></div>
+            <div
+              ref="quillEditor"
+              class="quill-container"
+              @click="focusEditor"
+            ></div>
           </div>
           <!-- 添加滑块组件 -->
           <v-slider
@@ -17,22 +21,31 @@
             thumb-label="always"
             class="mt-12"
           ></v-slider>
-          <div class="d-flex justify-center">
-            <v-btn @click="generateImage" class="text-none mt-4" :text="$t('Download Image')" prepend-icon="mdi-download"
-            elevation="12" size="x-large" width="180px" height="55px" rounded="xl">
-            {{ $t("Download Image") }}
-          </v-btn>
+          <div class="d-flex justify-center" v-if="base64Image">
+            <v-btn
+              @click="generateImage"
+              class="text-none mt-4"
+              :text="$t('Download Image')"
+              prepend-icon="mdi-download"
+              elevation="12"
+              size="x-large"
+              width="180px"
+              height="55px"
+              rounded="xl"
+            >
+              {{ $t("Download Image") }}
+            </v-btn>
           </div>
         </v-sheet>
       </v-col>
       <!-- 右侧图片上传区域 -->
-      <v-col cols="12" md="8" order="1" order-md="2">
+      <v-col cols="12" md="6" order="1" order-md="2">
         <div
           class="d-flex cursor-pointer rounded-xl position-relative"
           @click="upload"
         >
           <!-- 图片容器 -->
-          <div class="image-container" ref="zimu">
+          <div class="image-container" ref="zimu" :style="containerStyle">
             <!-- 原始图片 -->
             <template v-if="base64Image">
               <div
@@ -43,7 +56,6 @@
                 <v-img
                   :src="base64Image"
                   alt="图片"
-                  :style="imageStyle"
                   class="responsive-image"
                 ></v-img>
               </div>
@@ -57,17 +69,18 @@
                 <v-img
                   :src="base64Image"
                   alt="图片"
-                  :style="imageStyle"
                   class="responsive-image"
                 ></v-img>
                 <div class="text-overlay" v-html="section"></div>
               </div>
             </template>
-            <v-icon
-              v-if="!base64Image"
-              icon="mdi-plus-box"
-              size="130px"
-            ></v-icon>
+            <div class="upload-container mt-4">
+              <v-icon
+                v-if="!base64Image"
+                icon="mdi-cloud-upload"
+                size="130px"
+              ></v-icon>
+            </div>
           </div>
         </div>
         <v-file-input
@@ -83,34 +96,85 @@
       </v-col>
     </v-row>
   </v-container>
+  <div
+    class="d-flex justify-space-around mt-12 mb-12"
+    style="width: 1100px; margin: 0 auto"
+  >
+    <v-sheet
+      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      elevation="4"
+      height="250"
+      max-width="350"
+      rounded
+    >
+      <div>
+        <v-icon class="mb-5" icon="mdi-image" size="60"></v-icon>
+        <h4 class="text-h4 font-weight-black text-orange">上传图片</h4>
+        <p class="text-body-2 mb-4 mt-4 font-weight-medium">
+          选择你想要添加字幕的图片，确保图片清晰且图片底部没有文字，点击上传即可。
+        </p>
+      </div>
+    </v-sheet>
+    <v-sheet
+      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      elevation="4"
+      height="250"
+      max-width="350"
+      rounded
+    >
+      <div>
+        <v-icon class="mb-5" icon="mdi-lead-pencil" size="60"></v-icon>
+        <h4 class="text-h4 font-weight-black text-orange">输入字幕</h4>
+        <p class="text-body-2 mb-4 mt-4 font-weight-medium">
+          在左侧富文本框中输入字幕文字，换行可新增字幕行，选中对应文字可以应用富文本工具栏的文字效果
+        </p>
+      </div>
+    </v-sheet>
+    <v-sheet
+      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      elevation="4"
+      height="250"
+      max-width="350"
+      rounded
+    >
+      <div>
+        <v-icon class="mb-5" icon="mdi-download" size="60"></v-icon>
+        <h4 class="text-h4 font-weight-black text-orange">下载图片</h4>
+        <p class="text-body-2 mb-4 mt-4 font-weight-medium">
+          点击下载图片即可生成字幕拼图，保存到电脑或手机本地，一键拼图省心又省力。
+        </p>
+      </div>
+    </v-sheet>
+  </div>
 </template>
 
 <script setup>
 import html2canvas from "html2canvas";
 const isClient = ref(false);
-const editorContent = ref('');
+const editorContent = ref("");
 const quillEditor = ref(null);
 const zimu = ref(null);
 let quillInstance = null;
 
-
 useSeoMeta({
   title: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
   ogTitle: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
-  keywords: "拼字幕, 字幕拼图, 字幕生成, 字幕生成器, 字幕截图, 小红书引流, 小红书流量, 社交媒体运营, 名人语录, 电影台词, 马斯克说, 罗翔说, 乔布斯说, 余华说, 董宇辉说, 字幕图片, 字幕拼接, 内容引流, 增粉工具, 社交媒体曝光",
+  keywords:
+    "拼字幕, 字幕拼图, 字幕生成, 字幕生成器, 字幕截图, 小红书引流, 小红书流量, 社交媒体运营, 名人语录, 电影台词, 马斯克说, 罗翔说, 乔布斯说, 余华说, 董宇辉说, 字幕图片, 字幕拼接, 内容引流, 增粉工具, 社交媒体曝光",
   ogType: "website",
-  description: "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
-  ogDescription: "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
+  description:
+    "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
+  ogDescription:
+    "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
   twitterCard: "summary_large_image",
   ogUrl: "https://labs.wowyou.cc",
   ogLocale: "zh",
-  ogPublisher: '创图卡片',
-  ogLogo: 'https://labs.wowyou.cc/logo.png',
-  ogImage: 'https://labs.wowyou.cc/preview.png',
-  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-
+  ogPublisher: "创图卡片",
+  ogLogo: "https://labs.wowyou.cc/logo.png",
+  ogImage: "https://labs.wowyou.cc/preview.png",
+  robots:
+    "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
 });
-
 
 // 编辑器配置
 const editorOptions = {
@@ -206,7 +270,7 @@ onMounted(async () => {
   isClient.value = true;
 
   // 从 localStorage 读取保存的内容
-  const savedContent = localStorage.getItem('pinzimuEditorContent');
+  const savedContent = localStorage.getItem("pinzimuEditorContent");
   if (savedContent) {
     editorContent.value = savedContent;
   }
@@ -315,9 +379,10 @@ onMounted(async () => {
 
   // 监听内容变化
   quillInstance.on("text-change", () => {
-    editorContent.value = quillEditor.value.querySelector(".ql-editor").innerHTML;
+    editorContent.value =
+      quillEditor.value.querySelector(".ql-editor").innerHTML;
     // 保存到 localStorage
-    localStorage.setItem('pinzimuEditorContent', editorContent.value);
+    localStorage.setItem("pinzimuEditorContent", editorContent.value);
   });
 });
 
@@ -378,7 +443,39 @@ const textSections = computed(() => {
 
   return sections;
 });
+const imageHeight = ref(0); // 添加图片高度的响应式变量
+const imageTotalHeight = ref(0); //总高度
+// 添加计算属性来动态计算容器高度
+const containerStyle = computed(() => {
+  const textSectionsHeight =
+    (textSections.value.length - 1) * overlayHeight.value;
+  const totalHeight = imageHeight.value + textSectionsHeight;
+  imageTotalHeight.value = totalHeight;
+  return {
+    minHeight: base64Image.value
+      ? `${totalHeight + overlayHeight.value}px`
+      : "auto",
+    marginBottom: "20px", // 添加底部间距
+  };
+});
 
+// 监听图片加载完成后更新高度
+watch(base64Image, async (newVal) => {
+  if (newVal) {
+    await nextTick();
+    const img = new Image();
+    img.src = newVal;
+    img.onload = () => {
+      // 图片加载完成后触发重新计算
+      const containerWidth = 500; // 容器最大宽度
+      const aspectRatio = img.height / img.width;
+      imageHeight.value = containerWidth * aspectRatio;
+      nextTick();
+    };
+  } else {
+    imageHeight.value = 0;
+  }
+});
 // 修改 getSectionStyle 函数使用 overlayHeight
 function getSectionStyle(index) {
   if (index === 0) {
@@ -395,14 +492,6 @@ function getSectionStyle(index) {
   };
 }
 
-// 计算图片样式
-const imageStyle = computed(() => ({
-  width: "100%", // 改为100%宽度
-  height: "auto",
-  objectFit: "contain",
-  display: "block",
-}));
-
 // 添加聚焦方法
 function focusEditor() {
   if (quillInstance) {
@@ -412,39 +501,41 @@ function focusEditor() {
 
 //生成图片
 async function generateImage() {
-  await nextTick();
-  // 等待图片加载完成
-  const images = zimu.value.getElementsByTagName('img');
-  await Promise.all(Array.from(images).map(img => {
-    return new Promise((resolve) => {
-      if (img.complete) {
-        resolve();
-      } else {
-        img.onload = resolve;
-      }
-    });
-  }));
+  //   await nextTick();
+  //   // 等待图片加载完成
+  //   const images = zimu.value.getElementsByTagName("img");
+  //   await Promise.all(
+  //     Array.from(images).map((img) => {
+  //       return new Promise((resolve) => {
+  //         if (img.complete) {
+  //           resolve();
+  //         } else {
+  //           img.onload = resolve;
+  //         }
+  //       });
+  //     })
+  //   );
 
-  // 计算所有 image-section 的总高度
-  const sections = zimu.value.getElementsByClassName('image-section');
-  let maxBottom = 0;
-  Array.from(sections).forEach(section => {
-    const bottom = section.offsetTop + section.offsetHeight;
-    maxBottom = Math.max(maxBottom, bottom);
-  });
-
+  //   // 计算所有 image-section 的总高度
+  //   const sections = zimu.value.getElementsByClassName("image-section");
+  //   let maxBottom = 0;
+  //   Array.from(sections).forEach((section) => {
+  //     const bottom = section.offsetTop + section.offsetHeight;
+  //     maxBottom = Math.max(maxBottom, bottom);
+  //   });
+  // let maxBottom  =imageTotalHeight.value
   html2canvas(zimu.value, {
     scale: 2,
-    height: maxBottom,
-    windowHeight: maxBottom,
+    height: imageTotalHeight.value,
+    windowHeight: imageTotalHeight.value,
     useCORS: true,
     logging: false,
     onclone: (clonedDoc) => {
-      const clonedElement = clonedDoc.querySelector('.image-container');
+      const clonedElement = clonedDoc.querySelector(".image-container");
       if (clonedElement) {
-        clonedElement.style.height = `${maxBottom}px`;
+        clonedElement.style.height = `${imageTotalHeight.value}px`;
       }
-    }
+    },
   }).then((canvas) => {
     const imgData = canvas.toDataURL("image/png");
     const blob = dataURItoBlob(imgData);
@@ -475,7 +566,7 @@ const dataURItoBlob = (dataURI) => {
 // 可选：添加在组件卸载时清理的功能
 onBeforeUnmount(() => {
   if (quillInstance) {
-    quillInstance.off('text-change'); // 移除事件监听
+    quillInstance.off("text-change"); // 移除事件监听
   }
 });
 </script>
@@ -490,7 +581,14 @@ onBeforeUnmount(() => {
   border-radius: 12px;
   overflow: visible;
 }
-
+.upload-container {
+  display: flex;
+  width: 100%;
+  height: 300px;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #865656;
+}
 .image-section {
   position: absolute;
   left: 0;
@@ -517,18 +615,24 @@ onBeforeUnmount(() => {
   max-width: 100%;
   height: auto;
   display: block; /* 添加这行消除图片底部间隙 */
+  /* width: "100%", // 改为100%宽度 */
+  /* height: "auto", */
+  object-fit: "contain";
+  /* display: "block", */
 }
 
 .text-overlay {
   position: absolute;
-  bottom: 0;
+  bottom: 2px;
   left: 0;
   right: 0;
-  height: auto;
   display: block;
   overflow: visible; /* 改为 visible 让文字可以正常显示 */
   text-align: center;
   width: 100%; /* 确保宽度100% */
+  height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 .custom-file-input {
@@ -547,7 +651,7 @@ onBeforeUnmount(() => {
 
 :deep(.text-overlay p) {
   margin: 2px 0;
-  line-height: 1.2;
+  line-height: 1.3;
   display: block;
 }
 
