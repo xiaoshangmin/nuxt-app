@@ -1,14 +1,38 @@
 <template>
   <v-container>
-    <v-row class="justify-center">
-      <!-- 左侧图片上传区域 -->
-      <v-col cols="6" style="min-width: 100px">
+    <v-row class="flex-column flex-md-row">
+      <!-- 左侧富文本编辑区域 -->
+      <v-col cols="12" md="4" order="2" order-md="1">
+        <v-sheet rounded="lg" class="pa-4 editor-sheet">
+          <div v-if="isClient">
+            <div ref="quillEditor" class="quill-container" @click="focusEditor"></div>
+          </div>
+          <!-- 添加滑块组件 -->
+          <v-slider
+            v-model="overlayHeight"
+            :min="20"
+            :max="200"
+            :step="1"
+            label="文字区域高度"
+            thumb-label="always"
+            class="mt-12"
+          ></v-slider>
+          <div class="d-flex justify-center">
+            <v-btn @click="generateImage" class="text-none mt-4" :text="$t('Download Image')" prepend-icon="mdi-download"
+            elevation="12" size="x-large" width="180px" height="55px" rounded="xl">
+            {{ $t("Download Image") }}
+          </v-btn>
+          </div>
+        </v-sheet>
+      </v-col>
+      <!-- 右侧图片上传区域 -->
+      <v-col cols="12" md="8" order="1" order-md="2">
         <div
-          class="d-flex justify-center cursor-pointer rounded-xl position-relative"
+          class="d-flex cursor-pointer rounded-xl position-relative"
           @click="upload"
         >
           <!-- 图片容器 -->
-          <div class="image-container">
+          <div class="image-container" ref="zimu">
             <!-- 原始图片 -->
             <template v-if="base64Image">
               <div
@@ -19,8 +43,8 @@
                 <v-img
                   :src="base64Image"
                   alt="图片"
-                  max-width="600"
                   :style="imageStyle"
+                  class="responsive-image"
                 ></v-img>
               </div>
               <div
@@ -33,8 +57,8 @@
                 <v-img
                   :src="base64Image"
                   alt="图片"
-                  max-width="600"
                   :style="imageStyle"
+                  class="responsive-image"
                 ></v-img>
                 <div class="text-overlay" v-html="section"></div>
               </div>
@@ -57,23 +81,17 @@
         >
         </v-file-input>
       </v-col>
-
-      <!-- 右侧富文本编辑区域 -->
-      <v-col cols="6" style="min-width: 400px">
-        <v-sheet rounded="lg" class="pa-4">
-          <div v-if="isClient">
-            <div ref="quillEditor"></div>
-          </div>
-        </v-sheet>
-      </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script setup>
+import html2canvas from "html2canvas";
+import { useDisplay } from "vuetify";
 const isClient = ref(false);
 const editorContent = ref("");
 const quillEditor = ref(null);
+const zimu = ref(null);
 let quillInstance = null;
 
 // 编辑器配置
@@ -81,38 +99,83 @@ const editorOptions = {
   modules: {
     toolbar: [
       ["bold", "italic", "underline", "strike"],
-      [{ 
-        color: [
-          "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", 
-          "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", 
-          "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", 
-          "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", 
-          "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", 
-          "#663d00", "#666600", "#003700", "#002966", "#3d1466"
-        ] 
-      }, { 
-        background: [
-          "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", 
-          "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", 
-          "#cce0f5", "#ebd6ff"
-        ] 
-      }],
-      [{ 
-        font: [
-          false,
-          'sans-serif',
-          'serif',
-          'monospace',
-          'arial',
-          'times',
-          'courier',
-          '微软雅黑',
-          '宋体',
-          '黑体',
-          '楷体',
-          '仿宋'
-        ] 
-      }],
+      [
+        {
+          color: [
+            "#000000",
+            "#e60000",
+            "#ff9900",
+            "#ffff00",
+            "#008a00",
+            "#0066cc",
+            "#9933ff",
+            "#ffffff",
+            "#facccc",
+            "#ffebcc",
+            "#ffffcc",
+            "#cce8cc",
+            "#cce0f5",
+            "#ebd6ff",
+            "#bbbbbb",
+            "#f06666",
+            "#ffc266",
+            "#ffff66",
+            "#66b966",
+            "#66a3e0",
+            "#c285ff",
+            "#888888",
+            "#a10000",
+            "#b26b00",
+            "#b2b200",
+            "#006100",
+            "#0047b2",
+            "#6b24b2",
+            "#444444",
+            "#5c0000",
+            "#663d00",
+            "#666600",
+            "#003700",
+            "#002966",
+            "#3d1466",
+          ],
+        },
+        {
+          background: [
+            "#000000",
+            "#e60000",
+            "#ff9900",
+            "#ffff00",
+            "#008a00",
+            "#0066cc",
+            "#9933ff",
+            "#ffffff",
+            "#facccc",
+            "#ffebcc",
+            "#ffffcc",
+            "#cce8cc",
+            "#cce0f5",
+            "#ebd6ff",
+          ],
+        },
+      ],
+      [
+        {
+          font: [
+            "roboto",
+            "sans-serif",
+            "serif",
+            "monospace",
+            "arial",
+            "times",
+            "courier",
+            "微软雅黑",
+            "宋体",
+            "黑体",
+            "楷体",
+            "仿宋",
+          ],
+        },
+      ],
       [{ size: ["small", false, "large", "huge"] }],
       ["clean"],
     ],
@@ -130,20 +193,19 @@ onMounted(async () => {
   await import("quill/dist/quill.snow.css");
 
   // 注册字体
-  const Font = Quill.import('formats/font');
+  const Font = Quill.import("formats/font");
   // 定义可用字体
   Font.whitelist = [
-    'sans-serif',
-    'serif',
-    'monospace',
-    'arial',
-    'times',
-    'courier',
-    'msyh',
-    'simsun',
-    'simhei',
-    'kaiti',
-    'fangsong'
+    "roboto",
+    "sans-serif",
+    "serif",
+    "monospace",
+    "arial",
+    "msyh",
+    "simsun",
+    "simhei",
+    "kaiti",
+    "fangsong",
   ];
   Quill.register(Font, true);
 
@@ -155,28 +217,71 @@ onMounted(async () => {
       toolbar: {
         container: [
           ["bold", "italic", "underline", "strike"],
-          [{ 
-            color: [
-              "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", 
-              "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", 
-              "#cce0f5", "#ebd6ff", "#bbbbbb", "#f06666", "#ffc266", "#ffff66", 
-              "#66b966", "#66a3e0", "#c285ff", "#888888", "#a10000", "#b26b00", 
-              "#b2b200", "#006100", "#0047b2", "#6b24b2", "#444444", "#5c0000", 
-              "#663d00", "#666600", "#003700", "#002966", "#3d1466"
-            ] 
-          }, { 
-            background: [
-              "#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", 
-              "#9933ff", "#ffffff", "#facccc", "#ffebcc", "#ffffcc", "#cce8cc", 
-              "#cce0f5", "#ebd6ff"
-            ] 
-          }],
+          [
+            {
+              color: [
+                "#000000",
+                "#e60000",
+                "#ff9900",
+                "#ffff00",
+                "#008a00",
+                "#0066cc",
+                "#9933ff",
+                "#ffffff",
+                "#facccc",
+                "#ffebcc",
+                "#ffffcc",
+                "#cce8cc",
+                "#cce0f5",
+                "#ebd6ff",
+                "#bbbbbb",
+                "#f06666",
+                "#ffc266",
+                "#ffff66",
+                "#66b966",
+                "#66a3e0",
+                "#c285ff",
+                "#888888",
+                "#a10000",
+                "#b26b00",
+                "#b2b200",
+                "#006100",
+                "#0047b2",
+                "#6b24b2",
+                "#444444",
+                "#5c0000",
+                "#663d00",
+                "#666600",
+                "#003700",
+                "#002966",
+                "#3d1466",
+              ],
+            },
+            {
+              background: [
+                "#000000",
+                "#e60000",
+                "#ff9900",
+                "#ffff00",
+                "#008a00",
+                "#0066cc",
+                "#9933ff",
+                "#ffffff",
+                "#facccc",
+                "#ffebcc",
+                "#ffffcc",
+                "#cce8cc",
+                "#cce0f5",
+                "#ebd6ff",
+              ],
+            },
+          ],
           [{ font: Font.whitelist }],
           [{ size: ["small", false, "large", "huge"] }],
           ["clean"],
-        ]
-      }
-    }
+        ],
+      },
+    },
   });
 
   // 监听内容变化
@@ -195,8 +300,8 @@ const rules = [
     return (
       !value ||
       !value.length ||
-      value[0].size < 2000000 ||
-      "Image size should be less than 2 MB!"
+      value[0].size < 10000000 ||
+      "Image size should be less than 10 MB!"
     );
   },
 ];
@@ -207,12 +312,14 @@ function upload() {
 
 async function uploadImg() {
   let file = files.value;
-  const url = URL.createObjectURL(file);
-  base64Image.value = url;
+  if (file) {
+    const url = URL.createObjectURL(file);
+    base64Image.value = url;
+  }
 }
 
-const imageHeight = 300; // 每个图片区域的高度
-const OVERLAY_HEIGHT = 60; // 文字覆盖层高度，用于显示两行文字
+// 将 OVERLAY_HEIGHT 改为响应式变量
+const overlayHeight = ref(60); // 默认值设为60
 
 const textSections = computed(() => {
   if (!editorContent.value) return [];
@@ -242,54 +349,110 @@ const textSections = computed(() => {
   return sections;
 });
 
-// 计算容器样式
-const containerStyle = computed(() => {
-  const firstImageHeight = imageHeight;
-  const remainingHeight = (textSections.value.length - 1) * OVERLAY_HEIGHT;
-  const totalHeight =
-    textSections.value.length > 0 ? firstImageHeight + remainingHeight : 200;
-
-  return {
-    minHeight: `${totalHeight}px`,
-  };
-});
-
-// 计算图片区域样式
+// 修改 getSectionStyle 函数使用 overlayHeight
 function getSectionStyle(index) {
   if (index === 0) {
-    // 第一张图片完整显示
     return {
-    //   top: "-100%",
-      height: "auto", // `${imageHeight}px`,
-      zIndex: 999 - index, // 第一张图片z-index最大，后面依次递减
+      height: "auto",
+      zIndex: 999 - index,
     };
   }
-  // 后续图片只显示底部文字区域的部分
   return {
-    top: `${index * OVERLAY_HEIGHT}px`,
-    height: "auto", // `${imageHeight}px`, // 恢复完整高度，但会被前面的图片覆盖
-    zIndex: 999 - index, // z-index随index递减
+    top: `${index * overlayHeight.value}px`, // 使用 overlayHeight.value
+    height: "auto",
+    zIndex: 999 - index,
     overflow: "hidden",
   };
 }
 
 // 计算图片样式
 const imageStyle = computed(() => ({
-  width: "400px", // 固定宽度为容器宽度
-  height: "auto", // 高度自动，保持原始比例
-  objectFit: "fill", // 使用fill确保宽度填充
-  display: "block", // 确保图片正确显示
+  width: "100%", // 改为100%宽度
+  height: "auto",
+  objectFit: "contain",
+  display: "block",
 }));
+
+// 添加聚焦方法
+function focusEditor() {
+  if (quillInstance) {
+    quillInstance.focus();
+  }
+}
+
+//生成图片
+async function generateImage() {
+  await nextTick();
+  // 等待图片加载完成
+  const images = zimu.value.getElementsByTagName('img');
+  await Promise.all(Array.from(images).map(img => {
+    return new Promise((resolve) => {
+      if (img.complete) {
+        resolve();
+      } else {
+        img.onload = resolve;
+      }
+    });
+  }));
+
+  // 计算所有 image-section 的总高度
+  const sections = zimu.value.getElementsByClassName('image-section');
+  let maxBottom = 0;
+  Array.from(sections).forEach(section => {
+    const bottom = section.offsetTop + section.offsetHeight;
+    maxBottom = Math.max(maxBottom, bottom);
+  });
+
+  html2canvas(zimu.value, {
+    scale: 2,
+    height: maxBottom,
+    windowHeight: maxBottom,
+    useCORS: true,
+    logging: false,
+    onclone: (clonedDoc) => {
+      const clonedElement = clonedDoc.querySelector('.image-container');
+      if (clonedElement) {
+        clonedElement.style.height = `${maxBottom}px`;
+      }
+    }
+  }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const blob = dataURItoBlob(imgData);
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "screenshot.png";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+}
+// 将 base64 转换为 Blob 对象的函数
+const dataURItoBlob = (dataURI) => {
+  const byteString = atob(dataURI.split(",")[1]);
+  const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
+};
 </script>
 
 <style scoped>
 .image-container {
   position: relative;
-  width: 400px;
-  min-height: 100px;
-  margin: 0;
-  padding: 0;
-  /* overflow: hidden; */
+  width: 100%;
+  max-width: 500px;
+  /* min-height: 400px; */
+  display: block;
+  background-color: var(--v-theme-surface);
+  border-radius: 12px;
+  overflow: visible;
 }
 
 .image-section {
@@ -299,7 +462,9 @@ const imageStyle = computed(() => ({
   display: block;
   margin: 0;
   padding: 0;
-  width: 400px;
+  width: 100%;
+  height: auto;
+  overflow: visible;
 }
 
 :deep(.v-img) {
@@ -307,8 +472,15 @@ const imageStyle = computed(() => ({
   padding: 0;
   border: none;
   border-radius: 0;
-  width: 400px !important;
+  width: 100% !important;
   height: auto !important;
+  max-height: none !important; /* 添加这行确保图片不被限制高度 */
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+  display: block; /* 添加这行消除图片底部间隙 */
 }
 
 .text-overlay {
@@ -316,14 +488,11 @@ const imageStyle = computed(() => ({
   bottom: 0;
   left: 0;
   right: 0;
-  /* color: white; */
-  /* padding: 10px; */
   height: auto;
-  /* min-height: 80px; */
   display: block;
-  overflow: hidden;
+  overflow: visible; /* 改为 visible 让文字可以正常显示 */
   text-align: center;
-  /* width: 400px; */
+  width: 100%; /* 确保宽度100% */
 }
 
 .custom-file-input {
@@ -362,132 +531,308 @@ const imageStyle = computed(() => ({
 /* 更新字体样式支持 */
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before),
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before) {
-  content: 'Arial';
-  font-family: 'Arial';
+  content: "Arial";
+  font-family: "Arial";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial-black"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial-black"]::before) {
-  content: 'Arial Black';
-  font-family: 'Arial Black';
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-label[data-value="arial-black"]::before
+  ),
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-item[data-value="arial-black"]::before
+  ) {
+  content: "Arial Black";
+  font-family: "Arial Black";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="comic-sans"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="comic-sans"]::before) {
-  content: 'Comic Sans MS';
-  font-family: 'Comic Sans MS';
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-label[data-value="comic-sans"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="comic-sans"]::before
+  ) {
+  content: "Comic Sans MS";
+  font-family: "Comic Sans MS";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before) {
-  content: 'Courier New';
-  font-family: 'Courier New';
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-label[data-value="courier-new"]::before
+  ),
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-item[data-value="courier-new"]::before
+  ) {
+  content: "Courier New";
+  font-family: "Courier New";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before) {
-  content: 'Georgia';
-  font-family: 'Georgia';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before
+  ) {
+  content: "Georgia";
+  font-family: "Georgia";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="helvetica"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="helvetica"]::before) {
-  content: 'Helvetica';
-  font-family: 'Helvetica';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="helvetica"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="helvetica"]::before
+  ) {
+  content: "Helvetica";
+  font-family: "Helvetica";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="impact"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="impact"]::before) {
-  content: 'Impact';
-  font-family: 'Impact';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="impact"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="impact"]::before
+  ) {
+  content: "Impact";
+  font-family: "Impact";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="tahoma"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="tahoma"]::before) {
-  content: 'Tahoma';
-  font-family: 'Tahoma';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="tahoma"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="tahoma"]::before
+  ) {
+  content: "Tahoma";
+  font-family: "Tahoma";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before) {
-  content: 'Times New Roman';
-  font-family: 'Times New Roman';
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-label[data-value="times-new-roman"]::before
+  ),
+:deep(
+    .ql-snow
+      .ql-picker.ql-font
+      .ql-picker-item[data-value="times-new-roman"]::before
+  ) {
+  content: "Times New Roman";
+  font-family: "Times New Roman";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="trebuchet"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="trebuchet"]::before) {
-  content: 'Trebuchet MS';
-  font-family: 'Trebuchet MS';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="trebuchet"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="trebuchet"]::before
+  ) {
+  content: "Trebuchet MS";
+  font-family: "Trebuchet MS";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="verdana"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="verdana"]::before) {
-  content: 'Verdana';
-  font-family: 'Verdana';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="verdana"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="verdana"]::before
+  ) {
+  content: "Verdana";
+  font-family: "Verdana";
 }
 
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="msyh"]::before),
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="msyh"]::before) {
-  content: '微软雅黑';
-  font-family: '微软雅黑';
+  content: "微软雅黑";
+  font-family: "微软雅黑";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="simsun"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="simsun"]::before) {
-  content: '宋体';
-  font-family: '宋体';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="simsun"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="simsun"]::before
+  ) {
+  content: "宋体";
+  font-family: "宋体";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="simhei"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="simhei"]::before) {
-  content: '黑体';
-  font-family: '黑体';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="simhei"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="simhei"]::before
+  ) {
+  content: "黑体";
+  font-family: "黑体";
 }
 
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="kaiti"]::before),
 :deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="kaiti"]::before) {
-  content: '楷体';
-  font-family: '楷体';
+  content: "楷体";
+  font-family: "楷体";
 }
 
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-label[data-value="fangsong"]::before),
-:deep(.ql-snow .ql-picker.ql-font .ql-picker-item[data-value="fangsong"]::before) {
-  content: '仿宋';
-  font-family: '仿宋';
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="fangsong"]::before
+  ),
+:deep(
+    .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="fangsong"]::before
+  ) {
+  content: "仿宋";
+  font-family: "仿宋";
 }
 
 /* 更新文本覆盖层的字体样式 */
 :deep(.text-overlay) {
-  .ql-font-sans-serif { font-family: Arial, Helvetica, sans-serif !important; }
-  .ql-font-serif { font-family: "Times New Roman", Times, serif !important; }
-  .ql-font-monospace { font-family: "Courier New", Courier, monospace !important; }
-  .ql-font-arial { font-family: Arial, Helvetica, sans-serif !important; }
-  .ql-font-times { font-family: "Times New Roman", Times, serif !important; }
-  .ql-font-courier { font-family: "Courier New", Courier, monospace !important; }
-  .ql-font-msyh { font-family: "微软雅黑", "Microsoft YaHei", sans-serif !important; }
-  .ql-font-simsun { font-family: "宋体", SimSun, serif !important; }
-  .ql-font-simhei { font-family: "黑体", SimHei, sans-serif !important; }
-  .ql-font-kaiti { font-family: "楷体", KaiTi, serif !important; }
-  .ql-font-fangsong { font-family: "仿宋", FangSong, serif !important; }
+  .ql-font-roboto {
+    font-family: roboto, Helvetica, sans-serif !important;
+  }
+  .ql-font-sans-serif {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .ql-font-serif {
+    font-family: "Times New Roman", Times, serif !important;
+  }
+  .ql-font-monospace {
+    font-family: "Courier New", Courier, monospace !important;
+  }
+  .ql-font-arial {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .ql-font-times {
+    font-family: "Times New Roman", Times, serif !important;
+  }
+  .ql-font-courier {
+    font-family: "Courier New", Courier, monospace !important;
+  }
+  .ql-font-msyh {
+    font-family: "微软雅黑", "Microsoft YaHei", sans-serif !important;
+  }
+  .ql-font-simsun {
+    font-family: "宋体", SimSun, serif !important;
+  }
+  .ql-font-simhei {
+    font-family: "黑体", SimHei, sans-serif !important;
+  }
+  .ql-font-kaiti {
+    font-family: "楷体", KaiTi, serif !important;
+  }
+  .ql-font-fangsong {
+    font-family: "仿宋", FangSong, serif !important;
+  }
 }
 
 /* 更新编辑器预览样式 */
 :deep(.ql-editor) {
-  .ql-font-sans-serif { font-family: Arial, Helvetica, sans-serif !important; }
-  .ql-font-serif { font-family: "Times New Roman", Times, serif !important; }
-  .ql-font-monospace { font-family: "Courier New", Courier, monospace !important; }
-  .ql-font-arial { font-family: Arial, Helvetica, sans-serif !important; }
-  .ql-font-times { font-family: "Times New Roman", Times, serif !important; }
-  .ql-font-courier { font-family: "Courier New", Courier, monospace !important; }
-  .ql-font-msyh { font-family: "微软雅黑", "Microsoft YaHei", sans-serif !important; }
-  .ql-font-simsun { font-family: "宋体", SimSun, serif !important; }
-  .ql-font-simhei { font-family: "黑体", SimHei, sans-serif !important; }
-  .ql-font-kaiti { font-family: "楷体", KaiTi, serif !important; }
-  .ql-font-fangsong { font-family: "仿宋", FangSong, serif !important; }
+  .ql-font-roboto {
+    font-family: roboto, Helvetica, sans-serif !important;
+  }
+  .ql-font-sans-serif {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .ql-font-serif {
+    font-family: "Times New Roman", Times, serif !important;
+  }
+  .ql-font-monospace {
+    font-family: "Courier New", Courier, monospace !important;
+  }
+  .ql-font-arial {
+    font-family: Arial, Helvetica, sans-serif !important;
+  }
+  .ql-font-times {
+    font-family: "Times New Roman", Times, serif !important;
+  }
+  .ql-font-courier {
+    font-family: "Courier New", Courier, monospace !important;
+  }
+  .ql-font-msyh {
+    font-family: "微软雅黑", "Microsoft YaHei", sans-serif !important;
+  }
+  .ql-font-simsun {
+    font-family: "宋体", SimSun, serif !important;
+  }
+  .ql-font-simhei {
+    font-family: "黑体", SimHei, sans-serif !important;
+  }
+  .ql-font-kaiti {
+    font-family: "楷体", KaiTi, serif !important;
+  }
+  .ql-font-fangsong {
+    font-family: "仿宋", FangSong, serif !important;
+  }
 }
 
 /* 添加容器样式 */
 :deep(.v-container) {
   padding-top: 32px !important;
+}
+
+/* 添加媒体查询优化移动端显示 */
+@media screen and (max-width: 600px) {
+  .image-container {
+    min-height: 300px; /* 移动端稍微降低最小高度 */
+  }
+
+  .text-overlay {
+    padding: 5px;
+  }
+
+  :deep(.ql-editor) {
+    font-size: 14px;
+  }
+
+  .editor-sheet {
+    margin-top: 20px; /* 添加顶部边距 */
+    margin-bottom: 20px;
+  }
+
+  /* 调整图片区域的层级 */
+  .image-section {
+    z-index: 1;
+  }
+}
+
+/* 确保编辑器工具栏始终可见 */
+:deep(.ql-toolbar) {
+  position: sticky;
+  top: 0;
+  /* background-color: #fff; */
+  z-index: 1001;
+}
+
+.editor-sheet {
+  position: relative;
+  z-index: 1000; /* 确保编辑器在最上层 */
+}
+
+/* 添加滑块样式 */
+:deep(.v-slider) {
+  margin-top: 20px;
+}
+
+/* 添加编辑器容器样式 */
+:deep(.quill-container) {
+  cursor: text;
+}
+
+/* 确保编辑器区域可以接收点击事件 */
+:deep(.ql-container) {
+  min-height: 200px;
+  background-color: var(--v-theme-surface);
+}
+
+:deep(.ql-editor) {
+  min-height: 200px;
+  font-size: 16px;
+  padding: 12px 15px;
 }
 </style>
