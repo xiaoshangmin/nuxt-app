@@ -1,6 +1,6 @@
 {
-  "date": "2025-02-10T07:48:42.671Z",
-  "preset": "node-listener",
+  "date": "2025-02-10T08:28:58.982Z",
+  "preset": "static",
   "framework": {
     "name": "nuxt",
     "version": "3.15.4"
@@ -8,6 +8,8 @@
   "versions": {
     "nitro": "2.10.4"
   },
-  "commands": {},
+  "commands": {
+    "preview": "npx serve ./public"
+  },
   "config": {}
 }

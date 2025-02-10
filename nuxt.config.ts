@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  ssr: true,
   app: {
     head: {
       meta: [
@@ -23,7 +24,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
-    preset: 'node', // 防止静态构建时的 WASM 错误
+    preset: 'static', 
     compressPublicAssets: true, // 启动压缩
     experimental: {
       wasm: true,
