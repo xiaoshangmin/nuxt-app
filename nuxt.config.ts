@@ -28,16 +28,6 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true,
     },
-    // routeRules: {
-    //   '/**': {
-    //     headers: {
-    //       'Cross-Origin-Opener-Policy': 'same-origin',
-    //       'Cross-Origin-Embedder-Policy': 'require-corp',
-    //       'Cross-Origin-Resource-Policy': 'cross-origin',
-    //       'Origin-Agent-Cluster': '?1'
-    //     }
-    //   }
-    // }
   },
 
   build: {
@@ -58,12 +48,6 @@ export default defineNuxtConfig({
   ],
   vite: {
     server: {
-      headers: {
-        'Cross-Origin-Opener-Policy': 'same-origin',
-        'Cross-Origin-Embedder-Policy': 'require-corp',
-        'Cross-Origin-Resource-Policy': 'cross-origin',
-        'Origin-Agent-Cluster': '?1'
-      }
     },
     optimizeDeps: {
       exclude: ['@ffmpeg/ffmpeg', "@ffmpeg/util"], // 确保不被预编译

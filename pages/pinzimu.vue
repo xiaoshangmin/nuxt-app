@@ -87,12 +87,30 @@
 
 <script setup>
 import html2canvas from "html2canvas";
-import { useDisplay } from "vuetify";
 const isClient = ref(false);
 const editorContent = ref('');
 const quillEditor = ref(null);
 const zimu = ref(null);
 let quillInstance = null;
+
+
+useSeoMeta({
+  title: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
+  ogTitle: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
+  keywords: "拼字幕, 字幕拼图, 字幕生成, 字幕生成器, 字幕截图, 小红书引流, 小红书流量, 社交媒体运营, 名人语录, 电影台词, 马斯克说, 罗翔说, 乔布斯说, 余华说, 董宇辉说, 字幕图片, 字幕拼接, 内容引流, 增粉工具, 社交媒体曝光",
+  ogType: "website",
+  description: "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
+  ogDescription: "拼字幕是一款极致便捷的在线拼图工具，专为社交媒体运营设计，帮助用户快速生成用于小红书、微博、视频号、抖音等平台引流的字幕拼图。通过简单操作，即可生成名人语录、电影台词等拼图内容，提升内容曝光率与粉丝增长。无论是打造个人品牌还是增加社交媒体流量，拼字幕都是您的理想选择。",
+  twitterCard: "summary_large_image",
+  ogUrl: "https://labs.wowyou.cc",
+  ogLocale: "zh",
+  ogPublisher: '创图卡片',
+  ogLogo: 'https://labs.wowyou.cc/logo.png',
+  ogImage: 'https://labs.wowyou.cc/preview.png',
+  robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+
+});
+
 
 // 编辑器配置
 const editorOptions = {
@@ -467,7 +485,6 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   max-width: 500px;
-  /* min-height: 400px; */
   display: block;
   background-color: var(--v-theme-surface);
   border-radius: 12px;

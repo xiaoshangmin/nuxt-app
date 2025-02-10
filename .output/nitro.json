@@ -1,0 +1,13 @@
+{
+  "date": "2025-02-10T07:33:39.685Z",
+  "preset": "node-listener",
+  "framework": {
+    "name": "nuxt",
+    "version": "3.15.4"
+  },
+  "versions": {
+    "nitro": "2.10.4"
+  },
+  "commands": {},
+  "config": {}
+}
