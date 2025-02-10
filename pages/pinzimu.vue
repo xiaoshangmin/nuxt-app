@@ -89,7 +89,7 @@
 import html2canvas from "html2canvas";
 import { useDisplay } from "vuetify";
 const isClient = ref(false);
-const editorContent = ref("");
+const editorContent = ref('');
 const quillEditor = ref(null);
 const zimu = ref(null);
 let quillInstance = null;
@@ -186,6 +186,12 @@ const editorOptions = {
 
 onMounted(async () => {
   isClient.value = true;
+
+  // 从 localStorage 读取保存的内容
+  const savedContent = localStorage.getItem('pinzimuEditorContent');
+  if (savedContent) {
+    editorContent.value = savedContent;
+  }
 
   // 动态导入 Quill
   const Quill = (await import("quill")).default;
@@ -284,10 +290,16 @@ onMounted(async () => {
     },
   });
 
+  // 初始化完成后，如果有保存的内容则设置到编辑器
+  if (savedContent && quillInstance) {
+    quillInstance.clipboard.dangerouslyPasteHTML(savedContent);
+  }
+
   // 监听内容变化
   quillInstance.on("text-change", () => {
-    editorContent.value =
-      quillEditor.value.querySelector(".ql-editor").innerHTML;
+    editorContent.value = quillEditor.value.querySelector(".ql-editor").innerHTML;
+    // 保存到 localStorage
+    localStorage.setItem('pinzimuEditorContent', editorContent.value);
   });
 });
 
@@ -441,6 +453,13 @@ const dataURItoBlob = (dataURI) => {
   }
   return new Blob([ab], { type: mimeString });
 };
+
+// 可选：添加在组件卸载时清理的功能
+onBeforeUnmount(() => {
+  if (quillInstance) {
+    quillInstance.off('text-change'); // 移除事件监听
+  }
+});
 </script>
 
 <style scoped>
