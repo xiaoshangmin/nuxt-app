@@ -79,7 +79,7 @@ export default defineNuxtConfig({
   i18n: {
     detectBrowserLanguage: {
       useCookie: true,
-      fallbackLocale: 'zh-CN',
+      fallbackLocale: 'zh',
     },
     strategy: 'no_prefix',
     locales: [
@@ -89,14 +89,14 @@ export default defineNuxtConfig({
         file: 'en.json',
       },
       {
-        code: 'zh-CN',
+        code: 'zh',
         name: '简体中文',
-        file: 'zh-CN.json',
+        file: 'zh.json',
       }
     ],
     lazy: true,
     langDir: 'internationalization',
-    defaultLocale: 'zh-CN',
+    defaultLocale: 'zh',
   },
   components: true,
   compatibilityDate: '2024-04-03',
