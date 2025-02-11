@@ -47,14 +47,16 @@
 </template>
 
 <script setup>
-const theme = ref("dark");
+import { useTheme } from 'vuetify'
+
+const theme = useTheme()
 
 onMounted(() => {
-  theme.value = localStorage.getItem("theme") || "dark"; // 默认使用light主题
+  theme.global.name.value =  localStorage.getItem("theme") || "light";
 });
 
 function onClick() {
-  theme.value = theme.value === "light" ? "dark" : "light";
-  localStorage.setItem("theme", theme.value);
+  theme.global.name.value = theme.global.name.value === "light" ? "dark" : "light";
+  localStorage.setItem("theme", theme.global.name.value);
 }
 </script>

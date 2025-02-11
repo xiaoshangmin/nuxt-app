@@ -1,5 +1,9 @@
 <template>
   <v-container>
+    <v-row class="d-flex justify-center flex-column align-center mt-4 mb-16">
+      <h1 class="text-h3 font-weight-black">拼字幕</h1>
+      <h2 class="">一键免费生成字幕拼图 专为社交媒体运营设计</h2>
+    </v-row>
     <v-row class="flex-column flex-md-row">
       <!-- 左侧富文本编辑区域 -->
       <v-col cols="12" md="6" order="2" order-md="1" class="pl-16">
@@ -74,9 +78,8 @@
                 <div class="text-overlay" v-html="section"></div>
               </div>
             </template>
-            <div class="upload-container mt-4">
+            <div class="upload-container mt-4" v-if="!base64Image">
               <v-icon
-                v-if="!base64Image"
                 icon="mdi-cloud-upload"
                 size="130px"
               ></v-icon>
@@ -139,9 +142,9 @@
     >
       <div>
         <v-icon class="mb-5" icon="mdi-download" size="60"></v-icon>
-        <h4 class="text-h4 font-weight-black text-orange">下载图片</h4>
+        <h4 class="text-h4 font-weight-black text-orange">下载拼图</h4>
         <p class="text-body-2 mb-4 mt-4 font-weight-medium">
-          点击下载图片即可生成字幕拼图，保存到电脑或手机本地，一键拼图省心又省力。
+          制作好后点击下载图片即可生成字幕拼图，保存到电脑或手机本地，一键拼图省心又省力。
         </p>
       </div>
     </v-sheet>
@@ -242,8 +245,7 @@ const editorOptions = {
       ],
       [
         {
-          font: [
-            "roboto",
+          font: [ 
             "sans-serif",
             "serif",
             "monospace",
@@ -283,8 +285,7 @@ onMounted(async () => {
   // 注册字体
   const Font = Quill.import("formats/font");
   // 定义可用字体
-  Font.whitelist = [
-    "roboto",
+  Font.whitelist = [ 
     "sans-serif",
     "serif",
     "monospace",
