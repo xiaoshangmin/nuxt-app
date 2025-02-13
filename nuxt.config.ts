@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   ssr: true,
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'zh' // 设置页面语言为中文
+      },
       meta: [
         {
           "name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no"

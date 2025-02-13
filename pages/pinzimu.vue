@@ -101,13 +101,13 @@
   </v-container>
   <div
     class="d-flex justify-space-around mt-12 mb-12"
-    style="width: 1100px; margin: 0 auto"
+    style="width: 1300px; margin: 0 auto"
   >
     <v-sheet
       class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
       elevation="4"
       height="250"
-      max-width="350"
+      max-width="300"
       rounded
     >
       <div>
@@ -122,7 +122,7 @@
       class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
       elevation="4"
       height="250"
-      max-width="350"
+      max-width="300"
       rounded
     >
       <div>
@@ -137,7 +137,7 @@
       class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
       elevation="4"
       height="250"
-      max-width="350"
+      max-width="300"
       rounded
     >
       <div>
@@ -145,6 +145,21 @@
         <h4 class="text-h4 font-weight-black text-orange">下载拼图</h4>
         <p class="text-body-2 mb-4 mt-4 font-weight-medium">
           制作好后点击下载图片即可生成字幕拼图，保存到电脑或手机本地，一键拼图省心又省力。
+        </p>
+      </div>
+    </v-sheet>
+    <v-sheet
+      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      elevation="4"
+      height="250"
+      max-width="300"
+      rounded
+    >
+      <div>
+        <v-icon class="mb-5" icon="mdi-wechat" size="60" color="success"></v-icon>
+        <h4 class="text-h4 font-weight-black text-orange">小程序版本</h4>
+        <p class="text-body-2 mb-4 mt-4 font-weight-medium">
+          拼字幕也有小程序版，鼠标移动到网站底部微信图标，扫码可以进入小程序
         </p>
       </div>
     </v-sheet>
