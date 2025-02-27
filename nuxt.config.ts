@@ -2,7 +2,12 @@
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   ssr: true,
+  site: { 
+    url: 'https://labs.wowyou.cc', 
+    name: '拼字幕' 
+  }, 
   app: {
+    buildAssetsDir: 'static',
     head: {
       htmlAttrs: {
         lang: 'zh' // 设置页面语言为中文
@@ -33,7 +38,6 @@ export default defineNuxtConfig({
       wasm: true,
     },
   },
-
   build: {
     transpile: ['vuetify'],
     analyze: {
@@ -42,6 +46,7 @@ export default defineNuxtConfig({
   },
   modules: [
     '@nuxtjs/i18n',
+    '@nuxtjs/sitemap',
     async (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
         // @ts-expect-error
@@ -80,10 +85,6 @@ export default defineNuxtConfig({
    
   },
   i18n: {
-    detectBrowserLanguage: {
-      useCookie: true,
-      fallbackLocale: 'zh',
-    },
     strategy: 'no_prefix',
     locales: [
       {
@@ -98,8 +99,8 @@ export default defineNuxtConfig({
       }
     ],
     lazy: true,
-    langDir: 'internationalization',
-    defaultLocale: 'zh',
+    langDir: './locales',
+    defaultLocale: 'en',
   },
   components: true,
   compatibilityDate: '2024-04-03',

@@ -184,7 +184,7 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   ogUrl: "https://labs.wowyou.cc",
   ogLocale: "zh",
-  ogPublisher: "创图卡片",
+  ogPublisher: "拼字幕",
   ogLogo: "https://labs.wowyou.cc/logo.png",
   ogImage: "https://labs.wowyou.cc/preview.png",
   robots:
