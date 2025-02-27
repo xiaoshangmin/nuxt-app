@@ -194,7 +194,7 @@ const toggleDrawer = () => {
   drawer.value = !drawer.value;
 };
 
-const theme = ref("light");
+const theme = ref("dark");
 
 const availableLocales = computed(() => {
   return locales.value;

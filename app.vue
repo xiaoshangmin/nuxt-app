@@ -52,7 +52,7 @@ import { useTheme } from 'vuetify'
 const theme = useTheme()
 
 onMounted(() => {
-  theme.global.name.value =  localStorage.getItem("theme") || "light";
+  theme.global.name.value =  localStorage.getItem("theme") || "dark";
 });
 
 function onClick() {

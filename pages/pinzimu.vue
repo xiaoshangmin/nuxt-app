@@ -2,11 +2,11 @@
   <v-container>
     <v-row class="d-flex justify-center flex-column align-center mt-4 mb-16">
       <h1 class="text-h3 font-weight-black">拼字幕</h1>
-      <h2 class="">一键免费生成字幕拼图 专为社交媒体运营设计</h2>
+      <h3 class="mt-4">一键免费生成字幕拼图 专为社交媒体运营设计</h3>
     </v-row>
     <v-row class="flex-column flex-md-row">
       <!-- 左侧富文本编辑区域 -->
-      <v-col cols="12" md="6" order="2" order-md="1" class="pl-16">
+      <v-col cols="12" md="6" order="2" order-md="1">
         <v-sheet rounded="lg" class="pa-4 editor-sheet">
           <div v-if="isClient">
             <div
@@ -99,12 +99,9 @@
       </v-col>
     </v-row>
   </v-container>
-  <div
-    class="d-flex justify-space-around mt-12 mb-12"
-    style="width: 1300px; margin: 0 auto"
-  >
+  <div class="d-flex ga-4 mt-12 mb-12 flex-wrap align-center justify-center" >
     <v-sheet
-      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      class="d-flex align-center justify-center flex-wrap text-center px-4"
       elevation="4"
       height="250"
       max-width="300"
@@ -119,7 +116,7 @@
       </div>
     </v-sheet>
     <v-sheet
-      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      class="d-flex align-center justify-center flex-wrap text-center px-4"
       elevation="4"
       height="250"
       max-width="300"
@@ -134,7 +131,7 @@
       </div>
     </v-sheet>
     <v-sheet
-      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      class="d-flex align-center justify-center flex-wrap text-center px-4"
       elevation="4"
       height="250"
       max-width="300"
@@ -149,7 +146,7 @@
       </div>
     </v-sheet>
     <v-sheet
-      class="d-flex align-center justify-center flex-wrap text-center mx-auto px-4"
+      class="d-flex align-center justify-center flex-wrap text-center px-4"
       elevation="4"
       height="250"
       max-width="300"
