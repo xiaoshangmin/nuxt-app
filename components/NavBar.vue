@@ -12,12 +12,12 @@
     >
       {{ item.title }}
     </v-btn> -->
-    <v-btn to="/" class="text-none"> {{t("Simple Card")}}</v-btn>
-    <v-btn to="/bgremoval" class="text-none"> {{t("Bg Remove")}}</v-btn>
-    <v-btn to="/pinzimu" class="text-none"> {{t("Pinzimu")}}</v-btn>
-    <v-btn href="https://tools.wowyou.cc" target="_blank" class="text-none"> {{t("IT Tools")}}</v-btn>
-    <v-btn href="https://squish.pic.wowyou.cc/" class="text-none"  target="_blank"> {{t("Squish Pic")}}</v-btn>
-    <v-btn href="https://pdf.wowyou.cc" class="text-none"  target="_blank"> {{t("PDF Web")}}</v-btn>
+    <v-btn v-if="!isMobile" to="/" class="text-none"> {{t("Simple Card")}}</v-btn>
+    <v-btn v-if="!isMobile" to="/bgremoval" class="text-none"> {{t("Bg Remove")}}</v-btn>
+    <v-btn v-if="!isMobile" to="/pinzimu" class="text-none"> {{t("Pinzimu")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://tools.wowyou.cc" target="_blank" class="text-none"> {{t("IT Tools")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://squish.pic.wowyou.cc/" class="text-none"  target="_blank"> {{t("Squish Pic")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://pdf.wowyou.cc" class="text-none"  target="_blank"> {{t("PDF Web")}}</v-btn>
     <v-spacer></v-spacer>
     <div v-if="!isMobile" class="d-flex justify-center align-center">
       <!-- <v-btn variant="text">
