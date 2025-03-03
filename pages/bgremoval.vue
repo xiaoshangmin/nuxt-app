@@ -86,7 +86,7 @@ import { removeBackground } from "@imgly/background-removal";
 import { ImgComparisonSlider } from '@img-comparison-slider/vue';
 
 useSeoMeta({
-    title: "消除图片背景 - 在线抠图去除背景 | labs.wowyou.cc",
+    title: "消除图片背景 - 在线抠图去除背景",
     ogTitle: "消除图片背景 - 在线抠图去除背景",
     keywords: "消除图片背景,抠图,去背景",
     ogType: "website",

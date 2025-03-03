@@ -85,22 +85,22 @@ export default defineNuxtConfig({
    
   },
   i18n: {
-    strategy: 'no_prefix',
     locales: [
       {
         code: 'en',
         name: 'English',
-        file: 'en.json',
+        files: ['en.json'],
       },
       {
         code: 'zh',
         name: '简体中文',
-        file: 'zh.json',
+        files: ['zh.json'],
       }
     ],
     lazy: true,
-    langDir: './locales',
+    langDir: 'locales/',
     defaultLocale: 'en',
+    strategy:'no_prefix'
   },
   components: true,
   compatibilityDate: '2024-04-03',

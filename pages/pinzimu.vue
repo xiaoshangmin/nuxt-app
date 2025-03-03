@@ -172,8 +172,8 @@ const zimu = ref(null);
 let quillInstance = null;
 
 useSeoMeta({
-  title: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
-  ogTitle: "拼字幕 - 快速生成字幕拼图 | labs.wowyou.cc",
+  title: "拼字幕 - 快速生成字幕拼图",
+  ogTitle: "拼字幕 - 快速生成字幕拼图",
   keywords:
     "拼字幕, 字幕拼图, 字幕生成, 字幕生成器, 字幕截图, 小红书引流, 小红书流量, 社交媒体运营, 名人语录, 电影台词, 马斯克说, 罗翔说, 乔布斯说, 余华说, 董宇辉说, 字幕图片, 字幕拼接, 内容引流, 增粉工具, 社交媒体曝光",
   ogType: "website",

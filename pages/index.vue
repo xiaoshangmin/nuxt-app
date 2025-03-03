@@ -110,8 +110,8 @@ const sheet = ref(false);
 const isLoading = ref(false)
 
 useSeoMeta({
-  title: "创图卡片 - 体验全新的文字卡片分享 | labs.wowyou.cc",
-  ogTitle: "创图卡片 - 体验全新的文字卡片分享 | labs.wowyou.cc",
+  title: "创图卡片 - 体验全新的文字卡片分享",
+  ogTitle: "创图卡片 - 体验全新的文字卡片分享",
   keywords: "创图卡片,卡片,文生图,文字卡片,工具,演示,生成器,小红书图文必备,图文神器",
   ogType: "website",
   description: "创图卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
