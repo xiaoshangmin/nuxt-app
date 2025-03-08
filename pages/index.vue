@@ -110,16 +110,16 @@ const sheet = ref(false);
 const isLoading = ref(false)
 
 useSeoMeta({
-  title: "创图卡片 - 体验全新的文字卡片分享",
-  ogTitle: "创图卡片 - 体验全新的文字卡片分享",
-  keywords: "创图卡片,卡片,文生图,文字卡片,工具,演示,生成器,小红书图文必备,图文神器",
+  title: "简单卡片 - 体验全新的文字卡片分享",
+  ogTitle: "简单卡片 - 体验全新的文字卡片分享",
+  keywords: "简单卡片,卡片,文生图,文字卡片,工具,演示,生成器,小红书图文必备,图文神器",
   ogType: "website",
-  description: "创图卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
-  ogDescription: "创图卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
+  description: "简单卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
+  ogDescription: "简单卡片一款在线文字卡片制作工具，只需简单输入，即可瞬间转化为精致、风格独特的文字卡片，让每个字句都散发独特的魅力，让每一次表达都留下深刻印象",
   twitterCard: "summary_large_image",
   ogUrl: "https://labs.wowyou.cc",
   ogLocale: "zh",
-  ogPublisher: '创图卡片',
+  ogPublisher: 'labs.wowyou.cc',
   ogLogo: 'https://labs.wowyou.cc/logo.png',
   ogImage: 'https://labs.wowyou.cc/preview.png',
   robots: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
