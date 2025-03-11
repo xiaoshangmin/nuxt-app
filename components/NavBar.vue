@@ -14,7 +14,7 @@
     </v-btn> -->
     <v-btn v-if="!isMobile" to="/" class="text-none"> {{t("Simple Card")}}</v-btn>
     <v-btn v-if="!isMobile" to="/bgremoval" class="text-none"> {{t("Bg Remove")}}</v-btn>
-    <v-btn v-if="!isMobile" to="/pinzimu" class="text-none"> {{t("Pinzimu")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://quotemaker.cc" target="_blank" class="text-none"> {{t("Pinzimu")}}</v-btn>
     <v-btn v-if="!isMobile" href="https://tools.wowyou.cc" target="_blank" class="text-none"> {{t("IT Tools")}}</v-btn>
     <v-btn v-if="!isMobile" href="https://squish.pic.wowyou.cc/" class="text-none"  target="_blank"> {{t("Squish Pic")}}</v-btn>
     <v-btn v-if="!isMobile" href="https://pdf.wowyou.cc" class="text-none"  target="_blank"> {{t("PDF Web")}}</v-btn>
@@ -177,9 +177,9 @@ const items = computed(() => [
 const mobileItems = ref([
   { title: t("Simple Card"), to: "/" },
   { title: t("Bg Remove"), to: "/bgremoval" },
-  { title: t("Pinzimu"), href: "/pinzimu", target: "" },
+  { title: t("Pinzimu"), href: "https://quotemaker.cc",  target: "_blank",},
   { type: "divider" },
-  { title: t("IT Tools"), href: "https://tools.wowyou.cc" },
+  { title: t("IT Tools"), href: "https://tools.wowyou.cc" , target: "_blank",},
   {
     title: t("Squish Pic"),
     href: "https://squish.pic.wowyou.cc/",
