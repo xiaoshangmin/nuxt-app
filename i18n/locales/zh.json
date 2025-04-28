@@ -9,8 +9,8 @@
   "Width And Padding": "宽度和边距",
   "Font": "字体",
   "Edit":"样式编辑",
-  "Bg Remove":"移除背景",
-  "IT Tools":"IT 工具箱",
+  "Bg Remove":"Zero Bgremove",
+  "IT Tools":"Zero Tools",
   "Title":"标题",
   "Content":"文本",
   "QR Code":"二维码",
@@ -23,8 +23,8 @@
   "Middle":"中",
   "Large":"大",
   "XL Large":"加大",
-  "Pinzimu":"拼字幕",
-  "PDF Web":"胖豆腐",
-  "Squish Pic":"压缩图片",
+  "Pinzimu":"Quote Maker",
+  "PDF Web":"Zero PDF",
+  "Squish Pic":"Zero Image",
   "Free Nav":"免费资源导航"
 }

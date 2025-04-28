@@ -40,6 +40,7 @@
           </v-row>
 
           <div class="mt-4 mb-8">有问题或者建议可关注公众号给我反馈 感谢！</div>
+          <div class="mt-4 mb-8"><v-btn href="https://wowyou.cc/"  target="_blank" class="text-none" tile="Zero Project"> Zero Project</v-btn></div>
         </v-footer>
       </v-main>
     </v-app>

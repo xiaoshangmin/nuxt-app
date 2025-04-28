@@ -13,12 +13,12 @@
       {{ item.title }}
     </v-btn> -->
     <v-btn v-if="!isMobile" to="/" class="text-none"> {{t("Simple Card")}}</v-btn>
-    <v-btn v-if="!isMobile" to="/bgremoval" class="text-none"> {{t("Bg Remove")}}</v-btn>
-    <v-btn v-if="!isMobile" href="https://quotemaker.cc" target="_blank" class="text-none"> {{t("Pinzimu")}}</v-btn>
-    <v-btn v-if="!isMobile" href="https://tools.wowyou.cc" target="_blank" class="text-none"> {{t("IT Tools")}}</v-btn>
-    <v-btn v-if="!isMobile" href="https://image.wowyou.cc/" class="text-none"  target="_blank"> {{t("Squish Pic")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://bgremove.wowyou.cc/"  target="_blank" class="text-none" tile="Zero BGremove"> {{t("Bg Remove")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://quotemaker.cc" target="_blank" class="text-none" title="Quote Maker"> {{t("Pinzimu")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://tools.wowyou.cc" target="_blank" class="text-none" title="Zero Tools"> {{t("IT Tools")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://image.wowyou.cc/" class="text-none"  target="_blank" title="Zero Image"> {{t("Squish Pic")}}</v-btn>
     <v-btn v-if="!isMobile" href="https://nav.wowyou.cc/" class="text-none"  target="_blank"> {{t("Free Nav")}}</v-btn>
-    <v-btn v-if="!isMobile" href="https://pdf.wowyou.cc" class="text-none"  target="_blank"> {{t("PDF Web")}}</v-btn>
+    <v-btn v-if="!isMobile" href="https://pdf.wowyou.cc" class="text-none"  target="_blank" title="Zero PDF"> {{t("PDF Web")}}</v-btn>
     <v-spacer></v-spacer>
     <div v-if="!isMobile" class="d-flex justify-center align-center">
       <!-- <v-btn variant="text">

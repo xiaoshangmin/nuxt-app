@@ -9,8 +9,8 @@
   "Width And Padding":"Padding",
   "Font":"Font",
   "Edit":"Edit",
-  "Bg Remove":"Bg Remove",
-  "IT Tools":"IT Tools",
+  "Bg Remove":"Zero Bgremove",
+  "IT Tools":"Zero Tools",
   "Title":"Title",
   "Content":"Text",
   "QR Code":"QR Code",
@@ -23,8 +23,8 @@
   "Middle":"Middle",
   "Large":"Large",
   "XL Large":"XL Large",
-  "Pinzimu":"Pinzimu",
-  "PDF Web":"PDF Web",
-  "Squish Pic":"Image Compression",
+  "Pinzimu":"Quote Maker",
+  "PDF Web":"Zero PDF",
+  "Squish Pic":"Zero Image",
   "Free Nav":"Free Nav"
 }
